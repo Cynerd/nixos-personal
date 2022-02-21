@@ -1,0 +1,158 @@
+{ config, lib, pkgs, ... }:
+
+with lib;
+let
+
+  cnf = config.cynerd.desktop;
+
+in {
+
+  options = {
+    cynerd.desktop = {
+      enable = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Enable my desktop";
+      };
+      laptop = mkOption {
+        type = types.bool;
+        default = false;
+        description = "The desktop requires Laptop extensions";
+      };
+    };
+  };
+
+  config = mkIf cnf.enable {
+    cynerd.hosts.enable = true;
+
+    # TODO autologin but only on tty1
+    services.gpm.enable = true;
+
+    programs.sway.enable = true;
+    programs.sway.extraPackages = with pkgs; [
+      gnome.dconf-editor
+      glib gsettings-desktop-schemas
+      i3blocks sysstat
+      wofi rofimoji wev
+      swaybackground myswaylock
+
+      alacritty
+
+      kanshi wdisplays wayvnc wl-mirror
+      slurp grim
+      xdg-desktop-portal-wlr xdg-desktop-portal-gtk pipewire wf-recorder
+      wl-clipboard wl-color-picker
+      swayidle
+      dunst
+
+      isync msmtp notmuch astroid
+      taskwarrior vdirsyncer khal khard
+      gnupg pass pinentry-gnome pinentry-curses
+
+      firefox chromium
+      ferdi
+      libreoffice
+      mupdf pdfgrep
+
+      xdg-utils xdg-launch
+      mesa-demos vulkan-tools
+
+      pulsemixer
+      mpd mpc-cli ncmpcpp
+      feh shotwell id3lib
+      vlc mpv youtube-dl
+
+      delft-icon-theme gnome3.adwaita-icon-theme
+      vanilla-dmz
+      sound-theme-freedesktop
+      gucharmap
+
+      samba cifs-utils
+
+      tigervnc freerdp
+      kdeconnect
+
+      hdparm ethtool multipath-tools
+      usb-modeswitch
+      v4l-utils
+
+      # Calculating
+      python3Packages.numpy python3Packages.sympy python3Packages.matplotlib
+
+      # Creation
+      simple-scan
+      audacity
+      gimp inkscape
+      blender
+      kdenlive
+
+      # GStreamer
+      gst_all_1.gst-libav
+      gst_all_1.gst-plugins-bad
+      gst_all_1.gst-plugins-base
+      gst_all_1.gst-plugins-good
+      gst_all_1.gst-plugins-ugly
+      gst_all_1.gst-plugins-viperfx
+
+    ] ++ ( [
+      # Power management
+      powertop
+      acpi
+    ]);
+    programs.vim.package = pkgs.vimHugeX;
+    programs.shellrc.desktop = true;
+    xdg.portal.enable = true;
+    xdg.portal.wlr.enable = true;
+    xdg.portal.gtkUsePortal = true;
+    xdg.mime.defaultApplications = {
+      "application/pdf" = [ "mupdf.desktop" ];
+    };
+
+    programs.gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+      enableBrowserSocket = true;
+    };
+    services.dbus.packages = [ pkgs.gcr ];
+
+    services.pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+    };
+    security.rtkit.enable = true;
+
+    services.printing = {
+      enable = true;
+      drivers = with pkgs; [
+        gutenprint gutenprintBin
+        cnijfilter2
+      ];
+    };
+
+    fonts.fonts = with pkgs; [
+      arkpandora_ttf
+      corefonts
+      dejavu_fonts
+      font-awesome
+      freefont_ttf
+      hack-font
+      liberation_ttf
+      libertine
+      noto-fonts
+      noto-fonts-emoji
+      terminus_font_ttf
+      ubuntu_font_family
+      unifont
+    ];
+
+    services.udev.extraRules = ''
+      ACTION=="add|change", KERNEL=="sd*[!0-9]", ATTR{queue/scheduler}="bfq"
+      '';
+    hardware.opengl.driSupport = true;
+    hardware.opengl.driSupport32Bit = true;
+
+
+  };
+}

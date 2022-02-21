@@ -1,0 +1,172 @@
+{
+  "nodes": {
+    "flake-utils": {
+      "locked": {
+        "lastModified": 1653893745,
+        "narHash": "sha256-0jntwV3Z8//YwuOjzhV2sgJJPt+HY6KhU7VZUL0fKZQ=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "1ed9fb1935d260de5fe1c2f7ee0ebaae17ed2fa1",
+        "type": "github"
+      },
+      "original": {
+        "id": "flake-utils",
+        "type": "indirect"
+      }
+    },
+    "flake-utils_2": {
+      "locked": {
+        "lastModified": 1652776076,
+        "narHash": "sha256-gzTw/v1vj4dOVbpBSJX4J0DwUR6LIyXo7/SuuTJp1kM=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "04c1b180862888302ddfb2e3ad9eaa63afc60cf8",
+        "type": "github"
+      },
+      "original": {
+        "id": "flake-utils",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1654845941,
+        "narHash": "sha256-uXulXu4BQ9ch1ItV0FlL2Ns8X83m6unT5h/0X//VRLQ=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "7b3e907a6fef935794b5049c2c57c519853deb90",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1653738054,
+        "narHash": "sha256-IaR8iLN4Ms3f5EjU1CJkXSc49ZzyS5qv03DtVAti6/s=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "17b62c338f2a0862a58bb6951556beecd98ccda9",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
+        "lastModified": 1648219316,
+        "narHash": "sha256-Ctij+dOi0ZZIfX5eMhgwugfvB+WZSrvVNAyAuANOsnQ=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "30d3d79b7d3607d56546dd2a6b49e156ba0ec634",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs_4": {
+      "locked": {
+        "lastModified": 1637875414,
+        "narHash": "sha256-Ica++SXFuLyxX9Q7YxhfZulUif6/gwM8AEQYlUxqSgE=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "3bea86e918d8b54aa49780505d2d4cd9261413be",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "ref": "nixos-21.05",
+        "type": "indirect"
+      }
+    },
+    "nixturris": {
+      "inputs": {
+        "flake-utils": "flake-utils_2",
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1653841080,
+        "narHash": "sha256-WKjNzLTN6Sp86LqUbMfl/O9roNfSA6gJvqIUXHarAeM=",
+        "ref": "refs/heads/master",
+        "rev": "38a4faa40f2d6ec6decd8863b1784809952933c7",
+        "revCount": 28,
+        "type": "git",
+        "url": "https://git.cynerd.cz/nixturris"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.cynerd.cz/nixturris"
+      }
+    },
+    "personal-secret": {
+      "locked": {
+        "lastModified": 1654761075,
+        "narHash": "sha256-wzG0P8A9p7ca8S4NnKB42OlhSj8TZX5PlqVvnm9m0vM=",
+        "ref": "refs/heads/master",
+        "rev": "a5a2d42e69ef2b10ec5753a976d36228916090b1",
+        "revCount": 9,
+        "type": "git",
+        "url": "ssh://git@cynerd.cz/nixos-personal-secret"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@cynerd.cz/nixos-personal-secret"
+      }
+    },
+    "root": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": "nixpkgs",
+        "nixturris": "nixturris",
+        "personal-secret": "personal-secret",
+        "shellrc": "shellrc",
+        "sterm": "sterm"
+      }
+    },
+    "shellrc": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_3"
+      },
+      "locked": {
+        "lastModified": 1654780370,
+        "narHash": "sha256-IYqHhFNG8GP4P3dI8DCUR9lrlr+QHsEfGJ6Qf7pCem0=",
+        "ref": "refs/heads/master",
+        "rev": "9e4f4d2631b2d9ba537f25299c5d9fc5783ca776",
+        "revCount": 55,
+        "type": "git",
+        "url": "https://git.cynerd.cz/shellrc"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.cynerd.cz/shellrc"
+      }
+    },
+    "sterm": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_4"
+      },
+      "locked": {
+        "lastModified": 1654787204,
+        "narHash": "sha256-SFzlL4FxwazJqzMPvLPT0IVWaYqV+NMdHxOEOawZ9Z8=",
+        "owner": "cynerd",
+        "repo": "sterm",
+        "rev": "aec0022e09119ec4e0cf8ba85515cbde907384b6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cynerd",
+        "ref": "comp",
+        "repo": "sterm",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
