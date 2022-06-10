@@ -131,6 +131,13 @@ in {
       ];
     };
 
+    services.samba-wsdd = {
+      enable = true;
+      discovery = true;
+    };
+    networking.firewall.allowedTCPPorts = [ 5357 ];
+    networking.firewall.allowedUDPPorts = [ 3702 ];
+
     fonts.fonts = with pkgs; [
       arkpandora_ttf
       corefonts

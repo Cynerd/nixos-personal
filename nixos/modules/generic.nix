@@ -31,6 +31,7 @@ with lib;
       # Administration tools
       coreutils moreutils psmisc progress lshw
       dig
+      gnumake
 
       # NCurses tools
       htop iotop glances
@@ -67,14 +68,14 @@ with lib;
         passwordFile = "/run/secrets/root.pass";
       };
       cynerd = {
+        group = "cynerd";
+        extraGroups = ["users" "wheel"];
         uid = 1000;
         subUidRanges = [{ count = 65534; startUid = 10000; }];
         subGidRanges = [{ count = 65534; startGid = 10000; }];
-        group = "cynerd";
         isNormalUser = true;
         createHome = true;
         shell = pkgs.zsh.out;
-        extraGroups = ["users" "wheel"];
         passwordFile = "/run/secrets/cynerd.pass";
         openssh.authorizedKeys.keyFiles = [
           (config.personal-secrets + "/unencrypted/git-private.pub")

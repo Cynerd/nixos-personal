@@ -54,6 +54,9 @@ with lib;
       dataDir = "/home/cynerd";
       configDir = "/home/cynerd/.config/syncthing";
     };
+    services.openvpn.servers.oldpersonal = {
+      config = "config /run/secrets/old.ovpn";
+    };
 
   };
 

@@ -106,11 +106,11 @@
     },
     "personal-secret": {
       "locked": {
-        "lastModified": 1654761075,
-        "narHash": "sha256-wzG0P8A9p7ca8S4NnKB42OlhSj8TZX5PlqVvnm9m0vM=",
+        "lastModified": 1654865533,
+        "narHash": "sha256-eG+wZkWMbN7WVz8OxfoRf/tB5V4WW6XbvqhgKZ9THmE=",
         "ref": "refs/heads/master",
-        "rev": "a5a2d42e69ef2b10ec5753a976d36228916090b1",
-        "revCount": 9,
+        "rev": "fa6211f32cdb0318806d26abb15114fde6a75fe1",
+        "revCount": 10,
         "type": "git",
         "url": "ssh://git@cynerd.cz/nixos-personal-secret"
       },
@@ -134,11 +134,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1654780370,
-        "narHash": "sha256-IYqHhFNG8GP4P3dI8DCUR9lrlr+QHsEfGJ6Qf7pCem0=",
+        "lastModified": 1654863350,
+        "narHash": "sha256-qpnYgHWtK2FmnXRhn0yooW8cDfr7vC5ZFpG9fvyARaY=",
         "ref": "refs/heads/master",
-        "rev": "9e4f4d2631b2d9ba537f25299c5d9fc5783ca776",
-        "revCount": 55,
+        "rev": "fe900d86a3ade098bad9d99d7c53806df32a9077",
+        "revCount": 56,
         "type": "git",
         "url": "https://git.cynerd.cz/shellrc"
       },
