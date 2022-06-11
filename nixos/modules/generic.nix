@@ -18,7 +18,7 @@ with lib;
       };
     };
 
-    boot.loader.systemd-boot.enable = mkDefault true;
+    boot.loader.systemd-boot.enable = mkOverride 1100 true;
     boot.loader.efi.canTouchEfiVariables = true;
     boot.kernelPackages = pkgs.linuxPackages_latest;
     boot.kernelParams = ["boot.shell_on_fail"];

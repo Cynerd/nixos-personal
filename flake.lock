@@ -91,11 +91,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1653841080,
-        "narHash": "sha256-WKjNzLTN6Sp86LqUbMfl/O9roNfSA6gJvqIUXHarAeM=",
+        "lastModified": 1654937122,
+        "narHash": "sha256-Ea68UmPWQPJEFY0eLb/G/KHPubTWKR1+fpnkExm4U2c=",
         "ref": "refs/heads/master",
-        "rev": "38a4faa40f2d6ec6decd8863b1784809952933c7",
-        "revCount": 28,
+        "rev": "a7e2c790b76faadb5f1dcf3745c240eaa24a037a",
+        "revCount": 24,
         "type": "git",
         "url": "https://git.cynerd.cz/nixturris"
       },
