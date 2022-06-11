@@ -28,13 +28,27 @@
         "type": "indirect"
       }
     },
+    "flake-utils_3": {
+      "locked": {
+        "lastModified": 1653893745,
+        "narHash": "sha256-0jntwV3Z8//YwuOjzhV2sgJJPt+HY6KhU7VZUL0fKZQ=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "1ed9fb1935d260de5fe1c2f7ee0ebaae17ed2fa1",
+        "type": "github"
+      },
+      "original": {
+        "id": "flake-utils",
+        "type": "indirect"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1654845941,
-        "narHash": "sha256-uXulXu4BQ9ch1ItV0FlL2Ns8X83m6unT5h/0X//VRLQ=",
+        "lastModified": 1654931879,
+        "narHash": "sha256-OyKm0DPMaHdRcZ8c+jaXmecEeSe3Fd1K+yirg7zDsys=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "7b3e907a6fef935794b5049c2c57c519853deb90",
+        "rev": "c0d782e7b7b81174e056f7dbc991e82314488239",
         "type": "github"
       },
       "original": {
@@ -58,11 +72,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1648219316,
-        "narHash": "sha256-Ctij+dOi0ZZIfX5eMhgwugfvB+WZSrvVNAyAuANOsnQ=",
+        "lastModified": 1654875595,
+        "narHash": "sha256-Vairke3ryPSFpgQdaYicPPhPWMGhtzm6V+1uF2Tefbk=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "30d3d79b7d3607d56546dd2a6b49e156ba0ec634",
+        "rev": "3f909fb574d9b9d7294e544981c62a4a5e4599fc",
         "type": "github"
       },
       "original": {
@@ -131,14 +145,15 @@
     },
     "shellrc": {
       "inputs": {
+        "flake-utils": "flake-utils_3",
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1654863350,
-        "narHash": "sha256-qpnYgHWtK2FmnXRhn0yooW8cDfr7vC5ZFpG9fvyARaY=",
+        "lastModified": 1654979392,
+        "narHash": "sha256-AIuZnVtHRxyWRNmVb+UhFEOsE4vErWPSTrtGgQfTRa0=",
         "ref": "refs/heads/master",
-        "rev": "fe900d86a3ade098bad9d99d7c53806df32a9077",
-        "revCount": 56,
+        "rev": "f6b661ebf0cbd9ecae64eb1f757dc1b4073b1d73",
+        "revCount": 57,
         "type": "git",
         "url": "https://git.cynerd.cz/shellrc"
       },

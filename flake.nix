@@ -25,7 +25,7 @@
         modules = hostname: [
           self.nixosModules.default
           self.nixosModules."machine-${hostname}"
-          shellrc.nixosModule
+          shellrc.nixosModules.default
           (personal-secret.lib.personalSecrets hostname)
           {
             networking.hostName = hostname;
@@ -75,6 +75,8 @@
       packages = filterPackages system (flattenTree (
         import ./pkgs { nixpkgs = nixpkgs.legacyPackages."${system}"; }
       ));
+      devShells = filterPackages system
+        (import ./develop { inherit nixpkgs; inherit shellrc; inherit system; });
     });
 
 }
