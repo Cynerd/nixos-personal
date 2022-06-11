@@ -6,6 +6,10 @@
 stdenvNoCC.mkDerivation {
   pname = "swaybackground";
   version = "1.0";
+  meta = with lib; {
+    license = licenses.gpl3;
+    platforms = platforms.linux;
+  };
 
   nativeBuildInputs = [ makeWrapper ];
   phases = [ "installPhase" ];
