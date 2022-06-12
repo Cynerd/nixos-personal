@@ -1,5 +1,16 @@
-{ nixpkgs, shellrc, system }: {
+{ nixpkgs, shellrc, system }:
+let
 
-  riscv = import ./riscv.nix { inherit nixpkgs; inherit shellrc; inherit system; };
+  callDevelop = file: import file {
+    inherit nixpkgs;
+    inherit shellrc;
+    inherit system;
+  };
+
+in {
+
+  armv6 = callDevelop ./nuttx.nix "armv6-m";
+  armv7e = callDevelop ./nuttx.nix "armv7e-m";
+  riscv = callDevelop ./riscv.nix;
 
 }
