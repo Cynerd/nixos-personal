@@ -94,7 +94,7 @@ in {
       gst_all_1.gst-plugins-ugly
       gst_all_1.gst-plugins-viperfx
 
-    ] ++ ( [
+    ] ++ (optionals cnf.laptop [
       # Power management
       powertop
       acpi
@@ -159,6 +159,8 @@ in {
       '';
     hardware.opengl.driSupport = true;
     hardware.opengl.driSupport32Bit = true;
+
+    hardware.bluetooth.enable = mkIf cnf.laptop true;
 
 
   };

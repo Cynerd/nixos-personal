@@ -56,6 +56,7 @@ with lib;
       nmap netcat traceroute
       iftop nethogs
       # TODO add mdns
+      sshfs
 
       lm_sensors
 
