@@ -4,21 +4,6 @@ with lib;
 
 let
 
-  armv6l = (import nixpkgs.outPath {
-      localSystem = config.system.build.toplevel.system;
-      crossSystem = {
-        config = "armv6l-none-eabi";
-        libc = "newlib";
-      };
-    });
-  armv7l = (import nixpkgs.outPath {
-      localSystem = config.system.build.toplevel.system;
-      crossSystem = {
-        config = "armv7l-none-eabi";
-        libc = "newlib";
-      };
-    });
-
 in {
 
   options = {
@@ -94,9 +79,6 @@ in {
 
       # Bare metal
       openocd
-      #armv6l.buildPackages.gcc armv6l.buildPackages.gdb
-      #armv7l.buildPackages.gcc armv7l.buildPackages.gdb
-      pkgsCross.arm-embedded.buildPackages.gcc
 
       # Documentation
       man-pages man-pages-posix
