@@ -14,7 +14,7 @@ let
 
 in pkgs.mkShell {
   packages = (with pkgs; [
-    kconfig-frontends
+    kconfig-frontends make cmake
   ]) ++ (with pkgs-riscv.buildPackages; [
     gcc gdb
   ]);
