@@ -6,8 +6,7 @@
     nixturris.url = "git+https://git.cynerd.cz/nixturris";
     personal-secret.url = "git+ssh://git@cynerd.cz/nixos-personal-secret";
 
-    #sterm.url = "github:wentasah/sterm";
-    sterm.url = "github:cynerd/sterm/comp";
+    sterm.url = "github:wentasah/sterm";
   };
 
   outputs = { self
@@ -76,7 +75,7 @@
         import ./pkgs { nixpkgs = nixpkgs.legacyPackages."${system}"; }
       ));
       devShells = filterPackages system
-        (import ./develop { inherit nixpkgs; inherit shellrc; inherit system; });
+        (import ./devShells { inherit nixpkgs; inherit shellrc; inherit system; });
     });
 
 }

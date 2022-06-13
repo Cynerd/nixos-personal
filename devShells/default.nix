@@ -11,6 +11,7 @@ in {
 
   armv6 = callDevelop ./nuttx.nix "armv6-m";
   armv7e = callDevelop ./nuttx.nix "armv7e-m";
+  c = callDevelop ./c.nix;
   riscv = callDevelop ./riscv.nix;
 
 }
