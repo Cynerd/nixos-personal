@@ -58,6 +58,8 @@ with lib;
       config = "config /run/secrets/old.ovpn";
     };
 
+    cynerd.gaming = true;
+
   };
 
 }
