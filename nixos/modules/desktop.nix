@@ -162,6 +162,7 @@ in {
 
     hardware.bluetooth.enable = mkIf cnf.laptop true;
 
+    documentation.man.man-db.enable = true;
 
   };
 }

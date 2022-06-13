@@ -4,7 +4,8 @@ let
 
 in pkgs.mkShell {
   packages = (with pkgs; [
-    ccls gcc gdb
+    clang-tools
+    gcc gdb
     cppcheck flawfinder bear
     meson
     lcov massif-visualizer

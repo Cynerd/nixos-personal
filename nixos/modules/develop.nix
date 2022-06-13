@@ -98,7 +98,11 @@ in {
       #armv7l.buildPackages.gcc armv7l.buildPackages.gdb
       pkgsCross.arm-embedded.buildPackages.gcc
 
+      # Documentation
+      man-pages man-pages-posix
     ];
+
+    documentation.dev.enable = true;
 
   };
 

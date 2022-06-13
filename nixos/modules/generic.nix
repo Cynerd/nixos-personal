@@ -70,7 +70,7 @@ with lib;
       };
       cynerd = {
         group = "cynerd";
-        extraGroups = ["users" "wheel"];
+        extraGroups = ["users" "wheel" "dialout"];
         uid = 1000;
         subUidRanges = [{ count = 65534; startUid = 10000; }];
         subGidRanges = [{ count = 65534; startGid = 10000; }];
