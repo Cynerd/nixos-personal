@@ -46,7 +46,7 @@ with lib;
       strace
 
       sourceHighlight # Colors for less
-      unrar p7zip
+      unrar p7zip zip
 
       # Vim plugins (used for root account)
       vimPlugins.vim-nix
