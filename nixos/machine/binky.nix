@@ -57,6 +57,9 @@ with lib;
     services.openvpn.servers.oldpersonal = {
       config = "config /run/secrets/old.ovpn";
     };
+    services.openvpn.servers.elektroline = {
+      config = "config /run/secrets/elektroline.ovpn";
+    };
 
     cynerd.gaming = true;
 
