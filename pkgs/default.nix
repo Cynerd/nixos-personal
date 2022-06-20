@@ -22,6 +22,11 @@ let
     #with pythonPackages; [
     #  (pythonPackages.callPackage ./python/notify-send.nix { })
     #]);
+    ferdium = callPackage ./ferdium {
+      mkFranzDerivation = callPackage (
+        nixpkgs.path + "/pkgs/applications/networking/instant-messengers/franz/generic.nix"
+      ) { };
+    };
 
   };
 
