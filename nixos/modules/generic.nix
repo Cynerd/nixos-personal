@@ -29,9 +29,12 @@ with lib;
     environment.systemPackages = with pkgs; [
       git # We need git for this repository to even work
       # Administration tools
-      coreutils moreutils psmisc progress lshw
+      coreutils moreutils psmisc progress lshw file
       dig
       gnumake
+      exfat exfatprogs
+      nix-index
+      usbutils
 
       # NCurses tools
       htop iotop glances
@@ -46,7 +49,7 @@ with lib;
       strace
 
       sourceHighlight # Colors for less
-      unrar p7zip zip
+      unrar p7zip zip unzip
 
       # Vim plugins (used for root account)
       vimPlugins.vim-nix
@@ -70,7 +73,7 @@ with lib;
       };
       cynerd = {
         group = "cynerd";
-        extraGroups = ["users" "wheel" "dialout"];
+        extraGroups = ["users" "wheel" "dialout" "kvm" "uucp"];
         uid = 1000;
         subUidRanges = [{ count = 65534; startUid = 10000; }];
         subGidRanges = [{ count = 65534; startGid = 10000; }];
