@@ -67,10 +67,6 @@ in {
       # Gtk
       glade
 
-      # Containers
-      lxc lxd
-      docker
-
       # Barcode generation
       barcode
 
@@ -91,6 +87,16 @@ in {
       SUBSYSTEMS=="usb", ATTRS{idVendor}=="a600", ATTRS{idProduct}=="a003", MODE:="0660", GROUP="develop", SYMLINK+="aix_forte_%n"
       SUBSYSTEMS=="usb", ATTRS{idVendor}=="1366", ATTRS{idProduct}=="0105", MODE:="0660", GROUP="develop", SYMLINK+="jlink_%n"
     '';
+
+    virtualisation.docker = {
+      enable = true;
+      autoPrune.enable = true;
+    };
+    virtualisation.lxd = {
+      enable = true;
+      recommendedSysctlSettings = true;
+    };
+    virtualisation.lxc.enable = true;
 
     users.groups.develop = { };
     users.users.cynerd.extraGroups = [
