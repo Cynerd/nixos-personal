@@ -86,6 +86,17 @@ in {
 
     documentation.dev.enable = true;
 
+    services.udev.extraRules = ''
+      SUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="3748", MODE:="0660", GROUP="develop", SYMLINK+="stlinkv2_%n"
+      SUBSYSTEMS=="usb", ATTRS{idVendor}=="a600", ATTRS{idProduct}=="a003", MODE:="0660", GROUP="develop", SYMLINK+="aix_forte_%n"
+      SUBSYSTEMS=="usb", ATTRS{idVendor}=="1366", ATTRS{idProduct}=="0105", MODE:="0660", GROUP="develop", SYMLINK+="jlink_%n"
+    '';
+
+    users.groups.develop = { };
+    users.users.cynerd.extraGroups = [
+      "docker" "lxd" "develop"
+    ];
+
   };
 
 }
