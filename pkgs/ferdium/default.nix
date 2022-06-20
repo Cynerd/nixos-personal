@@ -28,6 +28,5 @@ mkFranzDerivation' rec {
     homepage = "https://ferdium.org/";
     license = licenses.asl20;
     platforms = [ "x86_64-linux" ];
-    hydraPlatforms = [ ];
   };
 }
