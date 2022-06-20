@@ -149,11 +149,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1654979392,
-        "narHash": "sha256-AIuZnVtHRxyWRNmVb+UhFEOsE4vErWPSTrtGgQfTRa0=",
+        "lastModified": 1655719624,
+        "narHash": "sha256-4dplfh6dS8QzGS4JviJOKmyUX46Yi7LJFO06Bx/1XD4=",
         "ref": "refs/heads/master",
-        "rev": "f6b661ebf0cbd9ecae64eb1f757dc1b4073b1d73",
-        "revCount": 57,
+        "rev": "5076e819be1e4cdbd88abad7c6db313701cad461",
+        "revCount": 59,
         "type": "git",
         "url": "https://git.cynerd.cz/shellrc"
       },
