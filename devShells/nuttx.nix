@@ -16,7 +16,8 @@ let
 
 in pkgs.mkShell {
   packages = (with pkgs; [
-    kconfig-frontends gnumake cmake
+    gnumake cmake
+    kconfig-frontends genromfs
     openocd
   ]) ++ (with pkgs-riscv.buildPackages; [
     gcc gdb
