@@ -26,6 +26,7 @@ in {
 
       # Nix
       nix-prefetch-git nix-prefetch-github nix-prefetch-scripts
+      rnix-lsp
 
       # C
       ccls bear
