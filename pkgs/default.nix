@@ -18,10 +18,12 @@ let
     swaybackground = callPackage ./theme/swaybackground.nix { };
     myswaylock = callPackage ./theme/myswaylock.nix { };
 
-    #personalPython3Packages = python3.withPackages (pythonPackages:
-    #with pythonPackages; [
-    #  (pythonPackages.callPackage ./python/notify-send.nix { })
-    #]);
+    sdcv-unwrapped = callPackage ./sdcv { };
+    sdcv = callPackage ./sdcv/wrapper.nix { };
+    stardict-en-cz = callPackage ./stardict/en-cz.nix { };
+    stardict-de-cz = callPackage ./stardict/de-cz.nix { };
+    stardict-cz = callPackage ./stardict/cz.nix { };
+
     ferdium = callPackage ./ferdium {
       mkFranzDerivation = callPackage (
         nixpkgs.path + "/pkgs/applications/networking/instant-messengers/franz/generic.nix"

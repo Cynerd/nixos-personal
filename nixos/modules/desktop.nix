@@ -67,6 +67,8 @@ in {
       sound-theme-freedesktop
       gucharmap
 
+      (sdcv.withDictionaries [ stardict-en-cz stardict-de-cz stardict-cz ])
+
       samba cifs-utils
 
       tigervnc freerdp
