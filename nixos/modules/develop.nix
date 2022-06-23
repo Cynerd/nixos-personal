@@ -29,7 +29,7 @@ in {
       rnix-lsp
 
       # C
-      ccls bear
+      ccls bear ctags
       check
       valgrind
       cppcheck flawfinder

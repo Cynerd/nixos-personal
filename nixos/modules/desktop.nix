@@ -108,7 +108,11 @@ in {
     xdg.portal.gtkUsePortal = true;
     xdg.portal.extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
     xdg.mime.defaultApplications = {
+      "text/html" = [ "firefox.desktop" ];
       "application/pdf" = [ "mupdf.desktop" ];
+      "image/jpeg" = [ "feh.desktop" ];
+      "image/png" = [ "feh.desktop" ];
+      "image/svg" = [ "feh.desktop" ];
     };
 
     programs.gnupg.agent = {
