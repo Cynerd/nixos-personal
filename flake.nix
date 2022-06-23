@@ -3,8 +3,11 @@
 
   inputs = {
     shellrc.url = "git+https://git.cynerd.cz/shellrc";
-    nixturris.url = "git+https://git.cynerd.cz/nixturris";
     personal-secret.url = "git+ssh://git@cynerd.cz/nixos-personal-secret";
+    nixturris = {
+      url = "git+https://git.cynerd.cz/nixturris";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     sterm.url = "github:wentasah/sterm";
   };
