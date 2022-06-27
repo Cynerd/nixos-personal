@@ -5,6 +5,14 @@ let
 
   cnf = config.cynerd.desktop;
 
+  autologinScript = pkgs.writeText "login-program.sh" ''
+    if [[ "$(tty)" == '/dev/tty1' ]]; then
+      ${pkgs.shadow}/bin/login -f cynerd;
+    else
+      ${pkgs.shadow}/bin/login;
+    fi
+  '';
+
 in {
 
   options = {
@@ -195,6 +203,18 @@ in {
           TIMELINE_MIN_AGE="1800"
         '';
       };
+    };
+
+    services.getty = {
+      extraArgs = [ "--skip-login" ];
+      loginProgram = "${pkgs.bash}/bin/sh";
+      loginOptions = toString (pkgs.writeText "login-program.sh" ''
+        if [[ "$(tty)" == '/dev/tty1' ]]; then
+          ${pkgs.shadow}/bin/login -f cynerd;
+        else
+          ${pkgs.shadow}/bin/login;
+        fi
+      '');
     };
 
   };

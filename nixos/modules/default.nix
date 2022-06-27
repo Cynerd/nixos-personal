@@ -1,4 +1,5 @@
 nixpkgs: {
+  cynerd-autounlock = import ./autounlock.nix;
   cynerd-compile = import ./compile.nix;
   cynerd-desktop = import ./desktop.nix;
   cynerd-develop = import ./develop.nix nixpkgs;

@@ -12,10 +12,13 @@ with lib;
       };
       wifiClient = true;
       develop = true;
+      gaming = true;
     };
 
     boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "usb_storage" "sd_mod"];
     boot.kernelModules = ["kvm-amd"];
+
+    hardware.cpu.amd.updateMicrocode = true;
 
     boot.initrd.luks.devices = {
       "encroot".device = "/dev/disk/by-uuid/b317feb5-d68d-4ec3-a24f-0307c116cac8";
@@ -61,7 +64,6 @@ with lib;
       config = "config /run/secrets/elektroline.ovpn";
     };
 
-    cynerd.gaming = true;
 
   };
 

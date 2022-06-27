@@ -30,7 +30,7 @@ with lib;
       git # We need git for this repository to even work
       # Administration tools
       coreutils moreutils psmisc progress lshw file
-      dig
+      drill
       gnumake
       exfat exfatprogs
       nix-index

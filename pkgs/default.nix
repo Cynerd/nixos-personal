@@ -13,6 +13,8 @@ let
       ];
     });
 
+    luks-hw-password = callPackage ./luks-hw-password { };
+
     delft-icon-theme = callPackage ./theme/delft-icon-theme.nix { };
     background-lnxpcs = callPackage ./theme/background-lnxpcs.nix { };
     swaybackground = callPackage ./theme/swaybackground.nix { };
