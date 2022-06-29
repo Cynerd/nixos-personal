@@ -37,6 +37,7 @@ in {
     services.gpm.enable = true;
 
     programs.sway.enable = true;
+    programs.sway.wrapperFeatures.gtk = true;
     programs.sway.extraPackages = with pkgs; [
       gnome.dconf-editor
       glib gsettings-desktop-schemas
@@ -70,6 +71,7 @@ in {
       feh shotwell id3lib
       vlc mpv youtube-dl
 
+      nordic
       delft-icon-theme gnome3.adwaita-icon-theme
       vanilla-dmz
       sound-theme-freedesktop
