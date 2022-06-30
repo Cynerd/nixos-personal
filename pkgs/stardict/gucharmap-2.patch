@@ -1,0 +1,12 @@
+diff -Naur old/dict/configure.ac new/dict/configure.ac
+--- old/dict/configure.ac	2022-06-30 10:07:59.300093597 +0200
++++ new/dict/configure.ac	2022-06-30 10:06:12.494954051 +0200
+@@ -94,7 +94,7 @@
+ 	[enable_gucharmap=yes])
+ 
+ if test "x$enable_gucharmap" = "xyes" ; then
+-	PKG_CHECK_MODULES(GUCHARMAP, [gucharmap-2], have_gucharmap=yes, have_gucharmap=no)
++	PKG_CHECK_MODULES(GUCHARMAP, [gucharmap], have_gucharmap=yes, have_gucharmap=no)
+ 	if test "x$have_gucharmap" = "xyes"; then
+ 		GUCHARMAP_CFLAGS="${GUCHARMAP_CFLAGS}"
+ 		GUCHARMAP_LIBS="${GUCHARMAP_LIBS}"

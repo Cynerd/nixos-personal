@@ -1,8 +1,8 @@
 { lib, stdenv, makeBinaryWrapper
-, sdcv-unwrapped
+, stardict
 }:
 
-with sdcv-unwrapped;
+with stardict;
 
 let
 
@@ -11,7 +11,7 @@ let
     inherit version;
     inherit meta;
 
-    nativeBuildInputs = [ sdcv-unwrapped makeBinaryWrapper ];
+    nativeBuildInputs = [ stardict makeBinaryWrapper ];
     dictionaries = [ /* empty and expecting override */ ];
 
     phases = [ "installPhase" ];
@@ -25,8 +25,11 @@ let
           ln -sf "$path" "$outln"
         done
       done
-      makeWrapper ${sdcv-unwrapped}/bin/sdcv $out/bin/sdcv \
-        --set STARDICT_DATA_DIR $out/usr/share/stardict/dic
+
+      for bin in ${stardict}/bin/*; do
+        makeWrapper "$bin" "$out/bin/${"$"}{bin##*/bin/}" \
+          --set STARDICT_DATA_DIR "$out/usr/share/stardict/dic"
+      done
     '';
 
     passthru.withDictionaries = dicts: drv.overrideAttrs (oldAttrs: {
