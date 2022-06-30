@@ -56,6 +56,9 @@ in {
       # Ansible
       ansible
 
+      # Qemmu
+      qemu
+
       # U-Boot
       ubootTools
       tftp-hpa
