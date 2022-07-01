@@ -20,14 +20,14 @@ in {
 
     environment.systemPackages = [ pkgs.luks-hw-password ];
     boot.initrd = {
-      extraFiles."/bin/luks-password" = pkgs.luks-hw-password + "/bin/luks-hw-password";
+      extraFiles."/luks-hw-password".source = pkgs.luks-hw-password;
       luks.devices = mapAttrs (name: value: {
           device = value;
           keyFile = "/keys/${name}.key";
           fallbackToPassword = true;
           preOpenCommands = ''
             mkdir -p /keys
-            luks-hw-password > /keys/${name}.key
+            /luks-hw-password/bin/luks-hw-password > /keys/${name}.key
             '';
           postOpenCommands = ''
             rm -rf /keys
