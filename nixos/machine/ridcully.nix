@@ -23,18 +23,22 @@ with lib;
     fileSystems = {
       "/" = {
         device = "/dev/mapper/encroot";
+        fsType = "btrfs";
         options = ["compress=lzo" "subvol=@nix"];
       };
       "/home" = {
         device = "/dev/mapper/encroot";
+        fsType = "btrfs";
         options = ["compress=lzo" "subvol=@home"];
       };
       "/boot" = {
         device = "/dev/disk/by-uuid/C1A0-B7C9";
+        fsType = "vfat";
       };
 
       "/home2" = {
         device = "/dev/mapper/enchdd";
+        fsType = "btrfs";
         options = ["compress=lzo" "subvol=@home"];
       };
     };
