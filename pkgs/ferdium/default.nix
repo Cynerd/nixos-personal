@@ -17,10 +17,10 @@ in
 mkFranzDerivation' rec {
   pname = "ferdium";
   name = "Ferdium";
-  version = "6.0.0-nightly.80";
+  version = "6.0.0-nightly.84";
   src = fetchurl {
-    url = "https://github.com/ferdium/ferdium-app/releases/download/v${version}/ferdium_${version}_amd64.deb";
-    sha256 = "10gl3750nf2p6nqpm60ffbilrcr70wn2whwk94cyszq2d3nwg4cc";
+    url = "https://github.com/ferdium/ferdium-app/releases/download/v${version}/Ferdium-linux-${version}-amd64.deb";
+    sha256 = "1r9qxk98qa2myjv2qzxsh372v6wy6qzb65jw3xdscx5rqpza6z9d";
   };
   extraBuildInputs = [ xorg.libxshmfence ];
   meta = with lib; {
