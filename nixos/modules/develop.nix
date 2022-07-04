@@ -29,10 +29,9 @@ in {
       rnix-lsp
 
       # C
-      ccls bear ctags
-      check
-      valgrind
+      clang-tools gcc bear ctags
       cppcheck flawfinder
+      check valgrind
       gdb
       lcov massif-visualizer
 
