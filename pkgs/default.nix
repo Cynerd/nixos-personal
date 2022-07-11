@@ -6,13 +6,6 @@ let
 
   personalpkgs = with pkgs; {
 
-    wireplumber = nixpkgs.wireplumber.overrideAttrs (oldAttrs: {
-      patches = [
-        ./patches/0001-wpctl-Add-get-volume-command-and-functionality.patch
-        ./patches/0002-wpctl-allow-modifying-volume-levels-using-percentage.patch
-      ];
-    });
-
     luks-hw-password = callPackage ./luks-hw-password { };
 
     delft-icon-theme = callPackage ./theme/delft-icon-theme.nix { };
