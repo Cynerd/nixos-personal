@@ -23,6 +23,7 @@ in {
       cloc
       openssl
       sterm
+      parted
 
       # Nix
       nix-prefetch-git nix-prefetch-github nix-prefetch-scripts
