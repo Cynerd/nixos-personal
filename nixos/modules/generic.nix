@@ -31,7 +31,7 @@ with lib;
     environment.systemPackages = with pkgs; [
       git # We need git for this repository to even work
       # Administration tools
-      coreutils moreutils psmisc progress lshw file
+      coreutils moreutils binutils psmisc progress lshw file
       ldns wget
       gnumake
       exfat exfatprogs
@@ -52,10 +52,6 @@ with lib;
 
       sourceHighlight # Colors for less
       unrar p7zip zip unzip
-
-      # Vim plugins (used for root account)
-      vimPlugins.vim-nix
-      vimPlugins.vim-nftables
 
       # Network
       nmap netcat traceroute

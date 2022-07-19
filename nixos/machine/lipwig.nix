@@ -8,7 +8,7 @@ with lib;
     boot.isContainer = true;
     boot.loader.initScript.enable = true;
 
-    cynerd.openvpn.enable = true;
+    cynerd.openvpn.personal = true;
 
     # Git ######################################################################
     services.gitolite = {

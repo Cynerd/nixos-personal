@@ -26,7 +26,6 @@ let
         nixpkgs.path + "/pkgs/applications/networking/instant-messengers/franz/generic.nix"
       ) { };
     };
-    heroic = callPackage ./heroic { };
 
   };
 
