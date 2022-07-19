@@ -13,6 +13,10 @@ with lib;
       wifiClient = true;
       develop = true;
       gaming = true;
+      openvpn = {
+        oldpersonal = true;
+        elektroline = true;
+      };
     };
 
     boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "usb_storage" "sd_mod"];
@@ -57,13 +61,6 @@ with lib;
       dataDir = "/home/cynerd";
       configDir = "/home/cynerd/.config/syncthing";
     };
-    services.openvpn.servers.oldpersonal = {
-      config = "config /run/secrets/old.ovpn";
-    };
-    services.openvpn.servers.elektroline = {
-      config = "config /run/secrets/elektroline.ovpn";
-    };
-
 
   };
 

@@ -9,6 +9,9 @@ with lib;
       desktop.enable = true;
       develop = true;
       gaming = true;
+      openvpn = {
+        elektroline = true;
+      };
     };
 
     boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "usb_storage"];
