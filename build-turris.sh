@@ -1,18 +1,23 @@
-#!/bin/sh
-omnia_hash="17b62c338f2a0862a58bb6951556beecd98ccda9"
-moxes=( "spt-mox2" )
-omnias=( "spt-omnia" )
+#!/usr/bin/env bash
+set -eu
+omnia_hash="bd7ac5d8c08538ec1f126d34b765f0362427fe17"
+routers=( "spt-mox2" "spt-omnia" )
 
 cd "${0%/*}" || exit
-for system in "${moxes[@]}"; do
+for system in "${routers[@]}"; do
 	echo "Building $system"
-	nix build -o "result-${system}" ".#nixosConfigurations.${system}.config.system.build.toplevel"
-done
-for system in "${omnias[@]}"; do
-	echo "Building $system"
+	declare -a args
+	toplevel=".config.system.build.toplevel"
+	if [[ "$system" == *omnia ]]; then
+		toplevel=".config.system.build.cross.x86_64-linux${toplevel}"
+		args=( \
+			"--override-input" "nixpkgs" "github:NixOS/nixpkgs/${omnia_hash}"
+			"--override-input" "nixturris/nixpkgs" "github:NixOS/nixpkgs/${omnia_hash}"
+			"--override-input" "nixturris" "/home/cynerd/projects/nixturris"
+		)
+	fi
 	nix build \
-		--override-input nixpkgs "github:NixOS/nixpkgs/${omnia_hash}" \
-		--override-input nixturris/nixpkgs "github:NixOS/nixpkgs/${omnia_hash}" \
 		-o "result-${system}" \
-		".#nixosConfigurations.${system}.config.system.build.toplevel"
+		"${args[@]}" \
+		".#nixosConfigurations.${system}${toplevel}"
 done
