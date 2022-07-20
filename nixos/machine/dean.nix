@@ -31,6 +31,11 @@ with lib;
       dhcpcd.allowInterfaces = [ "brlan" ];
     };
 
+    swapDevices.swapfile = {
+      device = "/var/swap";
+      priority = 1;
+    };
+
   };
 
 }

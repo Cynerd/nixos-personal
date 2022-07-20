@@ -6,6 +6,11 @@ with lib;
 
   config = {
 
+    swapDevices = [{
+      device = "/dev/disk/by-partlabel/NixTurrisSwap";
+      priority = 1;
+    }];
+
     #boot.kernelPatches = [{
     #  name = "rwtm";
     #  patch = null;
