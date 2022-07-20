@@ -1,6 +1,7 @@
 {
   machine-albert = import ./albert.nix;
   machine-binky = import ./binky.nix;
+  machine-dean = import ./dean.nix;
   machine-errol = import ./errol.nix;
   machine-lipwig = import ./lipwig.nix;
   machine-ridcully = import ./ridcully.nix;

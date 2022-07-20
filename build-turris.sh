@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eu
 omnia_hash="bd7ac5d8c08538ec1f126d34b765f0362427fe17"
-routers=( "spt-mox2" "spt-omnia" )
+routers=( "dean" "spt-mox2" "spt-omnia" )
 
 cd "${0%/*}" || exit
 for system in "${routers[@]}"; do

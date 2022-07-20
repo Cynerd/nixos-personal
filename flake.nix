@@ -67,6 +67,7 @@
         amd64System "susan" //
         armv7lSystem "spt-mpd" //
         aarch64System "adm-mpd" //
+        turrisMoxSystem "dean" //
         turrisOmniaSystem "spt-omnia" //
         turrisMoxSystem "spt-mox" //
         turrisMoxSystem "spt-mox2" //

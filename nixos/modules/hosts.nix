@@ -30,10 +30,10 @@ in {
     cynerd.hosts = {
       vpn = {
         "lipwig" = "10.8.0.1";
+        "dean" = "10.8.0.4";
         # Portable
         "android" = "10.8.0.2";
         "albert" = "10.8.0.3";
-        "dean" = "10.8.0.4";
         "susan" = "10.8.0.5";
         "binky" = "10.8.0.6";
         # Endpoints
@@ -73,7 +73,7 @@ in {
       "${cnf.vpn.lipwig}" = ["lipwig.vpn"];
       "${cnf.vpn.android}" = ["android.vpn"];
       "${cnf.vpn.albert}" = ["albert.vpn"];
-      "${cnf.vpn.dean}" = ["dean.vpn"];
+      "${cnf.vpn.dean}" = ["dean" "dean.vpn"];
       "${cnf.vpn.susan}" = ["susan.vpn"];
       "${cnf.vpn.binky}" = ["binky.vpn"];
       "${cnf.vpn.spt-omnia}" = ["spt.vpn"];
