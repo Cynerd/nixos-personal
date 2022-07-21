@@ -49,7 +49,7 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "Cross-platform and international dictionary software";
     homepage = "http://stardict-4.sourceforge.net/";
-    platform = platforms.linux;
+    platforms = platforms.linux;
     license = licenses.gpl3;
   };
 }
