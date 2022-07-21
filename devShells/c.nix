@@ -1,19 +1,20 @@
-{ nixpkgs, shellrc, system }:
+{ system, nixpkgs, default }:
 let
   pkgs = nixpkgs.legacyPackages.${system};
 
 in pkgs.mkShell {
   packages = (with pkgs; [
     clang-tools
-    gcc gdb
+    gcc gdb pkg-config
     cppcheck flawfinder bear
     meson
     lcov massif-visualizer
   ]);
   inputsFrom = with pkgs; [
     check
+    curl
 
-    shellrc.packages.${system}.default
+    default
   ];
   meta.platforms = nixpkgs.lib.platforms.linux;
 }

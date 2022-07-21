@@ -1,4 +1,4 @@
-{ nixpkgs, shellrc, system }:
+{ system, nixpkgs, default }:
 { arch, fpu ? null }:
 with nixpkgs.lib;
 let
@@ -22,6 +22,6 @@ in pkgs.mkShell {
   ]) ++ (with pkgs-riscv.buildPackages; [
     gcc gdb
   ]);
-  inputsFrom = [ shellrc.packages.${system}.default ];
+  inputsFrom = [ default ];
   meta.platforms = nixpkgs.lib.platforms.linux;
 }
