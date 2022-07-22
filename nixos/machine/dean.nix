@@ -31,10 +31,15 @@ with lib;
       dhcpcd.allowInterfaces = [ "brlan" ];
     };
 
-    swapDevices.swapfile = {
+    swapDevices = [{
       device = "/var/swap";
       priority = 1;
-    };
+    }];
+
+    environment.systemPackages = with pkgs; [
+      openocd
+      sterm
+    ];
 
   };
 
