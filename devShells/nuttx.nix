@@ -3,7 +3,7 @@
 with nixpkgs.lib;
 let
   pkgs = nixpkgs.legacyPackages.${system};
-  pkgs-riscv = import nixpkgs.outPath {
+  pkgs-cross = import nixpkgs.outPath {
     localSystem = system;
     crossSystem = {
       config = "arm-none-eabi" + (optionalString (fpu != null) "hf");
@@ -19,7 +19,7 @@ in pkgs.mkShell {
     gnumake
     kconfig-frontends genromfs xxd
     openocd
-  ]) ++ (with pkgs-riscv.buildPackages; [
+  ]) ++ (with pkgs-cross.buildPackages; [
     gcc gdb
   ]);
   inputsFrom = [ default ];

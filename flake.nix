@@ -28,6 +28,7 @@
           self.nixosModules.default
           self.nixosModules."machine-${hostname}"
           shellrc.nixosModules.default
+          nixturris.nixosModules.turris-crossbuild
           (personal-secret.lib.personalSecrets hostname)
           {
             networking.hostName = hostname;

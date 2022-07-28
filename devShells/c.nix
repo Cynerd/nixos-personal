@@ -4,17 +4,24 @@ let
 
 in pkgs.mkShell {
   packages = (with pkgs; [
+
     clang-tools
     gcc gdb pkg-config
-    cppcheck flawfinder bear
-    meson
+
+    meson ninja bear
+    cmake
+
+    cppcheck flawfinder
+
     lcov massif-visualizer
-  ]);
-  inputsFrom = with pkgs; [
+
     check
     curl
+    gtk3 gtk4
 
-    default
-  ];
+    # LVGL
+    SDL2 libffi.dev
+  ]);
+  inputsFrom = with pkgs; [ default ];
   meta.platforms = nixpkgs.lib.platforms.linux;
 }
