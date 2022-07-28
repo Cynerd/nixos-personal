@@ -5,15 +5,26 @@ with lib;
 {
 
   config = {
-    cynerd.desktop.enable = true;
+    cynerd = {
+      desktop.enable = true;
+      develop = true;
+      gaming = true;
+      openvpn = {
+        elektroline = true;
+      };
+    };
 
+    cynerd.autounlock = {
+      "encroot" = "/dev/disk/by-uuid/c07e929a-6eac-4f99-accf-f7cb3431290c";
+      "enchdd" = "/dev/disk/by-uuid/7fee3cda-efa0-47cd-8832-fdead9a7e6db";
+    };
     fileSystems = {
       "/" = {
-        device = "/dev/disk/by-uuid/b4b3dd52-29d0-4cb9-91c9-694dfcd9672c";
+        device = "/dev/mapper/encroot";
         options = ["compress=lzo" "subvol=@nix"];
       };
       "/home" = {
-        device = "/dev/disk/by-uuid/b4b3dd52-29d0-4cb9-91c9-694dfcd9672c";
+        device = "/dev/mapper/encroot";
         options = ["compress=lzo" "subvol=@home"];
       };
       "/boot" = {
@@ -21,14 +32,45 @@ with lib;
       };
 
       "/home2" = {
-        device = "/dev/disk/by-uuid/259d078f-b3d9-4bcc-90cc-6a0d7271a03d";
+        device = "/dev/mapper/enchdd";
         options = ["compress=lzo" "subvol=@home"];
       };
-      "/var/build" = {
-        device = "/dev/disk/by-uuid/259d078f-b3d9-4bcc-90cc-6a0d7271a03d";
-        options = ["compress=lzo" "subvol=@build" "uid=build" "gid=build"];
-      };
     };
+
+    services.syncthing = {
+      enable = true;
+      user = mkDefault "cynerd";
+      group = mkDefault "cynerd";
+      openDefaultPorts = true;
+
+      overrideDevices = false;
+      overrideFolders = false;
+
+      dataDir = "/home/cynerd";
+      configDir = "/home/cynerd/.config/syncthing";
+    };
+
+    #environment.systemPackages = [ pkgs.laminar ];
+    #users.groups.build.gid = 220;
+    #users.users.build = {
+    #  group = "build";
+    #  uid = 220;
+    #  subUidRanges = [{ count = 65534; startUid = 20000; }];
+    #  subGidRanges = [{ count = 65534; startGid = 20000; }];
+    #  createHome = true;
+    #  home = "/var/build";
+    #};
+    #systemd.services.laminar = {
+    #  description = "Laminar build server";
+    #  after = [ "network.target" ];
+    #  wantedBy = [ "multi-user.target" ];
+    #  serviceConfig = {
+    #    User = "build";
+    #    ExecStart = "${pkgs.laminar}/bin/laminar";
+    #    EnvironmentFile = "/etc/laminar.conf";
+    #    Restart = "always";
+    #  };
+    #};
 
   };
 
