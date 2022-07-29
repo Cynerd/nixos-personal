@@ -14,6 +14,11 @@ with lib;
       };
     };
 
+    boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "usb_storage"];
+    boot.kernelModules = ["kvm-amd"];
+
+    hardware.cpu.amd.updateMicrocode = true;
+
     cynerd.autounlock = {
       "encroot" = "/dev/disk/by-uuid/c07e929a-6eac-4f99-accf-f7cb3431290c";
       "enchdd" = "/dev/disk/by-uuid/7fee3cda-efa0-47cd-8832-fdead9a7e6db";
@@ -21,18 +26,22 @@ with lib;
     fileSystems = {
       "/" = {
         device = "/dev/mapper/encroot";
+        fsType = "btrfs";
         options = ["compress=lzo" "subvol=@nix"];
       };
       "/home" = {
         device = "/dev/mapper/encroot";
+        fsType = "btrfs";
         options = ["compress=lzo" "subvol=@home"];
       };
       "/boot" = {
         device = "/dev/disk/by-uuid/87B0-A1D5";
+        fsType = "vfat";
       };
 
       "/home2" = {
         device = "/dev/mapper/enchdd";
+        fsType = "btrfs";
         options = ["compress=lzo" "subvol=@home"];
       };
     };
