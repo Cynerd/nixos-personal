@@ -20,8 +20,9 @@ with lib;
     hardware.cpu.amd.updateMicrocode = true;
 
     cynerd.autounlock = {
-      "encroot" = "/dev/disk/by-uuid/c07e929a-6eac-4f99-accf-f7cb3431290c";
-      "enchdd" = "/dev/disk/by-uuid/7fee3cda-efa0-47cd-8832-fdead9a7e6db";
+      "encroot" = "/dev/disk/by-uuid/8095988e-239b-4417-9df6-94a40e4133ed";
+      "enchdd1" = "/dev/disk/by-uuid/87f16080-5ff6-43dd-89f3-307455a46fbe";
+      "enchdd2" = "/dev/disk/by-uuid/be4a33fa-8bc6-431d-a3ac-787668f223ed";
     };
     fileSystems = {
       "/" = {
@@ -40,7 +41,7 @@ with lib;
       };
 
       "/home2" = {
-        device = "/dev/mapper/enchdd";
+        device = "/dev/mapper/enchdd1";
         fsType = "btrfs";
         options = ["compress=lzo" "subvol=@home"];
       };
@@ -58,28 +59,6 @@ with lib;
       dataDir = "/home/cynerd";
       configDir = "/home/cynerd/.config/syncthing";
     };
-
-    #environment.systemPackages = [ pkgs.laminar ];
-    #users.groups.build.gid = 220;
-    #users.users.build = {
-    #  group = "build";
-    #  uid = 220;
-    #  subUidRanges = [{ count = 65534; startUid = 20000; }];
-    #  subGidRanges = [{ count = 65534; startGid = 20000; }];
-    #  createHome = true;
-    #  home = "/var/build";
-    #};
-    #systemd.services.laminar = {
-    #  description = "Laminar build server";
-    #  after = [ "network.target" ];
-    #  wantedBy = [ "multi-user.target" ];
-    #  serviceConfig = {
-    #    User = "build";
-    #    ExecStart = "${pkgs.laminar}/bin/laminar";
-    #    EnvironmentFile = "/etc/laminar.conf";
-    #    Restart = "always";
-    #  };
-    #};
 
   };
 

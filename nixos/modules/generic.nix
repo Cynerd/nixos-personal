@@ -11,6 +11,16 @@ with lib;
       extraOptions = "experimental-features = nix-command flakes";
       settings = {
         auto-optimise-store = true;
+        substituters = [
+          "https://cache.nixos.org"
+          "https://thefloweringash-armv7.cachix.org"
+          "https://arm.cachix.org"
+        ];
+        trusted-public-keys = [
+          "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+          "thefloweringash-armv7.cachix.org-1:v+5yzBD2odFKeXbmC+OPWVqx4WVoIVO6UXgnSAWFtso="
+          "arm.cachix.org-1:K3XjAeWPgWkFtSS9ge5LJSLw3xgnNqyOaG7MDecmTQ8="
+        ];
       };
       registry = {
         personal.to = {

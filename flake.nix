@@ -19,7 +19,7 @@
   }:
     with flake-utils.lib;
     {
-      overlays.default = final: prev: import ./pkgs { nixpkgs = prev; };
+      overlays.default = final: prev: import ./pkgs { inherit self; nixpkgs = prev; };
       nixosModules = import ./nixos nixpkgs;
 
       nixosConfigurations = let 
@@ -77,7 +77,7 @@
 
     } // eachDefaultSystem (system: {
       packages = filterPackages system (flattenTree (
-        import ./pkgs { nixpkgs = nixpkgs.legacyPackages."${system}"; }
+        import ./pkgs { inherit self; nixpkgs = nixpkgs.legacyPackages."${system}"; }
       ));
       devShells = filterPackages system
         (import ./devShells { inherit nixpkgs; inherit shellrc; inherit system; });

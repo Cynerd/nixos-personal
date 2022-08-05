@@ -1,8 +1,8 @@
-{ nixpkgs ? <nixpkgs>, nixlib ? nixpkgs.lib }:
+{ self, nixpkgs }:
 
 let
   pkgs = nixpkgs // personalpkgs;
-  callPackage = nixlib.callPackageWith pkgs;
+  callPackage = nixpkgs.lib.callPackageWith pkgs;
 
   personalpkgs = with pkgs; {
 
