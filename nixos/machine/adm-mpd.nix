@@ -5,6 +5,7 @@ with lib;
 {
 
   config = {
+
     fileSystems = {
       "/" = {
         device = "/dev/mmcblk0p2";
@@ -18,6 +19,35 @@ with lib;
         device = "/dev/mmcblk0p1";
       };
     };
+
+    networking.wireless = {
+      enable = true;
+      networks = filterAttrs (n: v: n == "Nela") config.secrets.wifiNetworks;
+      environmentFile = "/run/secrets/wifi.env";
+      userControlled.enable = true;
+    };
+
+    services.pipewire = {
+      enable = true;
+      alsa.enable = true;
+      pulse.enable = true;
+    };
+
+    services.spotifyd = {
+      enable = true;
+      settings.global = {
+        device_name = "Adámkovi";
+        device = "sysdefault";
+        mixer = "Master";
+        bitrate = 320;
+        cache_path = "/var/cahe/spotify";
+        no_audio_cache = true;
+        volume_normalisation = true;
+        normalisation_pregain = -10;
+        initial_volume = 60;
+      };
+    };
+
   };
 
 }

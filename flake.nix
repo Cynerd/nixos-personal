@@ -28,7 +28,6 @@
           self.nixosModules.default
           self.nixosModules."machine-${hostname}"
           shellrc.nixosModules.default
-          nixturris.nixosModules.turris-crossbuild
           (personal-secret.lib.personalSecrets hostname)
           {
             networking.hostName = hostname;
@@ -39,15 +38,18 @@
           }
         ];
 
-        genericSystem = system: hostname: {
+        genericSystem = {system, extra_modules ? []}: hostname: {
           ${hostname} = nixpkgs.lib.nixosSystem {
             system = system;
-            modules = modules hostname;
+            modules = (modules hostname) ++ extra_modules;
           };
         };
-        amd64System = genericSystem "x86_64-linux";
-        armv7lSystem = genericSystem "armv7l-linux";
-        aarch64System = genericSystem "aarch64-linux";
+        amd64System = genericSystem {system = "x86_64-linux";};
+        armv7lSystem = genericSystem {system = "armv7l-linux"; extra_modules = [
+          nixturris.nixosModules.turris-crossbuild
+          nixturris.nixosModules.armv7l-overlay
+        ];};
+        aarch64System = genericSystem {system = "aarch64-linux";};
 
         turrisSystem = board: hostname: {
           ${hostname} = nixturris.lib.nixturrisSystem {

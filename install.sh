@@ -1,11 +1,15 @@
 #!/bin/sh
 set -eu
 hostname="${1:-$(hostname)}"
+root="${2:-}"
 
-if [ "$(id -u)" -ne 0 ]; then
-	echo "Please run as root!" >&2
-	exit 1
-fi
+_sudo() {
+	if [ "$(id -u)" -ne 0 ]; then
+		"$@"
+	else
+		sudo -p 'Sudo password: ' -- "$@"
+	fi
+}
 
 if [ "$hostname" = "nixos" ]; then
 	echo "The hostname is the default one, that is not right for sure." >&2
@@ -13,19 +17,21 @@ if [ "$hostname" = "nixos" ]; then
 	exit 1
 fi
 
-if [ ! -s /.personal-secrets.key ]; then
+if [ ! -s "$root/.personal-secrets.key" ]; then
 	echo "Please paste the personal secret key (terminate using ^D)" >&2
-	cat >/.personal-secrets.key
+	sudo tee "$root/.personal-secrets.key" >/dev/null
 fi
 
-mkdir -p ~/.ssh
-cat >~/.ssh/config <<EOF
-Match User git Host cynerd.cz
-	IdentityFile ~/.ssh/nixos-secret-access
-EOF
+eval "$(ssh-agent)"
 echo "Please paste the SSH access key now (terminate using ^D):" >&2
-cat >~/.ssh/nixos-secret-access
-trap "rm -f ~/.ssh/nixos-secret-access" EXIT
+ssh-add -
+trap 'kill "$SSH_AGENT_PID"' EXIT
 
-nix-shell -p git --command \
-	"nixos-rebuild switch --flake 'git+https://git.cynerd.cz/nixos-personal#$hostname' --fast"
+flake="git+https://git.cynerd.cz/nixos-personal#$hostname"
+if [ -z "$root" ]; then
+	nix shell nixpkgs\#git --command \
+		"_sudo \"\$(command -v nixos-rebuild)\" switch --flake '$flake' --fast"
+else
+	nix shell nixpkgs\#git nixpkgs\#nixos-install-tools --command \
+		"_sudo \"\$(command -v nixos-install)\" --flake '$flake' --root '$root'"
+fi

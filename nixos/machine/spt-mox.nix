@@ -24,6 +24,16 @@ with lib;
           ];
         };
       };
+      interfaces.brlan = {
+        ipv4 = {
+          addresses = [{
+            address = config.cynerd.hosts.spt.mox;
+            prefixLength = 24;
+          }];
+        };
+      };
+      defaultGateway = config.cynerd.hosts.spt.omnia;
+      nameservers = [ config.cynerd.hosts.spt.omnia "1.1.1.1" "8.8.8.8" ];
       dhcpcd.allowInterfaces = [ "brlan" ];
     };
   };

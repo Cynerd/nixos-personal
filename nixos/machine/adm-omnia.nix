@@ -5,6 +5,10 @@ with lib;
 {
 
   config = {
+    cynerd = {
+      openvpn.oldpersonal = true;
+    };
+
   };
 
 }

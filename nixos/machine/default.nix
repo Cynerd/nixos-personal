@@ -14,5 +14,5 @@
 
   machine-adm-omnia = import ./adm-omnia.nix;
   machine-adm-omnia2 = import ./adm-omnia2.nix;
-  machine-adm-mpd = import ./spt-mpd.nix;
+  machine-adm-mpd = import ./adm-mpd.nix;
 }

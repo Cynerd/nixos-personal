@@ -1,24 +1,18 @@
 #!/usr/bin/env bash
 set -eu
 declare -a devices
-declare -A sshmap
 ################################################################################
-omnia_hash="bd7ac5d8c08538ec1f126d34b765f0362427fe17"
 ## aarch64
 # Mox
-devices+=( "dean" "spt-mox2" )
-sshmap["spt-mox2"]="mox2.spt"
+devices+=( "dean" "spt-mox" "spt-mox2" )
 # Raspberry Pi
 devices+=( "adm-mpd" )
-sshmap["adm-mpd"]="mpd.adm"
 
 ## armv7
 # Omnia
-devices+=( "spt-omnia" )
-sshmap["spt-omnia"]="omnia.spt"
+devices+=( "spt-omnia" "adm-omnia" "adm-omnia2" )
 # Raspberry Pi
 devices+=( "spt-mpd" )
-sshmap["spt-mpd"]="mpd.spt"
 ################################################################################
 
 valid_device() {
@@ -30,6 +24,14 @@ valid_device() {
 	return 1
 }
 
+device_system() {
+	nix eval --raw ".#nixosConfigurations.$1.config.nixpkgs.system"
+}
+
+sshdev() {
+	echo "$1" | awk -F- 'NF > 1 { print $2"."$1; exit } { print $1 }'
+}
+
 
 build() {
 	local system="$1"
@@ -37,14 +39,8 @@ build() {
 	local -a args
 	local toplevel=".config.system.build.toplevel"
 	args+=("--keep-going")
-	args+=("--override-input" "nixturris" "/home/cynerd/projects/nixturris")
-	if [[ "$system" == *omnia ]]; then
-		true
-		#toplevel=".config.system.build.cross.x86_64-linux${toplevel}"
-		#args=( \
-		#	"--override-input" "nixpkgs" "github:NixOS/nixpkgs/${omnia_hash}"
-		#	"--override-input" "nixturris/nixpkgs" "github:NixOS/nixpkgs/${omnia_hash}"
-		#)
+	if [ "$(device_system "$1")" = "armv7l-linux" ]; then
+		toplevel=".config.system.build.cross.x86_64-linux${toplevel}"
 	fi
 	nix build \
 		-o "result-${system}" \
@@ -54,7 +50,7 @@ build() {
 
 build_validate() {
 	local system="$1"
-	[ -L "result-$system" ] && [ ! -e "result-$system" ]
+	[ -L "result-$system" ] && [ -e "result-$system" ]
 }
 
 copy() {
@@ -64,10 +60,12 @@ copy() {
 		return 1
 	fi
 	local store="$(readlink -f "result-$system")"
-	local host="${sshmap["$system"]:-$system}"
+	local host="$(sshdev "$system")"
 
 	local freespace="$(ssh "$host" -- df -B 1 /nix | awk 'NR == 2 { print $4 }')"
-	local required="$(nix path-info -S "$store")"
+	local required="$(nix path-info -S "$store" | awk '{ print $2 }')"
+	echo "Free space on device: $(numfmt --to=iec "$freespace")"
+	echo "Required space: $(numfmt --to=iec "$required")"
 	if [ "$required" -ge "$freespace" ]; then
 		echo "There is not enough space to copy clousure to: $system" >&2
 		return 1
@@ -84,7 +82,7 @@ setenv() {
 		return 1
 	fi
 	local store="$(readlink -f "result-$system")"
-	local host="${sshmap["$system"]:-$system}"
+	local host="$(sshdev "$system")"
 
 	echo "Update system: $system"
 	if [ "$(ssh "$host" -- readlink -f /nix/var/nix/profiles/system)" != "$store" ]; then
@@ -98,7 +96,7 @@ boot() {
 	setenv "$system" || return 1
 
 	local store="$(readlink -f "result-$system")"
-	local host="${sshmap["$system"]:-$system}"
+	local host="$(sshdev "$system")"
 
 	echo "Setting boot system: $system"
 	ssh -t "$host" -- \
@@ -115,7 +113,7 @@ switch() {
 	setenv "$system" || return 1
 
 	local store="$(readlink -f "result-$system")"
-	local host="${sshmap["$system"]:-$system}"
+	local host="$(sshdev "$system")"
 
 	if is_current "$host"; then
 		echo "Switching: $system"
@@ -131,7 +129,7 @@ switch_test() {
 	setenv "$system" || return 1
 
 	local store="$(readlink -f "result-$system")"
-	local host="${sshmap["$system"]:-$system}"
+	local host="$(sshdev "$system")"
 
 	if is_current "$host"; then
 		echo "Testing: $system"

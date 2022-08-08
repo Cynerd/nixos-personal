@@ -2,7 +2,11 @@
 
 with lib;
 
-{
+let
+
+  isNative = config.nixpkgs.crossSystem == null;
+
+in {
 
   config = {
     system.stateVersion = "22.05";
@@ -12,12 +16,10 @@ with lib;
       settings = {
         auto-optimise-store = true;
         substituters = [
-          "https://cache.nixos.org"
           "https://thefloweringash-armv7.cachix.org"
           "https://arm.cachix.org"
         ];
         trusted-public-keys = [
-          "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
           "thefloweringash-armv7.cachix.org-1:v+5yzBD2odFKeXbmC+OPWVqx4WVoIVO6UXgnSAWFtso="
           "arm.cachix.org-1:K3XjAeWPgWkFtSS9ge5LJSLw3xgnNqyOaG7MDecmTQ8="
         ];
@@ -41,7 +43,8 @@ with lib;
     environment.systemPackages = with pkgs; [
       git # We need git for this repository to even work
       # Administration tools
-      coreutils moreutils binutils psmisc progress lshw file
+      #coreutils moreutils binutils psmisc progress lshw file
+      coreutils binutils psmisc progress lshw file
       ldns wget
       gnumake
       exfat exfatprogs
@@ -49,16 +52,16 @@ with lib;
       usbutils
 
       # NCurses tools
-      htop iotop glances
+      htop iotop #glances
       mc
       screen tmux
-      ncdu
+      #ncdu
 
       # ls tools
       tree
-      mlocate
       lsof
       strace
+      #mlocate
 
       sourceHighlight # Colors for less
       unrar p7zip zip unzip
@@ -71,7 +74,16 @@ with lib;
 
       lm_sensors
 
-    ] ++ optional (system == "x86_64-linux") ltrace;
+    ] ++ optionals (system == "x86_64-linux") [
+      ltrace
+    ] ++ optionals (!isNative) [
+      ncdu_1
+    ] ++ optionals (isNative) [
+      moreutils
+      glances
+      ncdu
+      mlocate
+    ];
 
     users.mutableUsers = false;
     users.groups.cynerd.gid = 1000;
@@ -87,14 +99,14 @@ with lib;
         subGidRanges = [{ count = 65534; startGid = 10000; }];
         isNormalUser = true;
         createHome = true;
-        shell = pkgs.zsh.out;
+        shell = if isNative then pkgs.zsh.out else pkgs.bash.out;
         passwordFile = "/run/secrets/cynerd.pass";
         openssh.authorizedKeys.keyFiles = [
           (config.personal-secrets + "/unencrypted/git-private.pub")
         ];
       };
     };
-    programs.zsh.enable = true;
+    programs.zsh.enable = isNative;
     programs.shellrc.enable = true;
     programs.vim.defaultEditor = mkDefault true;
 
