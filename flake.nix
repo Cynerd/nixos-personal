@@ -13,7 +13,7 @@
   };
 
   outputs = { self
-    , nixpkgs, flake-utils
+    , nixpkgs, flake-utils, nixos-hardware
     , shellrc, nixturris, personal-secret
     , sterm
   }:
@@ -45,11 +45,20 @@
           };
         };
         amd64System = genericSystem {system = "x86_64-linux";};
-        armv7lSystem = genericSystem {system = "armv7l-linux"; extra_modules = [
+        raspi2System = genericSystem {system = "armv7l-linux"; extra_modules = [
+          nixos-hardware.nixosModules.raspberry-pi-2
           nixturris.nixosModules.turris-crossbuild
           nixturris.nixosModules.armv7l-overlay
+          { boot.loader.systemd-boot.enable = false; }
         ];};
-        aarch64System = genericSystem {system = "aarch64-linux";};
+        raspi3System = genericSystem {system = "aarch64-linux"; extra_modules = [
+          ({pkgs, ...}: {
+            boot.loader.systemd-boot.enable = false;
+            boot.loader.grub.enable = false;
+            boot.loader.generic-extlinux-compatible.enable = true;
+            #boot.kernelPackages = pkgs.linuxKernel.packages.linux_rpi3;
+          })
+        ];};
 
         turrisSystem = board: hostname: {
           ${hostname} = nixturris.lib.nixturrisSystem {
@@ -68,8 +77,8 @@
         amd64System "lipwig" //
         amd64System "ridcully" //
         amd64System "susan" //
-        armv7lSystem "spt-mpd" //
-        aarch64System "adm-mpd" //
+        raspi2System "spt-mpd" //
+        raspi3System "adm-mpd" //
         turrisMoxSystem "dean" //
         turrisOmniaSystem "spt-omnia" //
         turrisMoxSystem "spt-mox" //

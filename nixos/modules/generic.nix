@@ -33,7 +33,7 @@ in {
     };
 
     boot.loader.systemd-boot.enable = mkOverride 1100 true;
-    boot.loader.efi.canTouchEfiVariables = true;
+    boot.loader.efi.canTouchEfiVariables = mkDefault true;
     boot.kernelPackages = pkgs.linuxPackages_latest;
     boot.kernelParams = ["boot.shell_on_fail"];
     hardware.enableAllFirmware = true;
