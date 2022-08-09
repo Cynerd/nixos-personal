@@ -35,16 +35,31 @@ sshdest() {
 	awk -F- 'NF > 1 { print $2"."$1; exit } { print $1 }' <<<"$1"
 }
 
+_sh() {
+	if [ $# -gt 1 ]; then
+		"$@"
+	else
+		sh -c "$1"
+	fi
+}
+
 _ssh() {
 	local device="$1"
 	shift
 	if [ "$device" != "$(hostname)" ]; then
-		local -a args
-		[ "$1" = "sudo" ] && \
-			args+=('-t') # Crude detection for terminal need
-		ssh "${args[@]}" "$(sshdest "$device")" -- "$@"
+		ssh "$(sshdest "$device")" -- "$@"
 	else
-		"$@"
+		_sh "$@"
+	fi
+}
+
+_tssh() {
+	local device="$1"
+	shift
+	if [ "$device" != "$(hostname)" ]; then
+		ssh -t "$(sshdest "$device")" -- "$@"
+	else
+		_sh "$@"
 	fi
 }
 
@@ -135,10 +150,11 @@ setenv() {
 		info "-----------------------------------------------------------------"
 		# TODO we should call here switch-to-configuration as well to use single
 		# sudo session and remove one prompt.
-		_ssh "$device" \
-			sudo sh -c \
-				'nix-env --profile /nix/var/nix/profiles/system --set "$store" && /nix/var/nix/profiles/system/bin/switch-to-configuration "$1"' \
-					"$switchop"
+		local _store _switchop
+		printf -v _store '%q' "$store"
+		printf -v _switchop '%q' "$switchop"
+		_tssh "$device" \
+			"sudo nix-env --profile /nix/var/nix/profiles/system --set '$_store' && sudo /nix/var/nix/profiles/system/bin/switch-to-configuration '$_switchop'"
 	else
 		warning "The latest system might have been already set."
 	fi
