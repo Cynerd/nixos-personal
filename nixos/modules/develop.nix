@@ -40,6 +40,7 @@ in {
       dash # Posix shell
       bats
       shellcheck
+      jq yq
 
       # Python
       python3 python3Packages.ipython
