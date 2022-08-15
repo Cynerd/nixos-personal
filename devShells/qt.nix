@@ -5,6 +5,7 @@ let
 in pkgs.mkShell {
   packages = (with pkgs; [
     qt5.full
+    cmake
   ]);
   inputsFrom = with pkgs; [ default ];
   meta.platforms = nixpkgs.lib.platforms.linux;
