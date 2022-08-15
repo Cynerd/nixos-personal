@@ -19,6 +19,8 @@ in pkgs.mkShell {
     gnumake
     kconfig-frontends genromfs xxd
     openocd
+
+    meson ninja bear
   ]) ++ (with pkgs-cross.buildPackages; [
     gcc gdb
   ]);

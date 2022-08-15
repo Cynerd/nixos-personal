@@ -5,15 +5,15 @@ let
 in pkgs.mkShell {
   packages = (with pkgs; [
 
-    clang-tools
+    clang-tools ctags
     gcc gdb pkg-config
 
     meson ninja bear
     cmake
 
-    cppcheck flawfinder
-
+    valgrind
     lcov massif-visualizer
+    cppcheck flawfinder
 
     check
     curl

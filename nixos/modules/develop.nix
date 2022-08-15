@@ -29,13 +29,6 @@ in {
       nix-prefetch-git nix-prefetch-github nix-prefetch-scripts
       rnix-lsp
 
-      # C
-      clang-tools gcc bear ctags
-      cppcheck flawfinder
-      check valgrind
-      gdb
-      lcov massif-visualizer
-
       # Shell
       dash # Posix shell
       bats
