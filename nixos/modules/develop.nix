@@ -36,16 +36,39 @@ in {
       jq yq
 
       # Python
-      python3 python3Packages.ipython
-      twine
-      python3Packages.pytest python3Packages.pytest-html #python3Packages.pytest-tap
-      python3Packages.coverage
-      python3Packages.python-lsp-black
-      mypy
-      pylint python3Packages.pydocstyle
+      (python3.withPackages (pypkgs: with pypkgs; [
+        ipython
+
+        pytest pytest-html #pytest-tap
+        coverage
+        python-lsp-black
+        pylint pydocstyle
+
+        mypy pygraphviz
+
+        python-gitlab PyGithub
+
+        schema
+        jinja2
+        ruamel-yaml
+        msgpack
+
+        psycopg
+
+        humanize rich
+        #lorem_text
+
+        pyserial pylibftdi
+        selenium
+
+      ]))
+      geckodriver
+      chromedriver
 
       # Lua
-      lua51Packages.luacheck
+      (lua5_1.withPackages  (luapkgs: with luapkgs; [
+        luacheck
+      ]))
 
       # Ansible
       ansible
@@ -70,9 +93,6 @@ in {
 
       # D-Bus
       dfeet
-
-      # Bare metal
-      openocd
 
       # Documentation
       man-pages man-pages-posix
