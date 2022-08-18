@@ -19,7 +19,6 @@ in {
     cynerd.desktop.enable = true;
 
     environment.systemPackages = with pkgs; [
-      minigalaxy
     ];
 
     programs.steam = {
