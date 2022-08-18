@@ -55,7 +55,6 @@ in {
       htop iotop #glances
       mc
       screen tmux
-      #ncdu
 
       # ls tools
       tree
@@ -118,6 +117,17 @@ in {
 
     time.timeZone = "Europe/Prague";
     i18n.defaultLocale = "en_US.UTF-8";
+
+    services.udev.packages =  [
+      (pkgs.writeTextFile rec {
+        name = "bfq-drives.rules";
+        destination = "/etc/udev/rules.d/60-${name}";
+        text = ''
+          ACTION=="add|change", KERNEL=="sd*[!0-9]", ATTR{queue/scheduler}="bfq"
+          ACTION=="add|change", KERNEL=="nvme*n[0-9]", ATTR{queue/scheduler}="bfq"
+        '';
+      })
+    ];
   };
 
 }
