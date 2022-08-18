@@ -16,11 +16,12 @@ let
 
 in pkgs.mkShell {
   packages = (with pkgs; [
-    gnumake
     kconfig-frontends genromfs xxd
     openocd
 
-    meson ninja bear
+    gnumake bear
+    meson ninja
+    cmake
   ]) ++ (with pkgs-cross.buildPackages; [
     gcc gdb
   ]);
