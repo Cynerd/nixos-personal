@@ -7,6 +7,8 @@
   machine-ridcully = import ./ridcully.nix;
   machine-susan = import ./susan.nix;
 
+  machine-gaspode = import ./gaspode.nix;
+
   machine-spt-omnia = import ./spt-omnia.nix;
   machine-spt-mox = import ./spt-mox.nix;
   machine-spt-mox2 = import ./spt-mox2.nix;

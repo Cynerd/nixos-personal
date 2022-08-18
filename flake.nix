@@ -59,6 +59,11 @@
             #boot.kernelPackages = pkgs.linuxKernel.packages.linux_rpi3;
           })
         ];};
+        beagleboneSystem = genericSystem {system = "armv7l-linux"; extra_modules = [
+          nixturris.nixosModules.turris-crossbuild
+          nixturris.nixosModules.armv7l-overlay
+          # TODO
+        ];};
 
         turrisSystem = board: hostname: {
           ${hostname} = nixturris.lib.nixturrisSystem {
@@ -79,6 +84,7 @@
         amd64System "susan" //
         raspi2System "spt-mpd" //
         raspi3System "adm-mpd" //
+        beagleboneSystem "gaspode" //
         turrisMoxSystem "dean" //
         turrisOmniaSystem "spt-omnia" //
         turrisMoxSystem "spt-mox" //
