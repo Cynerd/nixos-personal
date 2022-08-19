@@ -5,7 +5,7 @@ let
 in pkgs.mkShell {
   packages = (with pkgs; [
 
-    clang-tools ctags
+    clang-tools_14 ctags
     gcc gdb pkg-config
 
     meson ninja bear
@@ -21,6 +21,10 @@ in pkgs.mkShell {
 
     # LVGL
     SDL2 libffi.dev
+
+    (python3.withPackages (pypkgs: with pypkgs; [
+      schema jinja2 ruamel-yaml
+    ]))
   ]);
   inputsFrom = with pkgs; [ default ];
   meta.platforms = nixpkgs.lib.platforms.linux;
