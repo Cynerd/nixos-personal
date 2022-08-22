@@ -52,6 +52,7 @@
           { boot.loader.systemd-boot.enable = false; }
         ];};
         raspi3System = genericSystem {system = "aarch64-linux"; extra_modules = [
+          nixturris.nixosModules.turris-crossbuild
           ({pkgs, ...}: {
             boot.loader.systemd-boot.enable = false;
             boot.loader.grub.enable = false;

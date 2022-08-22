@@ -229,5 +229,7 @@ in {
     services.xserver.xkbOptions = "grp:alt_shift_toggle,caps:escape";
     services.gpm.enable = true;
 
+    services.locate.enable = true;
+
   };
 }

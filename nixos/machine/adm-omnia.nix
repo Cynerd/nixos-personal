@@ -8,6 +8,7 @@ with lib;
     cynerd = {
       #openvpn.oldpersonal = true;
     };
+    boot.kernelPackages = pkgs.linuxPackages;
 
     networking = {
       # TODO we need vlan filtering to filter out guest and adm network
@@ -40,12 +41,6 @@ with lib;
       enable = true;
       environmentFile = "/run/secrets/hostapd.env";
       interfaces = {
-        "mlan0" = {
-          countryCode = "CZ";
-          ssid = "TurrisRules";
-          wpa = true;
-          wpaPassphrase = "@PASS_TURRIS_RULES@";
-        };
         "wlp1s0" = {
           countryCode = "CZ";
           hwMode = "a";

@@ -77,7 +77,7 @@ in {
       qemu
 
       # U-Boot
-      ubootTools
+      #ubootTools
       tftp-hpa
 
       # Network
