@@ -35,6 +35,11 @@ sshdest() {
 	awk -F- 'NF > 1 { print $2"."$1; exit } { print $1 }' <<<"$1"
 }
 
+# Reverse opeartion for sshdest
+sshhost() {
+	awk -F. 'NF > 1 { print $2"-"$1; exit } { print $1 }' <<<"$1"
+}
+
 _sh() {
 	if [ $# -gt 1 ]; then
 		"$@"
@@ -90,6 +95,9 @@ build() {
 
 	local toplevel=".config.system.build.toplevel"
 	if [ "$(device_system "$device")" = "armv7l-linux" ]; then
+		toplevel=".config.system.build.cross.x86_64-linux${toplevel}"
+	fi
+	if [ "$(device_system "$device")" = "aarch64-linux" ]; then
 		toplevel=".config.system.build.cross.x86_64-linux${toplevel}"
 	fi
 

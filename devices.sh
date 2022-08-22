@@ -42,11 +42,17 @@ operation="${1:-}"
 declare -a selected_devices
 if [ $# -gt 0 ]; then
 	for device in "$@"; do
-		if ! valid_device "$device"; then
-			error "No such device: $device" >&2
-			exit 2
+		if valid_device "$device"; then
+			selected_devices+=("$device")
+		else
+			asdev="$(sshhost "$device")"
+			if valid_device "$asdev"; then
+				selected_devices+=("$asdev")
+			else
+				error "No such device: $device" >&2
+				exit 2
+			fi
 		fi
-		selected_devices+=("$device")
 	done
 else
 	selected_devices=("${devices[@]}")
