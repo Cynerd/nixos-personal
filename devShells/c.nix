@@ -17,6 +17,8 @@ in pkgs.mkShell {
 
     check
     curl
+    ncurses
+    flex bison 
     gtk3 gtk4
 
     # LVGL
