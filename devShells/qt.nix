@@ -1,10 +1,11 @@
-{ system, nixpkgs, default }:
+{ system, nixpkgs
+, default, c
+}:
 let
   pkgs = nixpkgs.legacyPackages.${system};
 
 in pkgs.mkShell {
   packages = (with pkgs; with libsForQt5; [
-    cmake
     qt5.full
     doctest
 
@@ -19,6 +20,6 @@ in pkgs.mkShell {
       buildInputs = oldAttrs.buildInputs ++ [qt5.full];
     }))
   ]);
-  inputsFrom = with pkgs; [ default ];
+  inputsFrom = with pkgs; [ default c ];
   meta.platforms = nixpkgs.lib.platforms.linux;
 }

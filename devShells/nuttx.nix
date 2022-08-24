@@ -1,5 +1,7 @@
-{ system, nixpkgs, default }:
-{ arch, fpu ? null }:
+{ system, nixpkgs
+, default, c
+, arch, fpu ? null
+}:
 with nixpkgs.lib;
 let
   pkgs = nixpkgs.legacyPackages.${system};
@@ -18,13 +20,9 @@ in pkgs.mkShell {
   packages = (with pkgs; [
     kconfig-frontends genromfs xxd
     openocd
-
-    gnumake bear
-    meson ninja
-    cmake
   ]) ++ (with pkgs-cross.buildPackages; [
     gcc gdb
   ]);
-  inputsFrom = [ default ];
+  inputsFrom = [ default c ];
   meta.platforms = nixpkgs.lib.platforms.linux;
 }

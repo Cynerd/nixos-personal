@@ -1,4 +1,6 @@
-{ system, nixpkgs, default }:
+{ system, nixpkgs
+, default
+}:
 let
   pkgs = nixpkgs.legacyPackages.${system};
 
@@ -8,7 +10,8 @@ in pkgs.mkShell {
     clang-tools_14 ctags
     gcc gdb pkg-config
 
-    meson ninja bear
+    gnumake bear
+    meson ninja
     cmake
 
     valgrind

@@ -1,4 +1,6 @@
-{ system, nixpkgs, default }:
+{ system, nixpkgs
+, default, c
+}:
 let
   pkgs = nixpkgs.legacyPackages.${system};
   pkgs-riscv = import nixpkgs.outPath {
@@ -18,6 +20,6 @@ in pkgs.mkShell {
   ]) ++ (with pkgs-riscv.buildPackages; [
     gcc pkg-config
   ]);
-  inputsFrom = [ default ];
+  inputsFrom = [ default c ];
   meta.platforms = nixpkgs.lib.platforms.linux;
 }
