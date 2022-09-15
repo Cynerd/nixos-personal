@@ -24,6 +24,9 @@ in pkgs.mkShell {
     flex bison 
     gtk3 gtk4
 
+    # Various libraries
+    openssl.dev zlib.dev curl.dev
+
     # LVGL
     SDL2 libffi.dev
 

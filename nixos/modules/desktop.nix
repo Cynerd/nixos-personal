@@ -103,6 +103,9 @@ in {
       gst_all_1.gst-plugins-ugly
       gst_all_1.gst-plugins-viperfx
 
+      # Latex
+      texlive.combined.scheme-full
+
     ] ++ (optionals cnf.laptop [
       # Power management
       powertop

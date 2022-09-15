@@ -49,7 +49,7 @@ in {
       gnumake
       exfat exfatprogs
       nix-index
-      usbutils
+      usbutils pciutils
 
       # NCurses tools
       htop iotop #glances
@@ -112,6 +112,8 @@ in {
     security.sudo.extraRules = [
       { groups = [ "wheel" ]; commands = [ "ALL" ]; }
     ];
+    networking.dhcpcd.extraConfig = "controlgroup wheel";
+    environment.etc."dhcpcd.conf".text = "controlgroup wheel";
 
     services.openssh.enable = true;
 

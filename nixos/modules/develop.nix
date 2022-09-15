@@ -32,7 +32,7 @@ in {
       # Shell
       dash # Posix shell
       bats
-      shellcheck
+      shellcheck shfmt
       jq yq
 
       # Python

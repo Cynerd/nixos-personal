@@ -50,6 +50,10 @@
           nixturris.nixosModules.turris-crossbuild
           nixturris.nixosModules.armv7l-overlay
           { boot.loader.systemd-boot.enable = false; }
+          { nixpkgs.overlays = [ (final: super: {
+              makeModulesClosure = x:
+                super.makeModulesClosure (x // { allowMissing = true; });
+            })]; }
         ];};
         raspi3System = genericSystem {system = "aarch64-linux"; extra_modules = [
           nixturris.nixosModules.turris-crossbuild
