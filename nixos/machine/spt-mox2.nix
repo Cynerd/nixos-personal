@@ -61,12 +61,12 @@ with lib;
       bridges = {
         brlan = {
           interfaces = [
-            "eth0" #"mlan0" "wlp1s0"
+            "eth0" "wlp1s0" #"mlan0"
           ];
         };
         brguest = {
           interfaces = [
-            "eth0.2" #"mlan0host" "wlp1s0host"
+            "eth0.2" "wlp1s0host" #"mlan0host"
           ];
         };
       };

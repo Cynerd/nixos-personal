@@ -5,6 +5,43 @@ with lib;
 {
 
   config = {
+
+    boot.initrd.kernelModules = [
+      "armada_37xx_wdt"
+      "mv88e6xxx" "dsa_core" "tag_dsa" "bridge" "hsr"
+    ];
+
+    networking.wirelessAP = {
+      enable = true;
+      environmentFile = "/run/secrets/hostapd.env";
+      interfaces = {
+        #"mlan0" = {
+          #countryCode = "CZ";
+          #ssid = "TurrisRules";
+          #wpa = true;
+          #wpaPassphrase = "@PASS_TURRIS_RULES@";
+        #};
+        "wlp1s0" = {
+          countryCode = "CZ";
+          hwMode = "a";
+          channel = 40;
+          ieee80211ac = true;
+          ht_capab = ["HT40+" "LDPC" "SHORT-GI-20" "SHORT-GI-40" "TX-STBC" "RX-STBC1" "MAX-AMSDU-7935" "DSSS_CCK-40"];
+          vht_capab = ["RXLDPC" "SHORT-GI-80" "TX-STBC-2BY1" "RX-ANTENNA-PATTERN" "TX-ANTENNA-PATTERN" "RX-STBC-1" "MAX-MPDU-11454" "MAX-A-MPDU-LEN-EXP7"];
+          ssid = "TurrisRules5";
+          wpa = true;
+          wpaPassphrase = "@PASS_TURRIS_RULES@";
+          bss = {
+            "wlp1s0host" = {
+              ssid = "KocoviGuest";
+              wpa = true;
+              wpaPassphrase = "@PASS_KOCOVI@";
+            };
+          };
+        };
+      };
+    };
+
     networking = {
       vlans = {
         "eth0.2" = {
@@ -15,7 +52,7 @@ with lib;
       bridges = {
         brlan = {
           interfaces = [
-            "eth0" "lan1" "lan2" "lan3" "lan4"
+            "eth0" # "lan1" "lan2" "lan3" "lan4"
           ];
         };
         brguest = {
@@ -36,6 +73,7 @@ with lib;
       nameservers = [ config.cynerd.hosts.spt.omnia "1.1.1.1" "8.8.8.8" ];
       dhcpcd.allowInterfaces = [ "brlan" ];
     };
+
   };
 
 }

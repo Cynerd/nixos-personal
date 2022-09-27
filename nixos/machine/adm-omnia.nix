@@ -8,7 +8,6 @@ with lib;
     cynerd = {
       #openvpn.oldpersonal = true;
     };
-    boot.kernelPackages = pkgs.linuxPackages;
 
     networking = {
       # TODO we need vlan filtering to filter out guest and adm network

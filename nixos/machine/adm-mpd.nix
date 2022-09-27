@@ -27,10 +27,15 @@ with lib;
       userControlled.enable = true;
     };
 
-    services.pipewire = {
+    #services.pipewire = {
+      #enable = true;
+      #alsa.enable = true;
+      #pulse.enable = true;
+    #};
+    hardware.pulseaudio = {
       enable = true;
-      alsa.enable = true;
-      pulse.enable = true;
+      systemWide = true;
+      zeroconf.publish.enable = true;
     };
 
     services.spotifyd = {

@@ -6,6 +6,7 @@
     personal-secret.url = "git+ssh://git@cynerd.cz/nixos-personal-secret";
     nixturris = {
       url = "git+https://git.cynerd.cz/nixturris";
+      #url = "/home/cynerd/projects/nixturris";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

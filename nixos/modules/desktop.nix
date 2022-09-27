@@ -69,7 +69,7 @@ in {
       vlc mpv youtube-dl
 
       nordic
-      delft-icon-theme gnome3.adwaita-icon-theme
+      delft-icon-theme gnome.adwaita-icon-theme
       vanilla-dmz
       sound-theme-freedesktop
       gucharmap
@@ -79,7 +79,7 @@ in {
       samba cifs-utils
 
       tigervnc freerdp
-      kdeconnect
+      plasma5Packages.kdeconnect-kde
 
       hdparm ethtool multipath-tools
       usb-modeswitch

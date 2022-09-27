@@ -11,15 +11,6 @@ with lib;
       };
     };
 
-    #boot.kernelPatches = [{
-    #  name = "rwtm";
-    #  patch = null;
-    #  extraConfig = ''
-    #    TURRIS_MOX_RWTM y
-    #    ARMADA_37XX_RWTM_MBOX y
-    #    '';
-    #}];
-
     networking = {
       bridges = {
         brlan = {

@@ -23,6 +23,7 @@ in {
           "thefloweringash-armv7.cachix.org-1:v+5yzBD2odFKeXbmC+OPWVqx4WVoIVO6UXgnSAWFtso="
           "arm.cachix.org-1:K3XjAeWPgWkFtSS9ge5LJSLw3xgnNqyOaG7MDecmTQ8="
         ];
+        trusted-users = [ "@wheel" ];
       };
       registry = {
         personal.to = {
