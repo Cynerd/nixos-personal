@@ -25,7 +25,7 @@ in pkgs.mkShell {
     gtk3 gtk4
 
     # Various libraries
-    openssl.dev zlib.dev curl.dev
+    openssl.dev zlib.dev curl.dev libconfig
 
     # LVGL
     SDL2 libffi.dev
