@@ -21,7 +21,7 @@ in pkgs.mkShell {
     check
     curl
     ncurses
-    flex bison 
+    flex bison gperf
     gtk3 gtk4
 
     # Various libraries
