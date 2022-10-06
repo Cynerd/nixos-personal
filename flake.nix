@@ -9,8 +9,7 @@
       #url = "/home/cynerd/projects/nixturris";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    #vpsadminos.url = "github:vpsfreecz/vpsadminos";
-    vpsadminos.url = "github:Cynerd/vpsadminos/nix-flake";
+    vpsadminos.url = "github:vpsfreecz/vpsadminos";
 
     sterm.url = "github:wentasah/sterm";
   };
@@ -52,7 +51,7 @@
         amd64System = genericSystem { };
         vpsSystem = genericSystem {
           extra_modules = [
-            vpsadminos.nixosConfigurations.default
+            vpsadminos.nixosConfigurations.container
             { boot.loader.systemd-boot.enable = false; }
           ];
         };

@@ -186,16 +186,15 @@
     },
     "vpsadminos": {
       "locked": {
-        "lastModified": 1665048880,
-        "narHash": "sha256-VbpeFHwhGLZBi/GL/TH+nvEOXFXejXHWL3l7qjlwBzE=",
-        "owner": "Cynerd",
+        "lastModified": 1665064651,
+        "narHash": "sha256-ddjWx8A0oeMTLeAEsJY/jwaGUESRD5s6Kn6D8ltlwmg=",
+        "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "b1dc09353a9000f7cfda4dcde6572e6e2afd1b7d",
+        "rev": "8047799e2f3dcd0190fac3a770b101a2541943ca",
         "type": "github"
       },
       "original": {
-        "owner": "Cynerd",
-        "ref": "nix-flake",
+        "owner": "vpsfreecz",
         "repo": "vpsadminos",
         "type": "github"
       }
