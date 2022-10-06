@@ -88,6 +88,7 @@
         amd64System "lipwig" //
         amd64System "ridcully" //
         amd64System "susan" //
+        amd64System "mrpump" //
         raspi2System "spt-mpd" //
         raspi3System "adm-mpd" //
         beagleboneSystem "gaspode" //

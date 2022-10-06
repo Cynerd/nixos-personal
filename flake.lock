@@ -44,11 +44,11 @@
     },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1663229557,
-        "narHash": "sha256-1uU4nsDLXKG0AHc/VCsNBAEPkTA/07juYhcEWRb1O1E=",
+        "lastModified": 1665040200,
+        "narHash": "sha256-glqL6yj3aUm40y92inzRmowGt9aIrUrpBX7eBAMic4I=",
         "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "a0df6cd6e199df4a78c833c273781ea92fa62cfb",
+        "rev": "47fd70289491c1f0c0d9a1f44fb5a9e2801120c9",
         "type": "github"
       },
       "original": {
@@ -58,11 +58,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1664235386,
-        "narHash": "sha256-hlkYFCJ9VKZPRW50vtpHHq4h1PJrptD5BbdLOEp4Lyc=",
+        "lastModified": 1664904529,
+        "narHash": "sha256-mGlB/SQR4E9jb7fOOxCTJlwL6Mk1Dpyvi4UrOXL6C18=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "ea4a87537cfdc83eebcd1804a5ec51057018784f",
+        "rev": "b7a47253e0c8cb04c0a3f8ed3149e90229e62884",
         "type": "github"
       },
       "original": {
@@ -122,11 +122,11 @@
     },
     "personal-secret": {
       "locked": {
-        "lastModified": 1662805434,
-        "narHash": "sha256-S4tk5PW94Eg7Kfrq2/MChJaNE+3+Xl3pqe3NcUrR7iE=",
+        "lastModified": 1665047556,
+        "narHash": "sha256-TWELa1+akUyj0zc6DucheOydPN23b9oqXApKU3nqgzo=",
         "ref": "refs/heads/master",
-        "rev": "a3a643d9685407f6e707af9e7c1367d2a50ac91c",
-        "revCount": 30,
+        "rev": "e6000437e6ab83ddf537de765b116bed40672e8b",
+        "revCount": 32,
         "type": "git",
         "url": "ssh://git@cynerd.cz/nixos-personal-secret"
       },
@@ -152,11 +152,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1664264492,
-        "narHash": "sha256-OgyxaGAG0PWUj3ZLjYPJ6Gnva+3oJTLvbSRV79U/++s=",
+        "lastModified": 1664443388,
+        "narHash": "sha256-jhYEjbMUfuiP7dbua1Pyn+70MvuMYZ4Cz6RQFeK4hpM=",
         "ref": "refs/heads/master",
-        "rev": "7a90b467f6ac04afc0a2ee581f451d319613070e",
-        "revCount": 71,
+        "rev": "23472c9673e2fffbf4e34f2fc05739570b603f8c",
+        "revCount": 75,
         "type": "git",
         "url": "https://git.cynerd.cz/shellrc"
       },
