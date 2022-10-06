@@ -26,6 +26,7 @@ in pkgs.mkShell {
 
     # Various libraries
     openssl.dev zlib.dev curl.dev libconfig
+    czmq libevent.dev
 
     # LVGL
     SDL2 libffi.dev

@@ -4,8 +4,7 @@
 }:
 with nixpkgs.lib;
 let
-  pkgs = nixpkgs.legacyPackages.${system};
-  pkgs-cross = import nixpkgs.outPath {
+  pkgs = import nixpkgs.outPath {
     localSystem = system;
     crossSystem = {
       config = "arm-none-eabi" + (optionalString (fpu != null) "hf");
@@ -17,12 +16,11 @@ let
   };
 
 in pkgs.mkShell {
-  packages = (with pkgs; [
+  packages = with pkgs.buildPackages; [
     kconfig-frontends genromfs xxd
     openocd
-  ]) ++ (with pkgs-cross.buildPackages; [
     gcc gdb
-  ]);
+  ];
   inputsFrom = [ default c ];
   meta.platforms = nixpkgs.lib.platforms.linux;
 }

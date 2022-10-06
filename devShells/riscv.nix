@@ -2,8 +2,7 @@
 , default, c
 }:
 let
-  pkgs = nixpkgs.legacyPackages.${system};
-  pkgs-riscv = import nixpkgs.outPath {
+  pkgs = import nixpkgs.outPath {
     localSystem = system;
     crossSystem = {
       config = "riscv32-none-elf";
@@ -15,11 +14,10 @@ let
   };
 
 in pkgs.mkShell {
-  packages = (with pkgs; [
+  packages = with pkgs.buildPackages; [
     qtrvsim
-  ]) ++ (with pkgs-riscv.buildPackages; [
     gcc pkg-config
-  ]);
+  ];
   inputsFrom = [ default c ];
   meta.platforms = nixpkgs.lib.platforms.linux;
 }
