@@ -3,9 +3,11 @@
   machine-binky = import ./binky.nix;
   machine-dean = import ./dean.nix;
   machine-errol = import ./errol.nix;
-  machine-lipwig = import ./lipwig.nix;
   machine-ridcully = import ./ridcully.nix;
   machine-susan = import ./susan.nix;
+
+  machine-lipwig = import ./lipwig.nix;
+  machine-mrpump = import ./mrpump.nix;
 
   machine-gaspode = import ./gaspode.nix;
 

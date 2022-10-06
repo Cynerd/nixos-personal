@@ -13,9 +13,10 @@ with lib;
       enable = true;
       services.docker = {
         registrationConfigFile = "/run/secrets/gitlab-runner-registration";
-        executor = "docker";
         tagList = ["docker"];
         runUntagged = true;
+        executor = "docker";
+        dockerImage = "alpine";
         description = "Docker runner";
       };
     };
