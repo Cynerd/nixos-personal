@@ -13,7 +13,7 @@ let
     };
   };
 
-in pkgs.mkShell {
+in pkgs.buildPackages.mkShell {
   packages = with pkgs.buildPackages; [
     qtrvsim
     gcc pkg-config

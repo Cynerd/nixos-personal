@@ -21,5 +21,5 @@ in pkgs.mkShell {
     }))
   ]);
   inputsFrom = with pkgs; [ default c ];
-  meta.platforms = nixpkgs.lib.platforms.linux;
+  meta.platforms = ["x86_64-linux"];
 }
