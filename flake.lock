@@ -143,7 +143,8 @@
         "nixturris": "nixturris",
         "personal-secret": "personal-secret",
         "shellrc": "shellrc",
-        "sterm": "sterm"
+        "sterm": "sterm",
+        "vpsadminos": "vpsadminos"
       }
     },
     "shellrc": {
@@ -180,6 +181,22 @@
       "original": {
         "owner": "wentasah",
         "repo": "sterm",
+        "type": "github"
+      }
+    },
+    "vpsadminos": {
+      "locked": {
+        "lastModified": 1665048880,
+        "narHash": "sha256-VbpeFHwhGLZBi/GL/TH+nvEOXFXejXHWL3l7qjlwBzE=",
+        "owner": "Cynerd",
+        "repo": "vpsadminos",
+        "rev": "b1dc09353a9000f7cfda4dcde6572e6e2afd1b7d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Cynerd",
+        "ref": "nix-flake",
+        "repo": "vpsadminos",
         "type": "github"
       }
     }

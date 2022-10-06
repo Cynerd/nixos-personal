@@ -5,9 +5,6 @@ with lib;
 {
 
   config = {
-    boot.isContainer = true;
-    boot.loader.initScript.enable = true;
-
     cynerd.openvpn.personal = true;
 
     # Git ######################################################################

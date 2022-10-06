@@ -51,7 +51,10 @@
           };
         amd64System = genericSystem { };
         vpsSystem = genericSystem {
-          extra_modules = [ vpsadminos.nixosConfigurations.default ];
+          extra_modules = [
+            vpsadminos.nixosConfigurations.default
+            { boot.loader.systemd-boot.enable = false; }
+          ];
         };
         raspi2System = genericSystem {
           system = "armv7l-linux";
