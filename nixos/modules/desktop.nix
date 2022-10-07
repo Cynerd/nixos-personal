@@ -124,6 +124,11 @@ in {
       "image/svg" = [ "feh.desktop" ];
     };
 
+    programs.usbkey = {
+      enable = true;
+      devicesUUID = [];
+    };
+
     programs.gnupg.agent = {
       enable = true;
       enableSSHSupport = true;

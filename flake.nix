@@ -12,11 +12,12 @@
     vpsadminos.url = "github:vpsfreecz/vpsadminos";
 
     sterm.url = "github:wentasah/sterm";
+    usbkey.url = "/home/cynerd/projects/usbkey";
   };
 
   outputs = { self
     , nixpkgs, flake-utils, nixos-hardware
-    , shellrc, nixturris, personal-secret
+    , shellrc, usbkey, nixturris, personal-secret
     , vpsadminos
     , sterm
   }:
@@ -31,6 +32,7 @@
           self.nixosModules.default
           self.nixosModules."machine-${hostname}"
           shellrc.nixosModules.default
+          usbkey.nixosModules.default
           (personal-secret.lib.personalSecrets hostname)
           {
             networking.hostName = hostname;

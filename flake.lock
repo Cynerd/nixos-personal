@@ -42,6 +42,20 @@
         "type": "indirect"
       }
     },
+    "flake-utils_4": {
+      "locked": {
+        "lastModified": 1659877975,
+        "narHash": "sha256-zllb8aq3YO3h8B/U0/J1WBgAL8EX5yWf5pMj3G0NAmc=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "c0e246b9b83f637f4681389ecabcb2681b4f3af0",
+        "type": "github"
+      },
+      "original": {
+        "id": "flake-utils",
+        "type": "indirect"
+      }
+    },
     "nixos-hardware": {
       "locked": {
         "lastModified": 1665040200,
@@ -58,11 +72,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1664904529,
-        "narHash": "sha256-mGlB/SQR4E9jb7fOOxCTJlwL6Mk1Dpyvi4UrOXL6C18=",
+        "lastModified": 1665087388,
+        "narHash": "sha256-FZFPuW9NWHJteATOf79rZfwfRn5fE0wi9kRzvGfDHPA=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "b7a47253e0c8cb04c0a3f8ed3149e90229e62884",
+        "rev": "95fda953f6db2e9496d2682c4fc7b82f959878f7",
         "type": "github"
       },
       "original": {
@@ -96,6 +110,20 @@
       "original": {
         "id": "nixpkgs",
         "ref": "nixos-21.05",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs_4": {
+      "locked": {
+        "lastModified": 1664847737,
+        "narHash": "sha256-Wxl0CtRH3Vo8+qEZ/PbCcx+9D8wEEi56tJPmROum2ss=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "de80d1d04ee691279e1302a1128c082bbda3ab01",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
         "type": "indirect"
       }
     },
@@ -144,6 +172,7 @@
         "personal-secret": "personal-secret",
         "shellrc": "shellrc",
         "sterm": "sterm",
+        "usbkey": "usbkey",
         "vpsadminos": "vpsadminos"
       }
     },
@@ -184,13 +213,29 @@
         "type": "github"
       }
     },
+    "usbkey": {
+      "inputs": {
+        "flake-utils": "flake-utils_4",
+        "nixpkgs": "nixpkgs_4"
+      },
+      "locked": {
+        "lastModified": 1665062797,
+        "narHash": "sha256-kVOrFYd4DVNcAb6sJLU6RNrrCKbBMzJ1+0HXSShahgQ=",
+        "type": "git",
+        "url": "file:///home/cynerd/projects/usbkey"
+      },
+      "original": {
+        "type": "git",
+        "url": "file:///home/cynerd/projects/usbkey"
+      }
+    },
     "vpsadminos": {
       "locked": {
-        "lastModified": 1665064651,
-        "narHash": "sha256-ddjWx8A0oeMTLeAEsJY/jwaGUESRD5s6Kn6D8ltlwmg=",
+        "lastModified": 1665142824,
+        "narHash": "sha256-J4hzH+Y5BSJmsVRsfkNnJLzNZHTjFeyAwxvSP3LRYAo=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "8047799e2f3dcd0190fac3a770b101a2541943ca",
+        "rev": "5ccaaaf91d3a330b5434c664ed4b98da3bdd7918",
         "type": "github"
       },
       "original": {
