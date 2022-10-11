@@ -131,6 +131,11 @@ in {
         '';
       })
     ];
+
+    system.extraSystemBuilderCmds = ''
+      substituteAll ${./nixos-system.sh} $out/bin/nixos-system
+      chmod +x $out/bin/nixos-system
+    '';
   };
 
 }

@@ -161,8 +161,7 @@ setenv() {
 		local _store _switchop
 		printf -v _store '%q' "$store"
 		printf -v _switchop '%q' "$switchop"
-		_tssh "$device" \
-			"sudo nix-env --profile /nix/var/nix/profiles/system --set '$_store' && sudo /nix/var/nix/profiles/system/bin/switch-to-configuration '$_switchop'"
+		_tssh "$device" "sudo '$_store/bin/nixos-system' -s '$_switchop'"
 	else
 		warning "The latest system might have been already set."
 	fi
