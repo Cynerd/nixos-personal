@@ -21,12 +21,6 @@ let
     sdcv-unwrapped = callPackage ./sdcv { };
     sdcv = callPackage ./stardict/wrapper.nix { stardict = sdcv-unwrapped; };
 
-    ferdium = callPackage ./ferdium {
-      mkFranzDerivation = callPackage (
-        nixpkgs.path + "/pkgs/applications/networking/instant-messengers/franz/generic.nix"
-      ) { };
-    };
-
   };
 
 in personalpkgs
