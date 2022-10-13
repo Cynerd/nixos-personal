@@ -16,6 +16,7 @@ in {
 
   config = mkIf config.cynerd.develop {
     cynerd.compile = true;
+    environment.enableDebugInfo = true;
     environment.systemPackages = with pkgs; [
       # Tools
       tig gource hub github-cli # Git

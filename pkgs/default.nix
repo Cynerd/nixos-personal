@@ -21,6 +21,15 @@ let
     sdcv-unwrapped = callPackage ./sdcv { };
     sdcv = callPackage ./stardict/wrapper.nix { stardict = sdcv-unwrapped; };
 
+    # Package to be installed to the user's profile
+    cynerd-profile = pkgs.symlinkJoin {
+      name = "cynerd-profile";
+      paths = with pkgs; [
+        self.inputs.shellrc.packages.${nixpkgs.system}.default
+        tig
+      ];
+    };
+
   };
 
 in personalpkgs
