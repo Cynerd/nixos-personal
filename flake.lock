@@ -219,14 +219,18 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1665062797,
-        "narHash": "sha256-kVOrFYd4DVNcAb6sJLU6RNrrCKbBMzJ1+0HXSShahgQ=",
+        "lastModified": 1665669035,
+        "narHash": "sha256-xhtwhGEmLoc8Dhn1eA9jYK5Csz0hAVpq3cpSgcNxwTg=",
+        "ref": "modules",
+        "rev": "5696f8083a2d3aaffee0786677a145ddbf6b38c8",
+        "revCount": 8,
         "type": "git",
-        "url": "file:///home/cynerd/projects/usbkey"
+        "url": "https://git.cynerd.cz/usbkey"
       },
       "original": {
+        "ref": "modules",
         "type": "git",
-        "url": "file:///home/cynerd/projects/usbkey"
+        "url": "https://git.cynerd.cz/usbkey"
       }
     },
     "vpsadminos": {

@@ -12,7 +12,7 @@
     vpsadminos.url = "github:vpsfreecz/vpsadminos";
 
     sterm.url = "github:wentasah/sterm";
-    usbkey.url = "/home/cynerd/projects/usbkey";
+    usbkey.url = "git+https://git.cynerd.cz/usbkey?ref=modules";
   };
 
   outputs = { self
