@@ -96,7 +96,7 @@ in {
       dfeet
 
       # Documentation
-      man-pages man-pages-posix
+      man-pages man-pages-posix linux-manual
     ];
 
     documentation.dev.enable = true;

@@ -45,7 +45,7 @@ in {
       git # We need git for this repository to even work
       # Administration tools
       #coreutils moreutils binutils psmisc progress lshw file
-      coreutils binutils psmisc progress lshw file
+      coreutils binutils psmisc progress lshw file vde2
       ldns wget
       gnumake
       exfat exfatprogs
@@ -136,6 +136,9 @@ in {
       substituteAll ${./nixos-system.sh} $out/bin/nixos-system
       chmod +x $out/bin/nixos-system
     '';
+
+    programs.fuse.userAllowOther = true;
+
   };
 
 }

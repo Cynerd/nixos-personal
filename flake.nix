@@ -2,6 +2,7 @@
   description = "Cynerd's personal flake";
 
   inputs = {
+    nixpkgs.url = "github:Cynerd/nixpkgs/oci-container-docker";
     shellrc.url = "git+https://git.cynerd.cz/shellrc";
     personal-secret.url = "git+ssh://git@cynerd.cz/nixos-personal-secret";
     nixturris = {
@@ -16,7 +17,7 @@
   };
 
   outputs = { self
-    , nixpkgs, flake-utils, nixos-hardware
+    , nixpkgs, flake-utils, nixos-hardware, nix
     , shellrc, usbkey, nixturris, personal-secret
     , vpsadminos
     , sterm
@@ -24,7 +25,7 @@
     with flake-utils.lib;
     {
       overlays.default = final: prev: import ./pkgs { inherit self; nixpkgs = prev; };
-      nixosModules = import ./nixos nixpkgs;
+      nixosModules = import ./nixos self;
 
       nixosConfigurations = let 
 

@@ -1,4 +1,4 @@
-{
+self: {
   machine-albert = import ./albert.nix;
   machine-binky = import ./binky.nix;
   machine-dean = import ./dean.nix;
@@ -7,7 +7,7 @@
   machine-susan = import ./susan.nix;
 
   machine-lipwig = import ./lipwig.nix;
-  machine-mrpump = import ./mrpump.nix;
+  machine-mrpump = import ./mrpump.nix self;
 
   machine-gaspode = import ./gaspode.nix;
 
