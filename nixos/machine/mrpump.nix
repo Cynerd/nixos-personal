@@ -12,6 +12,7 @@ with lib;
       name = "local/nix";
       tag = "latest";
       bundleNixpkgs = false;
+      extraPkgs = with pkgs; [ cachix ];
       nixConf = {
         cores = "0";
         experimental-features = [ "nix-command" "flakes" ];
@@ -56,10 +57,7 @@ with lib;
     # Gitlab runner
     systemd.services.gitlab-runner.serviceConfig = let
       config = (pkgs.formats.toml{}).generate "gitlab-runner.toml" {
-        concurent = 1;
-        session_server = {
-          session_timeout = 1800;
-        };
+        concurrent = 1;
         runners = [
           {
             name = "MrPump Docker (LogC)";
@@ -80,8 +78,8 @@ with lib;
             docker = {
               image = "local/nix:latest";
               allowed_images = ["local/nix:latest"];
-              pull_policy = "never";
-              allowed_pull_policies = ["never"];
+              pull_policy = "if-not-present";
+              allowed_pull_policies = ["if-not-present"];
               volumes_from = ["gitlabnix:ro"];
             };
             environment = [
@@ -89,9 +87,13 @@ with lib;
               "ENV=/etc/profile.d/nix-daemon.sh"
               "BASH_ENV=/etc/profile.d/nix-daemon.sh"
             ];
-            # TODO for some reason the /tmp seems to be missing
             pre_build_script = ''
+              # TODO for some reason the /tmp seems to be missing
               mkdir -p /tmp
+              # We need to allow modification of nix config for cachix as
+              # otherwise it is link to the read only file in the store.
+              cp --remove-destination \
+                $(readlink -f /etc/nix/nix.conf) /etc/nix/nix.conf
             '';
           }
         ];

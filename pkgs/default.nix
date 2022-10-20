@@ -1,10 +1,9 @@
 { self, nixpkgs }:
 
 let
-  pkgs = nixpkgs // personalpkgs;
-  callPackage = nixpkgs.lib.callPackageWith pkgs;
+  callPackage = nixpkgs.newScope personalpkgs;
 
-  personalpkgs = with pkgs; {
+  personalpkgs = rec {
 
     luks-hw-password = callPackage ./luks-hw-password { };
 
@@ -22,11 +21,11 @@ let
     sdcv = callPackage ./stardict/wrapper.nix { stardict = sdcv-unwrapped; };
 
     # Package to be installed to the user's profile
-    cynerd-profile = pkgs.symlinkJoin {
+    cynerd-profile = nixpkgs.symlinkJoin {
       name = "cynerd-profile";
-      paths = with pkgs; [
+      paths = [
         self.inputs.shellrc.packages.${nixpkgs.system}.default
-        tig
+        nixpkgs.tig
       ];
     };
 
