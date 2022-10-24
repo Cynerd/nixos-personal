@@ -20,6 +20,8 @@ let
     sdcv-unwrapped = callPackage ./sdcv { };
     sdcv = callPackage ./stardict/wrapper.nix { stardict = sdcv-unwrapped; };
 
+    lorem-text = callPackage ./lorem-text { };
+
     # Package to be installed to the user's profile
     cynerd-profile = nixpkgs.symlinkJoin {
       name = "cynerd-profile";
