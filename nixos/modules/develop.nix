@@ -57,9 +57,10 @@ in {
         psycopg
 
         humanize rich
-        #lorem_text
+        lorem-text.pythonPackage
 
         pyserial pylibftdi
+        pylxd
         selenium
 
       ]))
