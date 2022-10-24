@@ -79,11 +79,11 @@
         "nixpkgs-regression": "nixpkgs-regression"
       },
       "locked": {
-        "lastModified": 1666079405,
-        "narHash": "sha256-FckhGfnosWtcQop/TF/6yj4ifgd18/vdRT2ctPzNpUg=",
+        "lastModified": 1666244640,
+        "narHash": "sha256-BKbf12IZZYrCJQk12MTdj7u9DLyfWTIomKad5QMmgxw=",
         "owner": "NixOS",
         "repo": "nix",
-        "rev": "a324e9a5c84a144b824303064220463977c63c73",
+        "rev": "b3d2a05c59266688aa904d5fb326394cbb7e9e90",
         "type": "github"
       },
       "original": {
@@ -93,11 +93,11 @@
     },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1665649208,
-        "narHash": "sha256-MDkPVG4W8gigJ8OxWDp9L6aKaEwLRV3As1RvKkMq0rc=",
+        "lastModified": 1665987993,
+        "narHash": "sha256-MvlaIYTRiqefG4dzI5p6vVCfl+9V8A1cPniUjcn6Ngc=",
         "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "d92ed98c099ae731664fc526c348d609c4cffe04",
+        "rev": "0e6593630071440eb89cd97a52921497482b22c6",
         "type": "github"
       },
       "original": {
@@ -139,18 +139,16 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1666099973,
-        "narHash": "sha256-JCX0alqjPHPsak/YOVDEbjpThSnGOX2q+NWR1M3aE6E=",
-        "owner": "Cynerd",
+        "lastModified": 1666570118,
+        "narHash": "sha256-MTXmIYowHM1wyIYyqPdBLia5SjGnxETv0YkIbDsbkx4=",
+        "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "3eadda2cf8cfbdc86e9f44fc145ea5cd23653e8f",
+        "rev": "1e684b371cf05300bc2b432f958f285855bac8fb",
         "type": "github"
       },
       "original": {
-        "owner": "Cynerd",
-        "ref": "oci-container-docker",
-        "repo": "nixpkgs",
-        "type": "github"
+        "id": "nixpkgs",
+        "type": "indirect"
       }
     },
     "nixpkgs_3": {
@@ -204,11 +202,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1664266910,
-        "narHash": "sha256-G6NbV6xY4YuuRo2qUTdcwTyliO+dAwuG1wGyfiaiMXs=",
+        "lastModified": 1666533636,
+        "narHash": "sha256-l3YWDd1pOaW63PV5+uiZQPXrkobw5ehg0Hq0ojYFp/I=",
         "ref": "refs/heads/master",
-        "rev": "ff1073d03d303d3b15e66d03dc4a5a479a387fa7",
-        "revCount": 39,
+        "rev": "fc435c8d4ed77f2949d944f037a876b7043bcac5",
+        "revCount": 52,
         "type": "git",
         "url": "https://git.cynerd.cz/nixturris"
       },
@@ -305,11 +303,11 @@
     },
     "vpsadminos": {
       "locked": {
-        "lastModified": 1666063321,
-        "narHash": "sha256-O3+kp+7eN53E/OMbL1jpUd2Et5hOq7q5IdUbHvP4GP0=",
+        "lastModified": 1666486675,
+        "narHash": "sha256-NM3n3XS0fk4AV1HMquAc+vTKoSbk3NYljby0iz1z01k=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "f6f24bf43ee0c268831ff6dac3e94198dbe5a76b",
+        "rev": "fec963674b69bd8e4f6d772d9965e1f2a4928446",
         "type": "github"
       },
       "original": {

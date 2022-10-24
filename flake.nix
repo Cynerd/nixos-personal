@@ -2,7 +2,6 @@
   description = "Cynerd's personal flake";
 
   inputs = {
-    nixpkgs.url = "github:Cynerd/nixpkgs/tmprevert";
     shellrc.url = "git+https://git.cynerd.cz/shellrc";
     personal-secret.url = "git+ssh://git@cynerd.cz/nixos-personal-secret";
     nixturris = {
