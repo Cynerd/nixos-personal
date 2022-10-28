@@ -6,11 +6,6 @@ with lib;
 
   config = {
 
-    boot.initrd.kernelModules = [
-      "armada_37xx_wdt"
-      "mv88e6xxx" "dsa_core" "tag_dsa" "bridge" "hsr"
-    ];
-
     networking.wirelessAP = {
       enable = true;
       environmentFile = "/run/secrets/hostapd.env";
@@ -52,7 +47,7 @@ with lib;
       bridges = {
         brlan = {
           interfaces = [
-            "eth0" # "lan1" "lan2" "lan3" "lan4"
+            "eth0" "lan1" "lan2" "lan3" "lan4"
           ];
         };
         brguest = {
