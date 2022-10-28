@@ -31,18 +31,6 @@ let
       ];
     };
 
-    # cyrus_sasl with curus_sasl_xoauth2
-    cyrus_sasl_xoauth2 = callPackage ./cyrus-sasl-xoauth2 {
-      cyrus_sasl = nixpkgs.cyrus_sasl; # prevent infinite cycle
-    };
-    cyrus_sasl = nixpkgs.cyrus_sasl.overrideAttrs (div: rec {
-      postInstall = ''
-        for lib in ${cyrus_sasl_xoauth2}/usr/lib/sasl2/*; do
-          ln -sf $lib $out/lib/sasl2/
-        done
-      '';
-    });
-
   };
 
 in personalpkgs
