@@ -28,6 +28,7 @@ in {
 
       # Nix
       nix-prefetch-git nix-prefetch-github nix-prefetch-scripts
+      nix-universal-prefetch
       rnix-lsp
 
       # Shell
@@ -77,6 +78,7 @@ in {
 
       # Qemmu
       qemu
+      virt-manager
 
       # U-Boot
       #ubootTools
@@ -117,10 +119,11 @@ in {
       recommendedSysctlSettings = true;
     };
     virtualisation.lxc.enable = true;
+    virtualisation.libvirtd.enable = true;
 
     users.groups.develop = { };
     users.users.cynerd.extraGroups = [
-      "docker" "lxd" "develop"
+      "docker" "lxd" "develop" "libvirtd"
     ];
 
   };
