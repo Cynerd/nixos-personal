@@ -32,7 +32,11 @@ warning() {
 
 # Convert hostname to the SSH destination
 sshdest() {
-	awk -F- 'NF > 1 { print $2"."$1; exit } { print $1 }' <<<"$1"
+	if [ "$1" = "lipwig" ]; then
+		echo "newlipwig"
+	else
+		awk -F- 'NF > 1 { print $2"."$1; exit } { print $1 }' <<<"$1"
+	fi
 }
 
 # Reverse opeartion for sshdest
