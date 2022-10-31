@@ -6,6 +6,9 @@ let
   personalpkgs = rec {
 
     luks-hw-password = callPackage ./luks-hw-password { };
+    dev = callPackage ./dev {
+      devShells = self.devShells.${nixpkgs.system};
+    };
 
     delft-icon-theme = callPackage ./theme/delft-icon-theme.nix { };
     background-lnxpcs = callPackage ./theme/background-lnxpcs.nix { };

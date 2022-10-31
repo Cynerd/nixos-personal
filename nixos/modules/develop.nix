@@ -27,6 +27,7 @@ in {
       parted
 
       # Nix
+      dev
       nix-prefetch-git nix-prefetch-github nix-prefetch-scripts
       nix-universal-prefetch
       rnix-lsp
