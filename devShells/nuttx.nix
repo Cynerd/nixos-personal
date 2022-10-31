@@ -8,7 +8,7 @@ let
   pkgs = import nixpkgs.outPath {
     localSystem = system;
     crossSystem = {
-      config = if (match "armv.*" arch != null) then
+      config = if (hasPrefix "armv" arch) then
         "arm-none-eabi" + (optionalString (fpu != null) "hf")
         else "riscv32-none-elf";
       libc = "newlib";
@@ -23,7 +23,7 @@ in pkgs.buildPackages.mkShell {
     kconfig-frontends genromfs xxd
     openocd
     gcc gdb
-  ] ++ (optionals (match "rv32.*" arch != null) [
+  ] ++ (optionals (hasPrefix "rv32" arch) [
     esptool
   ]);
   inputsFrom = [ default c ];
