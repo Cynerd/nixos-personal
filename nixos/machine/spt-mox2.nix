@@ -38,6 +38,7 @@ with lib;
           ht_capab = ["HT40+" "LDPC" "SHORT-GI-20" "SHORT-GI-40" "TX-STBC" "RX-STBC1" "MAX-AMSDU-7935" "DSSS_CCK-40"];
           vht_capab = ["RXLDPC" "SHORT-GI-80" "TX-STBC-2BY1" "RX-ANTENNA-PATTERN" "TX-ANTENNA-PATTERN" "RX-STBC-1" "MAX-MPDU-11454" "MAX-A-MPDU-LEN-EXP7"];
           ssid = "TurrisRules5";
+          bridge = "brlan";
           wpa = true;
           wpaPassphrase = "@PASS_TURRIS_RULES@";
           bss = {
@@ -61,12 +62,12 @@ with lib;
       bridges = {
         brlan = {
           interfaces = [
-            "eth0" "wlp1s0" #"mlan0"
+            "eth0"
           ];
         };
         brguest = {
           interfaces = [
-            "eth0.2" "wlp1s0host" #"mlan0host"
+            "eth0.2"
           ];
         };
       };
