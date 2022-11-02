@@ -202,17 +202,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1666533636,
-        "narHash": "sha256-l3YWDd1pOaW63PV5+uiZQPXrkobw5ehg0Hq0ojYFp/I=",
-        "ref": "refs/heads/master",
-        "rev": "fc435c8d4ed77f2949d944f037a876b7043bcac5",
-        "revCount": 52,
-        "type": "git",
-        "url": "https://git.cynerd.cz/nixturris"
+        "lastModified": 1667320037,
+        "narHash": "sha256-qHZZFLEsW3m7yKw8MsRCLwoni+faOffvNHDHXKGb6pg=",
+        "owner": "cynerd",
+        "repo": "nixturris",
+        "rev": "5d28f71750824b66212e9ec165f557318b79bcfb",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "https://git.cynerd.cz/nixturris"
+        "owner": "cynerd",
+        "repo": "nixturris",
+        "type": "github"
       }
     },
     "personal-secret": {
