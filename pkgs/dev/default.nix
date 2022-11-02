@@ -7,7 +7,9 @@ with lib;
 
 let
 
-  shells = concatStringsSep ":" (mapAttrsToList (n: v: "${n}=${v}") devShells);
+  shells = concatStringsSep ":" (mapAttrsToList (
+      n: v: "${n}=${v.drvPath}=${v}"
+    ) devShells);
 
 in stdenvNoCC.mkDerivation rec {
   name = "personal-devshells";
@@ -17,13 +19,6 @@ in stdenvNoCC.mkDerivation rec {
   installPhase = ''
     makeShellWrapper ${./dev.sh} $out/bin/dev \
       --prefix PATH : ${lib.makeBinPath [ bash nix ]} \
-      --set DEV_SHELLS "${shells}" \
-      --set DEV_FLAKE "${../..}"
+      --set DEV_SHELLS "${shells}"
   '';
-
-  meta = with lib; {
-    description = "Console version of Stardict program";
-    homepage = "https://dushistov.github.io/sdcv/";
-    license = licenses.gpl2;
-  };
 }
