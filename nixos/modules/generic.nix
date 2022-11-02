@@ -25,6 +25,10 @@ in {
         ];
         trusted-users = [ "@wheel" ];
       };
+      gc = {
+        automatic = true;
+        persistent = true;
+      };
       registry = {
         personal.to = {
           type = "git";
