@@ -102,6 +102,7 @@ in {
       # Documentation
       man-pages man-pages-posix linux-manual
     ];
+    programs.wireshark.enable = true;
 
     documentation.dev.enable = true;
 
@@ -124,7 +125,7 @@ in {
 
     users.groups.develop = { };
     users.users.cynerd.extraGroups = [
-      "docker" "lxd" "develop" "libvirtd"
+      "docker" "lxd" "develop" "libvirtd" "wireshark"
     ];
 
   };
