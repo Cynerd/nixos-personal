@@ -2,8 +2,9 @@
   description = "Cynerd's personal flake";
 
   inputs = {
-    shellrc.url = "git+https://git.cynerd.cz/shellrc";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     personal-secret.url = "git+ssh://git@cynerd.cz/nixos-personal-secret";
+
     nixturris = {
       url = "github:cynerd/nixturris";
       #url = "/home/cynerd/projects/nixturris";
@@ -11,15 +12,16 @@
     };
     vpsadminos.url = "github:vpsfreecz/vpsadminos";
 
+    shellrc.url = "git+https://git.cynerd.cz/shellrc";
     sterm.url = "github:wentasah/sterm";
     usbkey.url = "git+https://git.cynerd.cz/usbkey?ref=modules";
   };
 
   outputs = { self
     , nixpkgs, flake-utils, nixos-hardware, nix
-    , shellrc, usbkey, nixturris, personal-secret
-    , vpsadminos
-    , sterm
+    , personal-secret
+    , nixturris, vpsadminos
+    , shellrc, usbkey, sterm
   }:
     with flake-utils.lib;
     {
