@@ -46,7 +46,7 @@ in {
 
       kanshi wdisplays wayvnc wl-mirror
       slurp grim
-      pipewire wf-recorder
+      wf-recorder
       wl-clipboard wl-color-picker
       swayidle
       dunst
@@ -141,6 +141,11 @@ in {
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
+      config.pipewire = {
+        context.modules = [
+          { name = "libpipewire-module-zeroconf-discover"; }
+        ];
+      };
     };
     security.rtkit.enable = true;
 
