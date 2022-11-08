@@ -62,7 +62,7 @@ _rootssh() {
 	local device="$1"
 	local cmd="$2"
 	if [ "$device" != "$(hostname)" ]; then
-		ssh -t "$(sshdest "$device")" sudo "sh -c '${cmd@Q}'"
+		ssh -t "$(sshdest "$device")" sudo "sh -c '${cmd}'"
 	else
 		sudo sh -c "$cmd"
 	fi
