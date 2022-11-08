@@ -65,7 +65,10 @@
             nixos-hardware.nixosModules.raspberry-pi-2
             nixturris.nixosModules.turris-crossbuild
             nixturris.nixosModules.armv7l-overlay
-            { boot.loader.systemd-boot.enable = false; }
+            ({pkgs, ...}: {
+              boot.loader.systemd-boot.enable = false;
+              boot.kernelPackages = pkgs.linuxPackages_latest;
+            })
             { nixpkgs.overlays = [ (final: super: {
                 makeModulesClosure = x:
                   super.makeModulesClosure (x // { allowMissing = true; });
@@ -76,12 +79,13 @@
           system = "aarch64-linux";
           extra_modules = [
             nixturris.nixosModules.turris-crossbuild
-            ({pkgs, ...}: {
-              boot.loader.systemd-boot.enable = false;
+            {
               boot.loader.grub.enable = false;
-              boot.loader.generic-extlinux-compatible.enable = true;
-              #boot.kernelPackages = pkgs.linuxKernel.packages.linux_rpi3;
-            })
+              boot.loader.generationsDir.enable = false;
+              boot.loader.raspberryPi = {
+                enable = true; version = 3;
+              };
+            }
           ];
         };
         beagleboneSystem = genericSystem {
@@ -89,7 +93,11 @@
           extra_modules = [
             nixturris.nixosModules.turris-crossbuild
             nixturris.nixosModules.armv7l-overlay
-            # TODO
+            {
+              boot.loader.grub.enable = false;
+              boot.loader.systemd-boot.enable = false;
+              boot.loader.generic-extlinux-compatible.enable = true;
+            }
           ];
         };
 

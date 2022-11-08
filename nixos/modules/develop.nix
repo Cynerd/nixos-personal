@@ -31,6 +31,7 @@ in {
       nix-prefetch-git nix-prefetch-github nix-prefetch-scripts
       nix-universal-prefetch
       rnix-lsp
+      cachix
 
       # Shell
       dash # Posix shell
