@@ -44,31 +44,27 @@ sshhost() {
 	awk -F. 'NF > 1 { print $2"-"$1; exit } { print $1 }' <<<"$1"
 }
 
-_sh() {
-	if [ $# -gt 1 ]; then
-		"$@"
-	else
-		sh -c "$1"
-	fi
-}
-
 _ssh() {
 	local device="$1"
 	shift
 	if [ "$device" != "$(hostname)" ]; then
 		ssh "$(sshdest "$device")" -- "$@"
 	else
-		_sh "$@"
+		if [ $# -gt 1 ]; then
+			"$@"
+		else
+			sh -c "$1"
+		fi
 	fi
 }
 
-_tssh() {
+_rootssh() {
 	local device="$1"
-	shift
+	local cmd="$2"
 	if [ "$device" != "$(hostname)" ]; then
-		ssh -t "$(sshdest "$device")" -- "$@"
+		ssh -t "$(sshdest "$device")" sudo "sh -c '${cmd@Q}'"
 	else
-		_sh "$@"
+		sudo sh -c "$cmd"
 	fi
 }
 
@@ -160,12 +156,10 @@ setenv() {
 		_ssh "$device" \
 			nix store diff-closures "$cursystem" "$store"
 		info "-----------------------------------------------------------------"
-		# TODO we should call here switch-to-configuration as well to use single
-		# sudo session and remove one prompt.
 		local _store _switchop
 		printf -v _store '%q' "$store"
 		printf -v _switchop '%q' "$switchop"
-		_tssh "$device" "sudo '$_store/bin/nixos-system' -s '$_switchop'"
+		_rootssh "$device" "$_store/bin/nixos-system -s $_switchop"
 	else
 		warning "The latest system might have been already set."
 	fi
