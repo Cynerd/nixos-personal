@@ -56,7 +56,7 @@ in {
       gnupg pass pinentry-gnome pinentry-curses
 
       firefox chromium
-      ferdium
+      ferdium signal-desktop
       libreoffice
       mupdf pdfgrep
 
