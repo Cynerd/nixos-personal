@@ -101,7 +101,7 @@ with lib;
       };
       configPath = "$HOME/.gitlab-runner/config.toml";
       configureScript = pkgs.writeShellScript "gitlab-runner-configure" ''
-        docker load < ${localNix}
+        ${pkgs.docker}/bin/docker load < ${localNix}
         mkdir -p $(dirname ${configPath})
         ${pkgs.gawk}/bin/awk '{
           for(varname in ENVIRON)
