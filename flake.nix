@@ -7,7 +7,6 @@
 
     nixturris = {
       url = "github:cynerd/nixturris";
-      #url = "/home/cynerd/projects/nixturris";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     vpsadminos.url = "github:vpsfreecz/vpsadminos";
