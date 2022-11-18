@@ -80,7 +80,7 @@
             nixturris.nixosModules.turris-crossbuild
             {
               boot.loader.grub.enable = false;
-              boot.loader.generationsDir.enable = false;
+              boot.loader.systemd-boot.enable = false;
               boot.loader.raspberryPi = {
                 enable = true; version = 3;
               };
