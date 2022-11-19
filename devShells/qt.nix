@@ -6,7 +6,7 @@ let
 
 in pkgs.mkShell {
   packages = (with pkgs; with libsForQt5; [
-    qt5.full
+    qt5.qtbase
     doctest
 
     (qcoro.overrideAttrs (oldAttrs: {
@@ -17,7 +17,7 @@ in pkgs.mkShell {
         rev = "261663560f59a162c0c82158a6cde41089668871";
         sha256 = "OAYJpoW3b0boSYBfuzLrFvlYSmP3SON8O6HsDQoi+I8=";
       };
-      buildInputs = oldAttrs.buildInputs ++ [qt5.full];
+      buildInputs = oldAttrs.buildInputs ++ [qt5.qtbase];
     }))
   ]);
   inputsFrom = with pkgs; [ default c ];
