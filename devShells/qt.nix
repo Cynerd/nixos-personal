@@ -8,7 +8,6 @@ in pkgs.mkShell {
   packages = (with pkgs; with libsForQt5; [
     qtbase
     qtserialport
-    qtserialport
     qtwebsockets
     doctest
 

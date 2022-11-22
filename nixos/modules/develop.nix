@@ -102,6 +102,9 @@ in {
 
       # Documentation
       man-pages man-pages-posix linux-manual
+
+      # SHV
+      shvspy
     ];
     programs.wireshark.enable = true;
 

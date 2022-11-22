@@ -34,6 +34,18 @@ let
       ];
     };
 
+    # Elektroline packages
+    shvspy = callPackage ./shvspy { };
+    qcoro = nixpkgs.libsForQt5.qcoro.overrideAttrs (oldAttrs: {
+      version =  "0.6.1";
+      src = nixpkgs.fetchFromGitHub {
+        owner = "danvratil";
+        repo = "qcoro";
+        rev = "261663560f59a162c0c82158a6cde41089668871";
+        sha256 = "OAYJpoW3b0boSYBfuzLrFvlYSmP3SON8O6HsDQoi+I8=";
+      };
+    });
+
   } // (nixpkgs.lib.optionalAttrs (nixpkgs.stdenv.hostPlatform != nixpkgs.stdenv.buildPlatform) {
     # Nixpkgs fixup
     glib = nixpkgs.glib.overrideAttrs (super: {
