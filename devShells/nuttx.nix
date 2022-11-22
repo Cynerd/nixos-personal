@@ -11,7 +11,7 @@ let
       config = if (hasPrefix "armv" arch) then
         "arm-none-eabi" + (optionalString (fpu != null) "hf")
         else "riscv32-none-elf";
-      libc = "newlib";
+      libc = "newlib-nano";
       gcc = {
         arch = arch;
       } // (optionalAttrs (fpu != null) { fpu = fpu; });

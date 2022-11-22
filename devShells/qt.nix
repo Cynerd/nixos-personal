@@ -6,7 +6,10 @@ let
 
 in pkgs.mkShell {
   packages = (with pkgs; with libsForQt5; [
-    qt5.qtbase
+    qtbase
+    qtserialport
+    qtserialport
+    qtwebsockets
     doctest
 
     (qcoro.overrideAttrs (oldAttrs: {
