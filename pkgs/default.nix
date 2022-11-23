@@ -36,8 +36,8 @@ let
 
     # Elektroline packages
     shvspy = callPackage ./shvspy { };
-    qcoro = nixpkgs.libsForQt5.qcoro.overrideAttrs (oldAttrs: {
-      version =  "0.6.1";
+    qcoro_task_exception_handling = nixpkgs.libsForQt5.qcoro.overrideAttrs (oldAttrs: {
+      version =  "0.6.0";
       src = nixpkgs.fetchFromGitHub {
         owner = "danvratil";
         repo = "qcoro";

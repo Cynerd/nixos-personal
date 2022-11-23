@@ -1,5 +1,5 @@
 { lib, stdenv, fetchFromGitHub
-, cmake, doctest, libsForQt5, qcoro
+, cmake, doctest, libsForQt5, qcoro_task_exception_handling
 , makeDesktopItem, copyDesktopItems
 }:
 with libsForQt5; 
@@ -19,7 +19,7 @@ stdenv.mkDerivation rec {
     cmake doctest wrapQtAppsHook copyDesktopItems
   ];
   buildInputs = [
-    qtbase qtserialport qtwebsockets doctest qcoro
+    qtbase qtserialport qtwebsockets doctest qcoro_task_exception_handling
   ];
 
   desktopItems = [
