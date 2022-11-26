@@ -48,7 +48,7 @@ in {
       coreutils binutils psmisc progress lshw file vde2
       ldns wget
       gnumake
-      exfat exfatprogs
+      exfat exfatprogs ntfs3g
       nix-index
       usbutils pciutils
 
