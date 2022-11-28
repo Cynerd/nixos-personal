@@ -6,6 +6,10 @@ with lib;
 
   config = {
 
+    boot.kernelParams = [
+      "pcie_aspm=off" # Fix for crashes due to SError Interrupt on ath10k load
+    ];
+
     swapDevices = [{
       device = "/dev/disk/by-partlabel/NixTurrisSwap";
       priority = 1;
