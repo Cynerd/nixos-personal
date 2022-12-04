@@ -48,7 +48,10 @@ in {
         python-lsp-black
         pylint pydocstyle
 
-        mypy pygraphviz
+        mypy
+
+        pygobject3
+        pygraphviz matplotlib
 
         python-gitlab PyGithub
 

@@ -50,7 +50,7 @@ in {
       gnumake
       exfat exfatprogs ntfs3g
       nix-index
-      usbutils pciutils
+      usbutils pciutils smartmontools
 
       # NCurses tools
       htop iotop #glances
