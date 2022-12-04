@@ -80,6 +80,10 @@ device_system() {
 	nix eval --raw ".#nixosConfigurations.$1.config.nixpkgs.system"
 }
 
+build_system() {
+	nix eval --raw --impure --expr 'builtins.currentSystem'
+}
+
 # Validates if link is valid.
 build_validate() {
 	local device="$1"
@@ -93,12 +97,10 @@ build() {
 	local device="$1"
 	shift
 
-	local toplevel=".config.system.build.toplevel"
-	if [ "$(device_system "$device")" = "armv7l-linux" ]; then
-		toplevel=".config.system.build.cross.x86_64-linux${toplevel}"
-	fi
-	if [ "$(device_system "$device")" = "aarch64-linux" ]; then
-		toplevel=".config.system.build.cross.x86_64-linux${toplevel}"
+	local toplevel="config.system.build.toplevel"
+	local bsystem="$(build_system)"
+	if [ "$bsystem" != "$(device_system "$device")" ]; then
+		toplevel="config.system.build.cross.$bsystem.$toplevel"
 	fi
 
 	stage "Building system for device: $device"
@@ -106,7 +108,7 @@ build() {
 		-o "$(result "${device}")" \
 		--keep-going \
 		"$@" \
-		"${0%/*}#nixosConfigurations.${device}${toplevel}"
+		"${0%/*}#nixosConfigurations.${device}.${toplevel}"
 }
 
 ## Copy NixOS system ###########################################################
