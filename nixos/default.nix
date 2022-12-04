@@ -1,6 +1,4 @@
-self:
-
-let
+self: let
 
   modules = import ./modules self.inputs.nixpkgs;
   machines = import ./machine self;
