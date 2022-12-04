@@ -22,6 +22,7 @@ in pkgs.mkShell {
     curl
     ncurses
     flex bison gperf
+    gobject-introspection
     gtk3 gtk4
 
     # Various libraries
@@ -30,10 +31,6 @@ in pkgs.mkShell {
 
     # LVGL
     SDL2 libffi.dev
-
-    (python3.withPackages (pypkgs: with pypkgs; [
-      schema jinja2 ruamel-yaml
-    ]))
   ]);
   inputsFrom = with pkgs; [ default ];
   meta.platforms = nixpkgs.lib.platforms.linux;
