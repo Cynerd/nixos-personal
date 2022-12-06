@@ -40,7 +40,7 @@ if [ -f "$src/flake.nix" ]; then
 	# Build in system when running from sources
 	result="$(nix build --no-link --print-out-paths \
 		"$flake#nixosConfigurations.$hostname.$toplevel")"
-	nix copy --to "$root" "$result" 
+	nix copy --no-check-sigs --to "$root" "$result" 
 else
 	result="$(nix build --no-link --print-out-paths \
 		"$flake#nixosConfigurations.$hostname.$toplevel" \
