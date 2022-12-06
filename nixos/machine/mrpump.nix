@@ -56,12 +56,13 @@ with lib;
 
     # Gitlab runner
     systemd.services.gitlab-runner.serviceConfig = let
+      name2var = name: replaceStrings ["-"] ["_"] (toUpper name);
       runners = project: [
         {
           name = "MrPump Docker (${project})";
           url = "https://gitlab.com";
           id = 18138767;
-          token = "@TOKEN_${toUpper project}_DOCKER@";
+          token = "@TOKEN_${name2var project}_DOCKER@";
           executor = "docker";
           docker = {
             image = "alpine";
@@ -71,7 +72,7 @@ with lib;
           name = "MrPump Nix (${project})";
           url = "https://gitlab.com";
           id = 18139391;
-          token = "@TOKEN_${toUpper project}_NIX@";
+          token = "@TOKEN_${name2var project}_NIX@";
           executor = "docker";
           docker = {
             image = "local/nix:latest";
@@ -97,7 +98,10 @@ with lib;
       ];
       config = (pkgs.formats.toml{}).generate "gitlab-runner.toml" {
         concurrent = 1;
-        runners = (runners "LogC") ++ (runners "NixTurris");
+        runners =
+          (runners "LogC") ++
+          (runners "NixTurris") ++
+          (runners "Check-Suite");
       };
       configPath = "$HOME/.gitlab-runner/config.toml";
       configureScript = pkgs.writeShellScript "gitlab-runner-configure" ''
