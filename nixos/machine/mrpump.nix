@@ -56,52 +56,47 @@ with lib;
 
     # Gitlab runner
     systemd.services.gitlab-runner.serviceConfig = let
-      name2var = name: replaceStrings ["-"] ["_"] (toUpper name);
-      runners = project: [
-        {
-          name = "MrPump Docker (${project})";
-          url = "https://gitlab.com";
-          id = 18138767;
-          token = "@TOKEN_${name2var project}_DOCKER@";
-          executor = "docker";
-          docker = {
-            image = "alpine";
-          };
-        }
-        {
-          name = "MrPump Nix (${project})";
-          url = "https://gitlab.com";
-          id = 18139391;
-          token = "@TOKEN_${name2var project}_NIX@";
-          executor = "docker";
-          docker = {
-            image = "local/nix:latest";
-            allowed_images = ["local/nix:latest"];
-            pull_policy = "if-not-present";
-            allowed_pull_policies = ["if-not-present"];
-            volumes_from = ["gitlabnix:ro"];
-          };
-          environment = [
-            "NIX_REMOTE=daemon"
-            "ENV=/etc/profile.d/nix-daemon.sh"
-            "BASH_ENV=/etc/profile.d/nix-daemon.sh"
-          ];
-          # TODO for some reason the /tmp seems to be missing
-          # The cp is required to allow modification of nix config for cachix as
-          # otherwise it is link to the read only file in the store.
-          pre_build_script = ''
-            mkdir -p /tmp
-            cp --remove-destination \
-              $(readlink -f /etc/nix/nix.conf) /etc/nix/nix.conf
-          '';
-        }
-      ];
       config = (pkgs.formats.toml{}).generate "gitlab-runner.toml" {
         concurrent = 1;
-        runners =
-          (runners "LogC") ++
-          (runners "NixTurris") ++
-          (runners "Check-Suite");
+        runners = [
+          {
+            name = "MrPump Docker";
+            url = "https://gitlab.com";
+            id = 18138767;
+            token = "@TOKEN_DOCKER@";
+            executor = "docker";
+            docker = {
+              image = "alpine";
+            };
+          }
+          {
+            name = "MrPump Nix";
+            url = "https://gitlab.com";
+            id = 18139391;
+            token = "@TOKEN_NIX@";
+            executor = "docker";
+            docker = {
+              image = "local/nix:latest";
+              allowed_images = ["local/nix:latest"];
+              pull_policy = "if-not-present";
+              allowed_pull_policies = ["if-not-present"];
+              volumes_from = ["gitlabnix:ro"];
+            };
+            environment = [
+              "NIX_REMOTE=daemon"
+              "ENV=/etc/profile.d/nix-daemon.sh"
+              "BASH_ENV=/etc/profile.d/nix-daemon.sh"
+            ];
+            # TODO for some reason the /tmp seems to be missing
+            # The cp is required to allow modification of nix config for cachix as
+            # otherwise it is link to the read only file in the store.
+            pre_build_script = ''
+              mkdir -p /tmp
+              cp --remove-destination \
+                $(readlink -f /etc/nix/nix.conf) /etc/nix/nix.conf
+            '';
+          }
+        ];
       };
       configPath = "$HOME/.gitlab-runner/config.toml";
       configureScript = pkgs.writeShellScript "gitlab-runner-configure" ''
