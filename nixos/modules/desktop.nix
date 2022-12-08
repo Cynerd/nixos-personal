@@ -49,11 +49,14 @@ in {
       wf-recorder
       wl-clipboard wl-color-picker
       swayidle
-      dunst
+      dunst libnotify
 
       isync msmtp notmuch astroid
       taskwarrior vdirsyncer khal khard
-      gnupg pass pass-otp pinentry-gnome pinentry-curses
+      gnupg pinentry-gnome pinentry-curses
+      (pass.withExtensions (exts: [
+        exts.pass-otp exts.pass-audit
+      ]))
 
       firefox chromium
       ferdium signal-desktop
@@ -139,6 +142,8 @@ in {
       enableBrowserSocket = true;
     };
     services.dbus.packages = [ pkgs.gcr ];
+
+    programs.kdeconnect.enable = true;
 
     services.pipewire = {
       enable = true;
