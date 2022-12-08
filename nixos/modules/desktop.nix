@@ -53,7 +53,7 @@ in {
 
       isync msmtp notmuch astroid
       taskwarrior vdirsyncer khal khard
-      gnupg pass pinentry-gnome pinentry-curses
+      gnupg pass pass-otp pinentry-gnome pinentry-curses
 
       firefox chromium
       ferdium signal-desktop
@@ -105,6 +105,10 @@ in {
 
       # Latex
       texlive.combined.scheme-full
+
+      # Gnome utils
+      gnome-firmware
+      gaphor
 
     ] ++ (optionals cnf.laptop [
       # Power management

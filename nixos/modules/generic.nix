@@ -38,6 +38,7 @@ in {
     boot.kernelPackages = mkOverride 1100 pkgs.linuxPackages_latest;
     boot.kernelParams = ["boot.shell_on_fail"];
     hardware.enableAllFirmware = true;
+    services.fwupd.enable = true;
 
 
     nixpkgs.config.allowUnfree = true;
