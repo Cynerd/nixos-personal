@@ -5,7 +5,6 @@ nixpkgs: {
   cynerd-develop = import ./develop.nix nixpkgs;
   cynerd-gaming = import ./gaming.nix;
   cynerd-generic = import ./generic.nix;
-  cynerd-hardware = import ./hardware.nix;
   cynerd-hosts = import ./hosts.nix;
   cynerd-openvpn = import ./openvpn.nix;
   cynerd-syncthing = import ./syncthing.nix;
