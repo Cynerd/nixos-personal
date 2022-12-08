@@ -122,6 +122,7 @@ in {
     virtualisation.docker = {
       enable = true;
       autoPrune.enable = true;
+      storageDriver = "btrfs";
     };
     virtualisation.lxd = {
       enable = true;
