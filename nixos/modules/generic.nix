@@ -72,6 +72,7 @@ in {
       iftop nethogs
       # TODO add mdns
       sshfs
+      wakeonlan
 
       lm_sensors
 
