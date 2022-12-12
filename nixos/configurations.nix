@@ -7,6 +7,7 @@ let
     self.nixosModules."machine-${hostname}"
     shellrc.nixosModules.default
     usbkey.nixosModules.default
+    nixbigclown.nixosModules.default
     (personal-secret.lib.personalSecrets hostname)
     {
       networking.hostName = hostname;

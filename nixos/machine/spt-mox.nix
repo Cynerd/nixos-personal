@@ -7,6 +7,10 @@ with lib;
 
   config = {
 
+    environment.systemPackages = with pkgs; [
+      mosquitto
+    ];
+
     networking.wirelessAP = {
       enable = true;
       environmentFile = "/run/secrets/hostapd.env";
@@ -56,6 +60,114 @@ with lib;
       defaultGateway = config.cynerd.hosts.spt.omnia;
       nameservers = [ config.cynerd.hosts.spt.omnia "1.1.1.1" "8.8.8.8" ];
       dhcpcd.allowInterfaces = [ "brlan" ];
+    };
+
+    services.mosquitto = {
+      enable = true;
+      listeners = [
+        {
+          users = {
+            cynerd = {
+              acl = ["readwrite #"];
+              passwordFile = "/run/secrets/mosquitto.cynerd.pass";
+            };
+            bigclown = {
+              acl = ["readwrite bigclown/#"];
+              passwordFile = "/run/secrets/mosquitto.bigclown.pass";
+            };
+          };
+        }
+      ];
+    };
+    networking.firewall.allowedTCPPorts = [1883];
+
+    services.bigclown = {
+      gateway = {
+        enable = true;
+        device = "/dev/ttyUSB0";
+        environmentFile = "/run/secrets/bigclown.env";
+        baseTopicPrefix = "bigclown/";
+        mqtt = {
+          username = "bigclown";
+          password = "@PASS_MQTT@";
+        };
+      };
+      mqtt2influxdb = {
+        enable = true;
+        environmentFile = "/run/secrets/bigclown.env";
+        mqtt = {
+          username = "bigclown";
+          password = "@PASS_MQTT@";
+        };
+        influxdb = {
+          host = "cynerd.cz";
+          database = "bigclown";
+          username = "bigclown";
+          password = "@PASS_INFLUXDB@";
+          ssl = true;
+          verify_ssl = false;
+        };
+        points = [
+          {
+            measurement = "temperature";
+            topic = "bigclown/node/+/thermometer/+/temperature";
+            fields.value = "$.payload";
+            tags = {
+              id = "$.topic[2]";
+              channel = "$.topic[4]";
+            };
+          }
+          {
+            measurement = "relative-humidity";
+            topic = "bigclown/node/+/hygrometer/+/relative-humidity";
+            fields.value = "$.payload";
+            tags = {
+              id = "$.topic[2]";
+              channel = "$.topic[4]";
+            };
+          }
+          {
+            measurement = "illuminance";
+            topic = "bigclown/node/+/lux-meter/0:0/illuminance";
+            fields.value = "$.payload";
+            tags = {
+              id = "$.topic[2]";
+            };
+          }
+          {
+            measurement = "pressure";
+            topic = "bigclown/node/+/barometer/0:0/pressure";
+            fields.value = "$.payload";
+            tags = {
+              id = "$.topic[2]";
+            };
+          }
+          {
+            measurement = "voltage";
+            topic = "bigclown/node/+/battery/+/voltage";
+            fields.value = "$.payload";
+            tags = {
+              id = "$.topic[2]";
+            };
+          }
+          {
+            measurement = "button";
+            topic = "bigclown/node/+/push-button/+/event-count";
+            fields.value = "$.payload";
+            tags = {
+              id = "$.topic[2]";
+              channel = "$.topic[4]";
+            };
+          }
+        ];
+      };
+    };
+
+    systemd.services.bigclown-leds = {
+      description = "Bigclown LEDs control";
+      wantedBy = ["multi-user.target"];
+      after = ["mosquitto.service"];
+      serviceConfig.ExecStart = "${pkgs.bigclown-leds}/bin/bigclown-leds /run/secrets/bigclown-leds.ini";
     };
 
   };

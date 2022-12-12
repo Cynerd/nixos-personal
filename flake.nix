@@ -9,6 +9,7 @@
       url = "github:cynerd/nixturris";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixbigclown.url = "github:cynerd/nixbigclown";
     vpsadminos.url = "github:vpsfreecz/vpsadminos";
 
     shellrc.url = "git+https://git.cynerd.cz/shellrc";

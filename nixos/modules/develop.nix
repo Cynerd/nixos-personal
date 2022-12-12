@@ -69,6 +69,8 @@ in {
         pylxd
         selenium
 
+        paho-mqtt
+
       ]))
       geckodriver
       chromedriver

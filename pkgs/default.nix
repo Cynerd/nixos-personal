@@ -25,6 +25,8 @@ let
 
     lorem-text = callPackage ./lorem-text { };
 
+    bigclown-leds = callPackage ./bigclown-leds { };
+
     # Package to be installed to the user's profile
     cynerd-profile = nixpkgs.symlinkJoin {
       name = "cynerd-profile";
