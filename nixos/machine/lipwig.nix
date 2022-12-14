@@ -5,7 +5,18 @@ with lib;
 {
 
   config = {
-    cynerd.openvpn.personal = true;
+    cynerd = {
+      syncthing = {
+        #enable = true;
+        baseDir = "/nas";
+      };
+      openvpn.personal = true;
+    };
+
+    fileSystems."/nas" = {
+      device = "172.16.128.63:/nas/2682";
+      fsType = "nfs";
+    };
 
     # Git ######################################################################
     services.gitolite = {
