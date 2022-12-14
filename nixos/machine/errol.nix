@@ -60,6 +60,34 @@ with lib;
       configDir = "/home/cynerd/.config/syncthing";
     };
 
+    services.home-assistant = {
+      enable = true;
+      openFirewall = true;
+      configDir = "/var/lib/hass";
+      config = {
+        homeassistant = {
+          name = "SPT";
+          latitude = "!secret latitude";
+          longitude = "!secret longitude";
+          elevation = "!secret elevation";
+          time_zone = "Europe/Prague";
+          country = "CZ";
+        };
+        http.server_port = 8808;
+        mqtt = {
+          broker = config.cynerd.hosts.spt.mox;
+          port = 1883;
+          username = "homeassistant";
+          password = "!secret mqtt_password";
+          sensor = import ./hass/sensors.nix;
+          light = import ./hass/light.nix;
+        };
+        met = {};
+        default_config = {};
+      };
+      extraComponents = [];
+    };
+
   };
 
 }

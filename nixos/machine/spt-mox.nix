@@ -75,6 +75,13 @@ with lib;
               acl = ["readwrite bigclown/#"];
               passwordFile = "/run/secrets/mosquitto.bigclown.pass";
             };
+            homeassistant = {
+              acl = [
+                "readwrite bigclown/#"
+                "readwrite homeassistant/#"
+              ];
+              passwordFile = "/run/secrets/mosquitto.homeassistant.pass";
+            };
           };
         }
       ];
@@ -168,6 +175,45 @@ with lib;
       wantedBy = ["multi-user.target"];
       after = ["mosquitto.service"];
       serviceConfig.ExecStart = "${pkgs.bigclown-leds}/bin/bigclown-leds /run/secrets/bigclown-leds.ini";
+    };
+
+    services.home-assistant = {
+      enable = false;
+      openFirewall = true;
+      configDir = "/var/lib/hass";
+      config = {
+        homeassistant = {
+          name = "SPT";
+          latitude = "!secret latitude";
+          longitude = "!secret longitude";
+          elevation = "!secret elevation";
+          time_zone = "Europe/Prague";
+          country = "CZ";
+        };
+        http.server_port = 8808;
+        mqtt = {
+          broker = config.cynerd.hosts.spt.mox;
+          port = 1883;
+          username = "homeassistant";
+          password = "!secret mqtt_password";
+          sensor = import ./hass/sensors.nix;
+          light = import ./hass/light.nix;
+        };
+        met = {};
+        default_config = {};
+      };
+      extraComponents = [];
+      package = pkgs.home-assistant.override {
+        packageOverrides = (self: super: {
+          scapy = super.scapy.override {
+            withPlottingSupport = false;
+          };
+          s3transfer = super.s3transfer.overridePythonAttrs (oldAttrs: {
+            dontUsePytestCheck = true;
+            dontUseSetuptoolsCheck = true;
+          });
+        });
+      };
     };
 
   };
