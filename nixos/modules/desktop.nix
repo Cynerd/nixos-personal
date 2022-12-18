@@ -5,14 +5,6 @@ let
 
   cnf = config.cynerd.desktop;
 
-  autologinScript = pkgs.writeText "login-program.sh" ''
-    if [[ "$(tty)" == '/dev/tty1' ]]; then
-      ${pkgs.shadow}/bin/login -f cynerd;
-    else
-      ${pkgs.shadow}/bin/login;
-    fi
-  '';
-
 in {
 
   options = {
@@ -112,6 +104,12 @@ in {
       # Gnome utils
       gnome-firmware
       gaphor
+
+      # CAD
+      freecad
+      kicad-with-packages3d
+      sweethome3d.application
+      qelectrotech
 
     ] ++ (optionals cnf.laptop [
       # Power management
