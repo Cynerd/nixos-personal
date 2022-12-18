@@ -2,7 +2,7 @@
 set -eu
 hostname="$1"
 root="${2:-$(pwd)}"
-src="$(readlink -f "${0%/*}")"
+src="$(readlink -f "${0%/*}/..")"
 
 if [ "$(id -u)" -ne 0 ]; then
 	echo "Run this as root!" >&2

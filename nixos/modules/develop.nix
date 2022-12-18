@@ -59,6 +59,7 @@ in {
         jinja2
         ruamel-yaml
         msgpack
+        urllib3 influxdb-client
 
         psycopg
 

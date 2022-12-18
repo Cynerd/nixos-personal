@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "${0%/*}/common.sh"
+source "${0%/*}/tools/common.sh"
 
 operations() {
 	for op in "$@"; do

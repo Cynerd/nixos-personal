@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "${0%/*}/common.sh"
+source "${0%/*}/tools/common.sh"
 declare -a default_hosts
 ################################################################################
 ## x86_64
