@@ -53,9 +53,6 @@ let
     glib = nixpkgs.glib.overrideAttrs (super: {
       nativeBuildInputs = with nixpkgs; super.nativeBuildInputs ++ [ libxslt docbook_xsl ];
     });
-    libtool = nixpkgs.libtool.overrideAttrs (super: {
-      nativeBuildInputs = with nixpkgs; super.nativeBuildInputs ++ [ help2man ];
-    });
   });
 
 in personalpkgs
