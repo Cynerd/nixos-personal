@@ -173,7 +173,7 @@ with lib;
     systemd.services.bigclown-leds = {
       description = "Bigclown LEDs control";
       wantedBy = ["multi-user.target"];
-      after = ["mosquitto.service"];
+      wants = ["mosquitto.service"];
       serviceConfig.ExecStart = "${pkgs.bigclown-leds}/bin/bigclown-leds /run/secrets/bigclown-leds.ini";
     };
 
