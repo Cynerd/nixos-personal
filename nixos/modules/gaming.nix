@@ -19,6 +19,7 @@ in {
     cynerd.desktop.enable = true;
 
     environment.systemPackages = with pkgs; [
+      dwarf-fortress
     ];
 
     programs.steam = {

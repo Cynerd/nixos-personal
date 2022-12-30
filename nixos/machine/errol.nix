@@ -79,13 +79,18 @@ with lib;
           port = 1883;
           username = "homeassistant";
           password = "!secret mqtt_password";
-          sensor = import ./hass/sensors.nix;
-          light = import ./hass/light.nix;
+          sensor = import ../modules/home-assistant/sensors.nix;
+          light = import ../modules/home-assistant/light.nix;
         };
         met = {};
         default_config = {};
       };
       extraComponents = [];
+      package = pkgs.home-assistant.override {
+        extraPackages = pkgs: with pkgs; [
+          securetar
+        ];
+      };
     };
 
   };

@@ -29,7 +29,7 @@ in {
   };
 
   config = mkMerge [
-    { cynerd.monitoring.host = "ridcully"; }
+    { cynerd.monitoring.host = "errol"; }
     (mkIf cnf.enable {
       # Telegraf configuration
       services.telegraf = {
@@ -38,7 +38,7 @@ in {
         extraConfig = {
           agent = {};
           outputs.influxdb_v2 = {
-            urls = ["http://${cnf.host}:8086"];
+            urls = ["http://errol:8086"];
             token = "$INFLUX_TOKEN";
             organization = "personal";
             bucket = "monitoring";
