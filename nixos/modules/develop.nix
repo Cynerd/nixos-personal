@@ -43,7 +43,7 @@ in {
       (python3.withPackages (pypkgs: with pypkgs; [
         ipython
 
-        pytest pytest-html #pytest-tap
+        pytest pytest-html pytest-tap
         coverage
         python-lsp-black
         pylint pydocstyle
