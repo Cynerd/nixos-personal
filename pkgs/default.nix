@@ -48,11 +48,6 @@ let
       };
     });
 
-  } // (nixpkgs.lib.optionalAttrs (nixpkgs.stdenv.hostPlatform != nixpkgs.stdenv.buildPlatform) {
-    # Nixpkgs fixup
-    glib = nixpkgs.glib.overrideAttrs (super: {
-      nativeBuildInputs = with nixpkgs; super.nativeBuildInputs ++ [ libxslt docbook_xsl ];
-    });
-  });
+  };
 
 in personalpkgs
