@@ -1,9 +1,10 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
-
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; {
   config = {
     cynerd = {
       syncthing = {
@@ -38,7 +39,7 @@ with lib;
       enable = true;
       settings = {
         server = {
-          hosts = [ "0.0.0.0:5232" "[::]:5232" ];
+          hosts = ["0.0.0.0:5232" "[::]:5232"];
           ssl = true;
           certificate = "/run/secrets/radicale/radicale.crt";
           key = "/run/secrets/radicale/radicale.key";
@@ -62,5 +63,4 @@ with lib;
       };
     };
   };
-
 }

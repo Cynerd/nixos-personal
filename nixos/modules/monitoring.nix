@@ -1,13 +1,13 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let
-
-cnf = config.cynerd.monitoring;
-hostName = config.networking.hostName;
-isHost = cnf.host == hostName;
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
+  cnf = config.cynerd.monitoring;
+  hostName = config.networking.hostName;
+  isHost = cnf.host == hostName;
 in {
   options.cynerd.monitoring = {
     enable = mkOption {
@@ -29,7 +29,7 @@ in {
   };
 
   config = mkMerge [
-    { cynerd.monitoring.host = "errol"; }
+    {cynerd.monitoring.host = "errol";}
 
     (mkIf cnf.enable {
       # Telegraf configuration
@@ -38,53 +38,75 @@ in {
         environmentFiles = ["/run/secrets/telegraf.env"];
         extraConfig = {
           agent = {};
-          outputs.influxdb_v2 = [{
-            urls = ["http://errol:8086"];
-            token = "$INFLUX_TOKEN";
-            organization = "personal";
-            bucket = "monitoring";
-            tagdrop.source = ["bigclown"]; # See home-assistant.nix
-          }];
-          inputs = {
-            cpu = [{
-              percpu = true;
-              totalcpu = true;
-            }];
-            mem = [{}];
-            swap = [{}];
-            disk = [{
-              ignore_fs = [
-                "tmpfs" "devtmpfs" "devfs" "iso9660" "overlay" "aufs" "squashfs"
+          outputs.influxdb_v2 = [
+            {
+              urls = ["http://errol:8086"];
+              token = "$INFLUX_TOKEN";
+              organization = "personal";
+              bucket = "monitoring";
+              tagdrop.source = ["bigclown"]; # See home-assistant.nix
+            }
+          ];
+          inputs =
+            {
+              cpu = [
+                {
+                  percpu = true;
+                  totalcpu = true;
+                }
               ];
-            }];
-            diskio = [{}];
-            net = [{}];
-            system = [{}];
-            processes = [{}];
-            systemd_units = [{}];
-            wireguard = [{}];
-          } // (optionalAttrs cnf.hw {
-            sensors = [{}];
-            smart = [{
-              path_smartctl = "${pkgs.smartmontools}/bin/smartctl";
-              use_sudo = true;
-            }];
-            wireless = [{}];
-          });
+              mem = [{}];
+              swap = [{}];
+              disk = [
+                {
+                  ignore_fs = [
+                    "tmpfs"
+                    "devtmpfs"
+                    "devfs"
+                    "iso9660"
+                    "overlay"
+                    "aufs"
+                    "squashfs"
+                  ];
+                }
+              ];
+              diskio = [{}];
+              net = [{}];
+              system = [{}];
+              processes = [{}];
+              systemd_units = [{}];
+              wireguard = [{}];
+            }
+            // (optionalAttrs cnf.hw {
+              sensors = [{}];
+              smart = [
+                {
+                  path_smartctl = "${pkgs.smartmontools}/bin/smartctl";
+                  use_sudo = true;
+                }
+              ];
+              wireless = [{}];
+            });
         };
       };
-      systemd.services.telegraf.path = with pkgs; [
-        "/run/wrappers"
-      ] ++ (optionals cnf.hw [
-        lm_sensors smartmontools nvme-cli
-      ]);
+      systemd.services.telegraf.path = with pkgs;
+        [
+          "/run/wrappers"
+        ]
+        ++ (optionals cnf.hw [
+          lm_sensors
+          smartmontools
+          nvme-cli
+        ]);
       security.sudo.extraRules = [
         {
           users = ["telegraf"];
-          commands = [{
-            command = "${pkgs.smartmontools}/bin/smartctl";
-            options = ["NOPASSWD"];
-          }];
+          commands = [
+            {
+              command = "${pkgs.smartmontools}/bin/smartctl";
+              options = ["NOPASSWD"];
+            }
+          ];
         }
       ];
     })
@@ -112,6 +134,5 @@ in {
       };
       networking.firewall.allowedTCPPorts = [8086 3000];
     })
-
   ];
 }

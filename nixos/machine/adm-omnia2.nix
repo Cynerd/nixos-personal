@@ -1,15 +1,21 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
-
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; {
   config = {
     networking = {
       bridges = {
         brlan = {
           interfaces = [
-            "eth2" "lan0" "lan1" "lan2" "lan3" "lan4"
+            "eth2"
+            "lan0"
+            "lan1"
+            "lan2"
+            "lan3"
+            "lan4"
           ];
         };
       };
@@ -32,16 +38,17 @@ with lib;
       };
       interfaces.lan = {
         ipv4 = {
-          addresses = [{
-            address = config.cynerd.hosts.adm.omnia2;
-            prefixLength = 24;
-          }];
+          addresses = [
+            {
+              address = config.cynerd.hosts.adm.omnia2;
+              prefixLength = 24;
+            }
+          ];
         };
       };
       defaultGateway = config.cynerd.hosts.adm.omnia;
-      nameservers = [ config.cynerd.hosts.adm.omnia "1.1.1.1" "8.8.8.8" ];
-      dhcpcd.allowInterfaces = [ "lan" ];
+      nameservers = [config.cynerd.hosts.adm.omnia "1.1.1.1" "8.8.8.8"];
+      dhcpcd.allowInterfaces = ["lan"];
     };
   };
-
 }

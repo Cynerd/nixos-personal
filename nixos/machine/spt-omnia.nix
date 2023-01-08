@@ -1,9 +1,10 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
-
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; {
   config = {
     cynerd = {
       openvpn.oldpersonal = true;
@@ -14,7 +15,11 @@ with lib;
       bridges = {
         brlan = {
           interfaces = [
-            "lan0" "lan1" "lan2" "lan3" "lan4"
+            "lan0"
+            "lan1"
+            "lan2"
+            "lan3"
+            "lan4"
           ];
         };
         #brguest = {
@@ -25,14 +30,16 @@ with lib;
       };
       interfaces.brlan = {
         ipv4 = {
-          addresses = [{
-            address = config.cynerd.hosts.spt.omnia;
-            prefixLength = 24;
-          }];
+          addresses = [
+            {
+              address = config.cynerd.hosts.spt.omnia;
+              prefixLength = 24;
+            }
+          ];
         };
       };
-      nameservers = [ "127.0.0.1" "1.1.1.1" "8.8.8.8" ];
-      dhcpcd.allowInterfaces = [ "eth2" ];
+      nameservers = ["127.0.0.1" "1.1.1.1" "8.8.8.8"];
+      dhcpcd.allowInterfaces = ["eth2"];
     };
 
     services.syncthing = {
@@ -44,7 +51,5 @@ with lib;
 
       dataDir = "/data";
     };
-
   };
-
 }

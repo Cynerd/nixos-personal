@@ -1,5 +1,12 @@
-{ lib, stdenv, stdenvNoCC, fetchFromGitHub, gtk3, gnome-icon-theme, hicolor-icon-theme }:
-
+{
+  lib,
+  stdenv,
+  stdenvNoCC,
+  fetchFromGitHub,
+  gtk3,
+  gnome-icon-theme,
+  hicolor-icon-theme,
+}:
 stdenv.mkDerivation rec {
   pname = "delft-icon-theme";
   version = "1.15";
@@ -11,9 +18,9 @@ stdenv.mkDerivation rec {
     sha256 = "fluSh2TR1CdIW54wkUp1QRB0m9akFKnSn4d+0z6gkLA=";
   };
 
-  nativeBuildInputs = [ gtk3 ];
+  nativeBuildInputs = [gtk3];
 
-  propagatedBuildInputs = [ gnome-icon-theme hicolor-icon-theme ];
+  propagatedBuildInputs = [gnome-icon-theme hicolor-icon-theme];
 
   dontDropIconThemeCache = true;
 

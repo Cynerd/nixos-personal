@@ -1,9 +1,10 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
-
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; {
   config = {
     cynerd = {
       desktop = {
@@ -42,7 +43,5 @@ with lib;
         options = ["compress=lzo" "subvol=@home"];
       };
     };
-
   };
-
 }

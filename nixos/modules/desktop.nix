@@ -1,12 +1,12 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-let
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
   cnf = config.cynerd.desktop;
-
 in {
-
   options = {
     cynerd.desktop = {
       enable = mkOption {
@@ -25,106 +25,146 @@ in {
   config = mkIf cnf.enable {
     programs.sway.enable = true;
     programs.sway.wrapperFeatures.gtk = true;
-    programs.sway.extraPackages = with pkgs; [
-      gnome.dconf-editor
-      glib gsettings-desktop-schemas
-      i3blocks sysstat
-      wofi rofimoji wev
-      swaybackground myswaylock
+    programs.sway.extraPackages = with pkgs;
+      [
+        gnome.dconf-editor
+        glib
+        gsettings-desktop-schemas
+        i3blocks
+        sysstat
+        wofi
+        rofimoji
+        wev
+        swaybackground
+        myswaylock
 
-      alacritty
+        alacritty
 
-      kanshi wdisplays wayvnc wl-mirror
-      slurp grim
-      wf-recorder
-      wl-clipboard wl-color-picker
-      swayidle
-      dunst libnotify
+        kanshi
+        wdisplays
+        wayvnc
+        wl-mirror
+        slurp
+        grim
+        wf-recorder
+        wl-clipboard
+        wl-color-picker
+        swayidle
+        dunst
+        libnotify
 
-      isync msmtp notmuch astroid
-      taskwarrior vdirsyncer khal khard
-      gnupg pinentry-gnome pinentry-curses
-      (pass.withExtensions (exts: [
-        exts.pass-otp exts.pass-audit
-      ]))
+        isync
+        msmtp
+        notmuch
+        astroid
+        taskwarrior
+        vdirsyncer
+        khal
+        khard
+        gnupg
+        pinentry-gnome
+        pinentry-curses
+        (pass.withExtensions (exts: [
+          exts.pass-otp
+          exts.pass-audit
+        ]))
 
-      firefox chromium
-      ferdium signal-desktop
-      libreoffice
-      mupdf pdfgrep
+        firefox
+        chromium
+        ferdium
+        signal-desktop
+        libreoffice
+        mupdf
+        pdfgrep
 
-      xdg-utils xdg-launch
-      mesa-demos vulkan-tools
+        xdg-utils
+        xdg-launch
+        mesa-demos
+        vulkan-tools
 
-      pulsemixer
-      mpd mpc-cli ncmpcpp
-      feh shotwell id3lib
-      vlc mpv youtube-dl
+        pulsemixer
+        mpd
+        mpc-cli
+        ncmpcpp
+        feh
+        shotwell
+        id3lib
+        vlc
+        mpv
+        youtube-dl
 
-      nordic
-      delft-icon-theme gnome.adwaita-icon-theme
-      vanilla-dmz
-      sound-theme-freedesktop
-      gucharmap
+        nordic
+        delft-icon-theme
+        gnome.adwaita-icon-theme
+        vanilla-dmz
+        sound-theme-freedesktop
+        gucharmap
 
-      (sdcv.withDictionaries [ stardict-en-cz stardict-de-cz stardict-cz ])
+        (sdcv.withDictionaries [stardict-en-cz stardict-de-cz stardict-cz])
 
-      samba cifs-utils
+        samba
+        cifs-utils
 
-      tigervnc freerdp
-      plasma5Packages.kdeconnect-kde
+        tigervnc
+        freerdp
+        plasma5Packages.kdeconnect-kde
 
-      hdparm ethtool multipath-tools
-      usb-modeswitch
-      v4l-utils
+        hdparm
+        ethtool
+        multipath-tools
+        usb-modeswitch
+        v4l-utils
 
-      # Calculating
-      python3Packages.numpy python3Packages.sympy python3Packages.matplotlib
+        # Calculating
+        python3Packages.numpy
+        python3Packages.sympy
+        python3Packages.matplotlib
 
-      # Creation
-      simple-scan
-      audacity
-      gimp inkscape
-      blender
-      kdenlive
+        # Creation
+        simple-scan
+        audacity
+        gimp
+        inkscape
+        blender
+        kdenlive
 
-      # GStreamer
-      gst_all_1.gst-libav
-      gst_all_1.gst-plugins-bad
-      gst_all_1.gst-plugins-base
-      gst_all_1.gst-plugins-good
-      gst_all_1.gst-plugins-ugly
-      gst_all_1.gst-plugins-viperfx
+        # GStreamer
+        gst_all_1.gst-libav
+        gst_all_1.gst-plugins-bad
+        gst_all_1.gst-plugins-base
+        gst_all_1.gst-plugins-good
+        gst_all_1.gst-plugins-ugly
+        gst_all_1.gst-plugins-viperfx
 
-      # Latex
-      texlive.combined.scheme-full
+        # Latex
+        texlive.combined.scheme-full
 
-      # Gnome utils
-      gnome-firmware
-      gaphor
+        # Gnome utils
+        gnome-firmware
+        gaphor
 
-      # CAD
-      freecad
-      kicad-with-packages3d
-      sweethome3d.application
-      qelectrotech
-
-    ] ++ (optionals cnf.laptop [
-      # Power management
-      powertop
-      acpi
-    ]);
+        # CAD
+        freecad
+        kicad-with-packages3d
+        sweethome3d.application
+        qelectrotech
+      ]
+      ++ (optionals cnf.laptop [
+        # Power management
+        powertop
+        acpi
+      ]);
     programs.vim.package = pkgs.vimHugeX;
     programs.shellrc.desktop = true;
     xdg.portal.enable = true;
     xdg.portal.wlr.enable = true;
-    xdg.portal.extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
+    xdg.portal.extraPortals = with pkgs; [xdg-desktop-portal-gtk];
     xdg.mime.defaultApplications = {
-      "text/html" = [ "firefox.desktop" ];
-      "application/pdf" = [ "mupdf.desktop" ];
-      "image/jpeg" = [ "feh.desktop" ];
-      "image/png" = [ "feh.desktop" ];
-      "image/svg" = [ "feh.desktop" ];
+      "text/html" = ["firefox.desktop"];
+      "application/pdf" = ["mupdf.desktop"];
+      "image/jpeg" = ["feh.desktop"];
+      "image/png" = ["feh.desktop"];
+      "image/svg" = ["feh.desktop"];
     };
 
     programs.usbkey = {
@@ -137,7 +177,7 @@ in {
       enableSSHSupport = true;
       enableBrowserSocket = true;
     };
-    services.dbus.packages = [ pkgs.gcr ];
+    services.dbus.packages = [pkgs.gcr];
 
     programs.kdeconnect.enable = true;
 
@@ -148,7 +188,7 @@ in {
       pulse.enable = true;
       config.pipewire = {
         context.modules = [
-          { name = "libpipewire-module-zeroconf-discover"; }
+          {name = "libpipewire-module-zeroconf-discover";}
         ];
       };
     };
@@ -157,7 +197,8 @@ in {
     services.printing = {
       enable = true;
       drivers = with pkgs; [
-        gutenprint gutenprintBin
+        gutenprint
+        gutenprintBin
         cnijfilter2
       ];
     };
@@ -167,8 +208,8 @@ in {
       enable = true;
       discovery = true;
     };
-    networking.firewall.allowedTCPPorts = [ 5357 ];
-    networking.firewall.allowedUDPPorts = [ 3702 ];
+    networking.firewall.allowedTCPPorts = [5357];
+    networking.firewall.allowedUDPPorts = [3702];
 
     fonts.fonts = with pkgs; [
       arkpandora_ttf
@@ -188,7 +229,7 @@ in {
 
     services.udev.extraRules = ''
       ACTION=="add|change", KERNEL=="sd*[!0-9]", ATTR{queue/scheduler}="bfq"
-      '';
+    '';
     hardware.opengl.driSupport = true;
     hardware.opengl.driSupport32Bit = true;
 
@@ -224,7 +265,7 @@ in {
 
     # Autologin on the first TTY
     services.getty = {
-      extraArgs = [ "--skip-login" ];
+      extraArgs = ["--skip-login"];
       loginProgram = "${pkgs.bash}/bin/sh";
       loginOptions = toString (pkgs.writeText "login-program.sh" ''
         if [[ "$(tty)" == '/dev/tty1' ]]; then
@@ -238,8 +279,22 @@ in {
     # VTI settings
     console = {
       colors = [
-        "2e3440" "3b4252" "434c5e" "4c566a" "d8dee9" "e5e9f0" "eceff4" "8fbcbb"
-        "88c0d0" "81a1c1" "5e81ac" "bf616a" "d08770" "ebcb8b" "a3be8c" "b48ead"
+        "2e3440"
+        "3b4252"
+        "434c5e"
+        "4c566a"
+        "d8dee9"
+        "e5e9f0"
+        "eceff4"
+        "8fbcbb"
+        "88c0d0"
+        "81a1c1"
+        "5e81ac"
+        "bf616a"
+        "d08770"
+        "ebcb8b"
+        "a3be8c"
+        "b48ead"
       ];
       earlySetup = true;
       useXkbConfig = true;
@@ -248,6 +303,5 @@ in {
     services.gpm.enable = true;
 
     services.locate.enable = true;
-
   };
 }

@@ -1,28 +1,38 @@
-{ config, lib, pkgs, ... }:
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 with builtins;
-with lib;
-
-let
-
+with lib; let
   cnf = config.cynerd.syncthing;
   hostName = config.networking.hostName;
   allDevices = [
-    "albert" "binky" "errol" "lipwig" "ridcully" "susan" "spt-omnia"
+    "albert"
+    "binky"
+    "errol"
+    "lipwig"
+    "ridcully"
+    "susan"
+    "spt-omnia"
   ];
   mediaDevices = [
-    "lipwig" "binky" "errol" "ridcully" "spt-omnia"
+    "lipwig"
+    "binky"
+    "errol"
+    "ridcully"
+    "spt-omnia"
   ];
   bigStorageDevices = [
-    "errol" "ridcully" "spt-omnia"
+    "errol"
+    "ridcully"
+    "spt-omnia"
   ];
   filterDevice = folders: filterAttrs (n: v: any (d: d == hostName) v.devices) folders;
-
 in {
-
   options = {
     cynerd.syncthing = {
-
       enable = mkOption {
         type = types.bool;
         default = false;
@@ -34,13 +44,12 @@ in {
         default = "/home/cynerd";
         description = "Base directory for all folders being synced.";
       };
-
     };
   };
 
   config = mkIf cnf.enable {
     services.syncthing = {
-      enable = any (n:  n == hostName) allDevices;
+      enable = any (n: n == hostName) allDevices;
       user = mkDefault "cynerd";
       key = "/run/secrets/syncthing/key.pem";
       cert = "/run/secrets/syncthing/cert.pem";
@@ -101,15 +110,15 @@ in {
       };
 
       overrideDevices = true;
-      devices = recursiveUpdate
-      (genAttrs allDevices (name: {
-        id = config.secrets.syncthingIDs."${name}";
-      }))
-      {
-        lipwig.addresses = ["tcp://cynerd.cz"];
-      };
+      devices =
+        recursiveUpdate
+        (genAttrs allDevices (name: {
+          id = config.secrets.syncthingIDs."${name}";
+        }))
+        {
+          lipwig.addresses = ["tcp://cynerd.cz"];
+        };
       # TODO phone
     };
   };
-
 }

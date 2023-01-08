@@ -1,18 +1,17 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
   cnf = config.cynerd.home-assistant;
-
 in {
   options = {
     cynerd.home-assistant = mkEnableOption "Enable Home Assistant and Bigclown";
   };
 
   config = mkIf cnf {
-
     services.mosquitto = {
       enable = true;
       listeners = [
@@ -134,27 +133,31 @@ in {
     };
 
     services.telegraf.extraConfig = {
-      outputs.influxdb_v2 = [{
-        urls = ["http://errol:8086"];
-        token = "$INFLUX_TOKEN";
-        organization = "personal";
-        bucket = "bigclown";
-        tagpass.source = ["bigclown"];
-      }];
+      outputs.influxdb_v2 = [
+        {
+          urls = ["http://errol:8086"];
+          token = "$INFLUX_TOKEN";
+          organization = "personal";
+          bucket = "bigclown";
+          tagpass.source = ["bigclown"];
+        }
+      ];
       inputs.mqtt_consumer = let
         consumer = data_type: topics: {
-          tags = { source = "bigclown"; };
+          tags = {source = "bigclown";};
           servers = ["tcp://localhost:1883"];
           topics = topics;
           username = "telegraf";
           password = "$MQTT_PASSWORD";
           data_format = "value";
           data_type = data_type;
-          topic_parsing = [{
-            topic = "bigclown/node/+/+/+/+";
-            measurement = "_/_/_/_/_/measurement";
-            tags = "_/_/device/field/_/_";
-          }];
+          topic_parsing = [
+            {
+              topic = "bigclown/node/+/+/+/+";
+              measurement = "_/_/_/_/_/measurement";
+              tags = "_/_/device/field/_/_";
+            }
+          ];
         };
       in [
         (consumer "float" [
@@ -170,11 +173,13 @@ in {
           "bigclown/node/+/flood-detector/+/alarm"
         ])
       ];
-      processors.pivot = [{
-        tag_key = "field";
-        value_key = "value";
-        tagpass.source = ["bigclown"];
-      }];
+      processors.pivot = [
+        {
+          tag_key = "field";
+          value_key = "value";
+          tagpass.source = ["bigclown"];
+        }
+      ];
     };
 
     services.home-assistant = {
@@ -204,10 +209,11 @@ in {
       };
       extraComponents = [];
       package = pkgs.home-assistant.override {
-        extraPackages = pkgs: with pkgs; [
-          securetar
-        ];
-        packageOverrides = (self: super: {
+        extraPackages = pkgs:
+          with pkgs; [
+            securetar
+          ];
+        packageOverrides = self: super: {
           scapy = super.scapy.override {
             withPlottingSupport = false;
           };
@@ -215,10 +221,8 @@ in {
             dontUsePytestCheck = true;
             dontUseSetuptoolsCheck = true;
           });
-        });
+        };
       };
     };
-
   };
-
 }

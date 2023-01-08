@@ -1,24 +1,25 @@
-{ lib, stdenvNoCC
-, makeShellWrapper, bash, nix
-, devShells
+{
+  lib,
+  stdenvNoCC,
+  makeShellWrapper,
+  bash,
+  nix,
+  devShells,
 }:
-
-with lib;
-
-let
-
+with lib; let
   shells = concatStringsSep ":" (mapAttrsToList (
       n: v: "${n}=${v.drvPath}=${v}"
-    ) devShells);
+    )
+    devShells);
+in
+  stdenvNoCC.mkDerivation rec {
+    name = "personal-devshells";
+    src = ./.;
 
-in stdenvNoCC.mkDerivation rec {
-  name = "personal-devshells";
-  src = ./.;
-
-  nativeBuildInputs = [ makeShellWrapper ];
-  installPhase = ''
-    makeShellWrapper ${./dev.sh} $out/bin/dev \
-      --prefix PATH : ${lib.makeBinPath [ bash nix ]} \
-      --set DEV_SHELLS "${shells}"
-  '';
-}
+    nativeBuildInputs = [makeShellWrapper];
+    installPhase = ''
+      makeShellWrapper ${./dev.sh} $out/bin/dev \
+        --prefix PATH : ${lib.makeBinPath [bash nix]} \
+        --set DEV_SHELLS "${shells}"
+    '';
+  }

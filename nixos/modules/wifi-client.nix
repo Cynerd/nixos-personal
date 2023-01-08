@@ -1,9 +1,10 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
-
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; {
   options = {
     cynerd.wifiClient = mkOption {
       type = types.bool;

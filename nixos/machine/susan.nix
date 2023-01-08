@@ -1,9 +1,10 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
-
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; {
   config = {
     cynerd.desktop.enable = true;
 
@@ -20,7 +21,5 @@ with lib;
         device = "/dev/disk/by-uuid/EB3E-3635";
       };
     };
-
   };
-
 }

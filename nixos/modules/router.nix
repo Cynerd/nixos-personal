@@ -1,12 +1,12 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-let
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
   cnf = config.cynerd.router;
-
 in {
-
   options = {
     cynerd.router = {
       enable = mkOption {
@@ -28,16 +28,14 @@ in {
   };
 
   config = mkIf cnf {
-
     # TODO firewall NAT
     networking = {
-
     };
 
     services.dhcpd4 = {
       enable = true;
       authoritative = true;
-      interfaces = [ "brlan" ];
+      interfaces = ["brlan"];
       extraConfig = ''
       '';
     };
@@ -45,7 +43,7 @@ in {
     services.dhcpd6 = {
       enable = true;
       authoritative = true;
-      interfaces = [ "brlan" ];
+      interfaces = ["brlan"];
       extraConfig = ''
       '';
     };
@@ -53,6 +51,5 @@ in {
     services.kresd = {
       enable = true;
     };
-
   };
 }

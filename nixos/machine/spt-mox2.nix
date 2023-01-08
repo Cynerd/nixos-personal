@@ -1,19 +1,21 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
-
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; {
   config = {
-
     boot.kernelParams = [
       "pcie_aspm=off" # Fix for crashes due to SError Interrupt on ath10k load
     ];
 
-    swapDevices = [{
-      device = "/dev/disk/by-partlabel/NixTurrisSwap";
-      priority = 1;
-    }];
+    swapDevices = [
+      {
+        device = "/dev/disk/by-partlabel/NixTurrisSwap";
+        priority = 1;
+      }
+    ];
 
     networking.wirelessAP = {
       enable = true;
@@ -61,16 +63,17 @@ with lib;
       };
       interfaces.brlan = {
         ipv4 = {
-          addresses = [{
-            address = config.cynerd.hosts.spt.mox2;
-            prefixLength = 24;
-          }];
+          addresses = [
+            {
+              address = config.cynerd.hosts.spt.mox2;
+              prefixLength = 24;
+            }
+          ];
         };
       };
       defaultGateway = config.cynerd.hosts.spt.omnia;
-      nameservers = [ config.cynerd.hosts.spt.omnia "1.1.1.1" "8.8.8.8" ];
-      dhcpcd.allowInterfaces = [ "brlan" ];
+      nameservers = [config.cynerd.hosts.spt.omnia "1.1.1.1" "8.8.8.8"];
+      dhcpcd.allowInterfaces = ["brlan"];
     };
   };
-
 }

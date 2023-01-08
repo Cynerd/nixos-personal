@@ -1,5 +1,9 @@
-{ lib, stdenvNoCC, fetchFromGitHub, imagemagick }:
-
+{
+  lib,
+  stdenvNoCC,
+  fetchFromGitHub,
+  imagemagick,
+}:
 stdenvNoCC.mkDerivation rec {
   pname = "background-lnxpcs";
   version = "20190411";
@@ -11,7 +15,7 @@ stdenvNoCC.mkDerivation rec {
     sha256 = "vtyyG0EHRmgWlxHmHgeckwtOv7t3C+hsuTt/vBdrRQM=";
   };
 
-  nativeBuildInputs = [ imagemagick ];
+  nativeBuildInputs = [imagemagick];
 
   wallpapers = "bash cron gcc gnu gnu-linux iptables kernel kill python root su sudo vim";
   buildPhase = ''

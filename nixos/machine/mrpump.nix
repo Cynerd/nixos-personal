@@ -1,21 +1,21 @@
-self: { config, lib, pkgs, ... }:
-
+self: {
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 with builtins;
-with lib;
-
-{
-
+with lib; {
   config = let
-
     localNix = import (self.inputs.nix.outPath + "/docker.nix") {
       pkgs = pkgs;
       name = "local/nix";
       tag = "latest";
       bundleNixpkgs = false;
-      extraPkgs = with pkgs; [ cachix ];
+      extraPkgs = with pkgs; [cachix];
       nixConf = {
         cores = "0";
-        experimental-features = [ "nix-command" "flakes" ];
+        experimental-features = ["nix-command" "flakes"];
       };
     };
     localNixDaemon = pkgs.dockerTools.buildLayeredImage {
@@ -24,14 +24,13 @@ with lib;
       tag = "latest";
       config = {
         Volumes = {
-          "/nix/store" = { };
-          "/nix/var/nix/db" = { };
-          "/nix/var/nix/daemon-socket" = { };
+          "/nix/store" = {};
+          "/nix/var/nix/db" = {};
+          "/nix/var/nix/daemon-socket" = {};
         };
       };
       maxLayers = 125;
     };
-
   in {
     # MrPump won't see Errol anyway
     cynerd.hosts.enable = false;
@@ -45,7 +44,7 @@ with lib;
         dates = "daily";
       };
     };
-    users.users.cynerd.extraGroups = [ "docker" ];
+    users.users.cynerd.extraGroups = ["docker"];
 
     # Common container for the Gitlab Nix runner
     virtualisation.oci-containers = {
@@ -59,7 +58,7 @@ with lib;
 
     # Gitlab runner
     systemd.services.gitlab-runner.serviceConfig = let
-      config = (pkgs.formats.toml{}).generate "gitlab-runner.toml" {
+      config = (pkgs.formats.toml {}).generate "gitlab-runner.toml" {
         concurrent = 1;
         runners = [
           {
@@ -118,7 +117,5 @@ with lib;
       ExecReload = mkForce "!${configureScript}";
     };
     services.gitlab-runner.enable = true;
-
   };
-
 }

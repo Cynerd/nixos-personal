@@ -1,9 +1,10 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
-
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; {
   config = {
     cynerd = {
       openvpn = {
@@ -15,23 +16,27 @@ with lib;
       bridges = {
         brlan = {
           interfaces = [
-            "eth0" "lan1" "lan2" "lan3" "lan4"
+            "eth0"
+            "lan1"
+            "lan2"
+            "lan3"
+            "lan4"
           ];
         };
       };
-      dhcpcd.allowInterfaces = [ "brlan" ];
+      dhcpcd.allowInterfaces = ["brlan"];
     };
 
-    swapDevices = [{
-      device = "/var/swap";
-      priority = 1;
-    }];
+    swapDevices = [
+      {
+        device = "/var/swap";
+        priority = 1;
+      }
+    ];
 
     environment.systemPackages = with pkgs; [
       #openocd
       sterm
     ];
-
   };
-
 }

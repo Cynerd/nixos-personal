@@ -1,10 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-with builtins;
-with lib;
-
 {
-
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with builtins;
+with lib; {
   config = {
     cynerd.home-assistant = true;
 
@@ -41,7 +42,11 @@ with lib;
       bridges = {
         brlan = {
           interfaces = [
-            "eth0" "lan1" "lan2" "lan3" "lan4"
+            "eth0"
+            "lan1"
+            "lan2"
+            "lan3"
+            "lan4"
           ];
         };
         brguest = {
@@ -52,17 +57,17 @@ with lib;
       };
       interfaces.brlan = {
         ipv4 = {
-          addresses = [{
-            address = config.cynerd.hosts.spt.mox;
-            prefixLength = 24;
-          }];
+          addresses = [
+            {
+              address = config.cynerd.hosts.spt.mox;
+              prefixLength = 24;
+            }
+          ];
         };
       };
       defaultGateway = config.cynerd.hosts.spt.omnia;
-      nameservers = [ config.cynerd.hosts.spt.omnia "1.1.1.1" "8.8.8.8" ];
-      dhcpcd.allowInterfaces = [ "brlan" ];
+      nameservers = [config.cynerd.hosts.spt.omnia "1.1.1.1" "8.8.8.8"];
+      dhcpcd.allowInterfaces = ["brlan"];
     };
-
   };
-
 }

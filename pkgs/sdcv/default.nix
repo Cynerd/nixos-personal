@@ -1,8 +1,15 @@
-{ lib, stdenv, fetchFromGitHub
-, cmake, pkg-config, gettext
-, zlib, glib, pcre, readline
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
+  cmake,
+  pkg-config,
+  gettext,
+  zlib,
+  glib,
+  pcre,
+  readline,
 }:
-
 stdenv.mkDerivation rec {
   pname = "sdcv";
   version = "0.5.3";
@@ -14,8 +21,8 @@ stdenv.mkDerivation rec {
     hash = "sha256-mJ9LrQ/l0SRmueg+IfGnS0NcNheGdOZ2Gl7KMFiK6is=";
   };
 
-  nativeBuildInputs = [ cmake pkg-config gettext ];
-  buildInputs = [ zlib glib pcre readline ];
+  nativeBuildInputs = [cmake pkg-config gettext];
+  buildInputs = [zlib glib pcre readline];
   makeFlags = "sdcv lang";
 
   meta = with lib; {

@@ -1,20 +1,23 @@
-{ lib, stdenv, makeBinaryWrapper
-, stardict
+{
+  lib,
+  stdenv,
+  makeBinaryWrapper,
+  stardict,
 }:
-
-with stardict;
-
-let
-
- drv = stdenv.mkDerivation rec {
+with stardict; let
+  drv = stdenv.mkDerivation rec {
     inherit pname;
     inherit version;
     inherit meta;
 
-    nativeBuildInputs = [ stardict makeBinaryWrapper ];
-    dictionaries = [ /* empty and expecting override */ ];
+    nativeBuildInputs = [stardict makeBinaryWrapper];
+    dictionaries = [
+      /*
+      empty and expecting override
+      */
+    ];
 
-    phases = [ "installPhase" ];
+    phases = ["installPhase"];
     installPhase = ''
       mkdir -p $out/bin $out/usr/share/stardict/dic
       for dic in $dictionaries; do
@@ -32,9 +35,10 @@ let
       done
     '';
 
-    passthru.withDictionaries = dicts: drv.overrideAttrs (oldAttrs: {
-      dictionaries = dicts;
-    });
+    passthru.withDictionaries = dicts:
+      drv.overrideAttrs (oldAttrs: {
+        dictionaries = dicts;
+      });
   };
-
-in drv
+in
+  drv

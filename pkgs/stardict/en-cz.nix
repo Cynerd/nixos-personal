@@ -1,5 +1,8 @@
-{ lib, stdenvNoCC, fetchurl }:
-
+{
+  lib,
+  stdenvNoCC,
+  fetchurl,
+}:
 stdenvNoCC.mkDerivation rec {
   pname = "stardict-en-cz";
   version = "20210401";

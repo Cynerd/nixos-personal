@@ -1,37 +1,52 @@
-{ system, nixpkgs
-, default
-}:
-let
+{
+  system,
+  nixpkgs,
+  default,
+}: let
   pkgs = nixpkgs.legacyPackages.${system};
+in
+  pkgs.mkShell {
+    packages = with pkgs; [
+      clang-tools_14
+      ctags
+      gcc
+      gdb
+      pkg-config
 
-in pkgs.mkShell {
-  packages = (with pkgs; [
+      gnumake
+      bear
+      meson
+      ninja
+      cmake
 
-    clang-tools_14 ctags
-    gcc gdb pkg-config
+      valgrind
+      lcov
+      massif-visualizer
+      cppcheck
+      flawfinder
 
-    gnumake bear
-    meson ninja
-    cmake
+      check
+      curl
+      ncurses
+      flex
+      bison
+      gperf
+      gobject-introspection
+      gtk3
+      gtk4
 
-    valgrind
-    lcov massif-visualizer
-    cppcheck flawfinder
+      # Various libraries
+      openssl.dev
+      zlib.dev
+      curl.dev
+      libconfig
+      czmq
+      libevent.dev
 
-    check
-    curl
-    ncurses
-    flex bison gperf
-    gobject-introspection
-    gtk3 gtk4
-
-    # Various libraries
-    openssl.dev zlib.dev curl.dev libconfig
-    czmq libevent.dev
-
-    # LVGL
-    SDL2 libffi.dev
-  ]);
-  inputsFrom = with pkgs; [ default ];
-  meta.platforms = nixpkgs.lib.platforms.linux;
-}
+      # LVGL
+      SDL2
+      libffi.dev
+    ];
+    inputsFrom = with pkgs; [default];
+    meta.platforms = nixpkgs.lib.platforms.linux;
+  }

@@ -1,9 +1,7 @@
 {
   python3Packages,
   fetchFromGitHub,
-}:
-let
-
+}: let
   pypkg = {
     buildPythonPackage,
     click,
@@ -20,5 +18,5 @@ let
       propagatedBuildInputs = [click];
       passthru.pythonPackage = pypkg;
     };
-
-in python3Packages.callPackage pypkg { }
+in
+  python3Packages.callPackage pypkg {}

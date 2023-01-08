@@ -1,35 +1,38 @@
 self:
 with self.inputs;
-let 
+with builtins;
+with nixpkgs.lib; let
+  modules = hostname:
+    [
+      self.nixosModules.default
+      shellrc.nixosModules.default
+      usbkey.nixosModules.default
+      nixbigclown.nixosModules.default
+      (personal-secret.lib.personalSecrets hostname)
+      {
+        networking.hostName = hostname;
+        nixpkgs.overlays = [
+          self.overlays.default
+          sterm.overlay
+        ];
+      }
+    ]
+    ++ (optional (hasAttr "machine-${hostname}" self.nixosModules) self.nixosModules."machine-${hostname}");
 
-  modules = hostname: [
-    self.nixosModules.default
-    self.nixosModules."machine-${hostname}"
-    shellrc.nixosModules.default
-    usbkey.nixosModules.default
-    nixbigclown.nixosModules.default
-    (personal-secret.lib.personalSecrets hostname)
-    {
-      networking.hostName = hostname;
-      nixpkgs.overlays = [
-        self.overlays.default
-        sterm.overlay
-      ];
-    }
-  ];
-
-  genericSystem = {system ? "x86_64-linux", extra_modules ? []}:
-    hostname: {
-      ${hostname} = nixpkgs.lib.nixosSystem {
-        system = system;
-        modules = (modules hostname) ++ extra_modules;
-      };
+  genericSystem = {
+    system ? "x86_64-linux",
+    extra_modules ? [],
+  }: hostname: {
+    ${hostname} = nixpkgs.lib.nixosSystem {
+      system = system;
+      modules = (modules hostname) ++ extra_modules;
     };
-  amd64System = genericSystem { };
+  };
+  amd64System = genericSystem {};
   vpsSystem = genericSystem {
     extra_modules = [
       vpsadminos.nixosConfigurations.container
-      { boot.loader.systemd-boot.enable = false; }
+      {boot.loader.systemd-boot.enable = false;}
     ];
   };
   raspi2System = genericSystem {
@@ -54,7 +57,8 @@ let
         boot.loader.grub.enable = false;
         boot.loader.systemd-boot.enable = false;
         boot.loader.raspberryPi = {
-          enable = true; version = 3;
+          enable = true;
+          version = 3;
         };
       })
     ];
@@ -72,6 +76,21 @@ let
     ];
   };
 
+  vmSystem = system: hostSystem:
+    genericSystem {
+      system = system;
+      extra_modules = [
+        nixturris.nixosModules.turris-crossbuild
+        {
+          boot.loader.systemd-boot.enable = false;
+          virtualisation.qemu.package = self.nixosConfigurations."${hostSystem}".pkgs.qemu;
+        }
+      ];
+    };
+  amd64vmSystem = vmSystem "x86_64-linux";
+  armv7lvmSystem = vmSystem "armv7l-linux";
+  aarch64vmSystem = vmSystem "aarch64-linux";
+
   turrisSystem = board: hostname: {
     ${hostname} = nixturris.lib.nixturrisSystem {
       nixpkgs = nixpkgs;
@@ -81,21 +100,20 @@ let
   };
   turrisMoxSystem = turrisSystem "mox";
   turrisOmniaSystem = turrisSystem "omnia";
-
 in
-  amd64System "albert" //
-  amd64System "binky" //
-  amd64System "errol" //
-  amd64System "ridcully" //
-  amd64System "susan" //
-  vpsSystem "lipwig" //
-  vpsSystem "mrpump" //
-  raspi2System "spt-mpd" //
-  raspi3System "adm-mpd" //
-  beagleboneSystem "gaspode" //
-  turrisMoxSystem "dean" //
-  turrisOmniaSystem "spt-omnia" //
-  turrisMoxSystem "spt-mox" //
-  turrisMoxSystem "spt-mox2" //
-  turrisOmniaSystem "adm-omnia" //
-  turrisOmniaSystem "adm-omnia2"
+  amd64System "albert"
+  // amd64System "binky"
+  // amd64System "errol"
+  // amd64System "ridcully"
+  // amd64System "susan"
+  // vpsSystem "lipwig"
+  // vpsSystem "mrpump"
+  // raspi2System "spt-mpd"
+  // raspi3System "adm-mpd"
+  // beagleboneSystem "gaspode"
+  // turrisMoxSystem "dean"
+  // turrisOmniaSystem "spt-omnia"
+  // turrisMoxSystem "spt-mox"
+  // turrisMoxSystem "spt-mox2"
+  // turrisOmniaSystem "adm-omnia"
+  // turrisOmniaSystem "adm-omnia2"

@@ -1,11 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
-
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; {
   config = {
-
     fileSystems = {
       "/" = {
         device = "/dev/mmcblk0p2";
@@ -28,9 +28,9 @@ with lib;
     };
 
     #services.pipewire = {
-      #enable = true;
-      #alsa.enable = true;
-      #pulse.enable = true;
+    #enable = true;
+    #alsa.enable = true;
+    #pulse.enable = true;
     #};
     hardware.pulseaudio = {
       enable = true;
@@ -52,7 +52,5 @@ with lib;
         initial_volume = 60;
       };
     };
-
   };
-
 }

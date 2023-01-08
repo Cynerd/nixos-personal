@@ -34,6 +34,8 @@ warning() {
 sshdest() {
 	if [ "$1" = "lipwig" ]; then
 		echo "newlipwig"
+	elif [ "$1" = "binky" ]; then
+		echo "binky.vpn"
 	else
 		awk -F- 'NF > 1 { print $2"."$1; exit } { print $1 }' <<<"$1"
 	fi

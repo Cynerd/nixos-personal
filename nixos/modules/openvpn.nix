@@ -1,13 +1,12 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
   cnf = config.cynerd.openvpn;
-
 in {
-
   options = {
     cynerd.openvpn = {
       personal = mkOption {
@@ -36,11 +35,10 @@ in {
       oldpersonal = mkIf cnf.oldpersonal {
         config = "config /run/secrets/old.ovpn";
       };
-      elektroline = mkIf  cnf.elektroline {
+      elektroline = mkIf cnf.elektroline {
         autoStart = false;
         config = "config /run/secrets/elektroline.ovpn";
       };
     };
   };
-
 }

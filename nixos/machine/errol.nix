@@ -1,9 +1,10 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
-
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; {
   config = {
     cynerd = {
       desktop.enable = true;
@@ -87,12 +88,11 @@ with lib;
       };
       extraComponents = [];
       package = pkgs.home-assistant.override {
-        extraPackages = pkgs: with pkgs; [
-          securetar
-        ];
+        extraPackages = pkgs:
+          with pkgs; [
+            securetar
+          ];
       };
     };
-
   };
-
 }

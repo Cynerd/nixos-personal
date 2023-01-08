@@ -1,9 +1,10 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
 {
-
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; {
   config = {
     cynerd = {
       desktop.enable = true;
@@ -63,7 +64,5 @@ with lib;
       dataDir = "/home/cynerd";
       configDir = "/home/cynerd/.config/syncthing";
     };
-
   };
-
 }

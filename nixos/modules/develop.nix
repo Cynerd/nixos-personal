@@ -1,11 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
 in {
-
   options = {
     cynerd.develop = mkOption {
       type = types.bool;
@@ -19,7 +19,10 @@ in {
     environment.enableDebugInfo = true;
     environment.systemPackages = with pkgs; [
       # Tools
-      tig gource hub github-cli # Git
+      tig
+      gource
+      hub
+      github-cli # Git
       wlc # Weblate
       cloc
       openssl
@@ -28,7 +31,9 @@ in {
 
       # Nix
       dev
-      nix-prefetch-git nix-prefetch-github nix-prefetch-scripts
+      nix-prefetch-git
+      nix-prefetch-github
+      nix-prefetch-scripts
       nix-universal-prefetch
       rnix-lsp
       cachix
@@ -36,50 +41,61 @@ in {
       # Shell
       dash # Posix shell
       bats
-      shellcheck shfmt
-      jq yq
+      shellcheck
+      shfmt
+      jq
+      yq
 
       # Python
-      (python3.withPackages (pypkgs: with pypkgs; [
-        ipython
+      (python3.withPackages (pypkgs:
+        with pypkgs; [
+          ipython
 
-        pytest pytest-html pytest-tap
-        coverage
-        python-lsp-black
-        pylint pydocstyle
+          pytest
+          pytest-html
+          pytest-tap
+          coverage
+          python-lsp-black
+          pylint
+          pydocstyle
 
-        mypy
+          mypy
 
-        pygobject3
-        pygraphviz matplotlib
+          pygobject3
+          pygraphviz
+          matplotlib
 
-        python-gitlab PyGithub
+          python-gitlab
+          PyGithub
 
-        schema
-        jinja2
-        ruamel-yaml
-        msgpack
-        urllib3 influxdb-client
+          schema
+          jinja2
+          ruamel-yaml
+          msgpack
+          urllib3
+          influxdb-client
 
-        psycopg
+          psycopg
 
-        humanize rich
-        lorem-text.pythonPackage
+          humanize
+          rich
+          lorem-text.pythonPackage
 
-        pyserial pylibftdi
-        pylxd
-        selenium
+          pyserial
+          pylibftdi
+          pylxd
+          selenium
 
-        paho-mqtt
-
-      ]))
+          paho-mqtt
+        ]))
       geckodriver
       chromedriver
 
       # Lua
-      (lua5_1.withPackages  (luapkgs: with luapkgs; [
-        luacheck
-      ]))
+      (lua5_1.withPackages (luapkgs:
+        with luapkgs; [
+          luacheck
+        ]))
 
       # Ansible
       ansible
@@ -93,7 +109,8 @@ in {
       tftp-hpa
 
       # Network
-      iperf2 iperf3
+      iperf2
+      iperf3
       wireshark
       inetutils
 
@@ -107,7 +124,9 @@ in {
       dfeet
 
       # Documentation
-      man-pages man-pages-posix linux-manual
+      man-pages
+      man-pages-posix
+      linux-manual
 
       # SHV
       shvspy
@@ -134,11 +153,13 @@ in {
     virtualisation.lxc.enable = true;
     virtualisation.libvirtd.enable = true;
 
-    users.groups.develop = { };
+    users.groups.develop = {};
     users.users.cynerd.extraGroups = [
-      "docker" "lxd" "develop" "libvirtd" "wireshark"
+      "docker"
+      "lxd"
+      "develop"
+      "libvirtd"
+      "wireshark"
     ];
-
   };
-
 }

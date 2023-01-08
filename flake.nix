@@ -17,18 +17,39 @@
     usbkey.url = "git+https://git.cynerd.cz/usbkey?ref=modules";
   };
 
-  outputs = { self, nixpkgs, nix, nixos-hardware, flake-utils, shellrc, ... }:
+  outputs = {
+    self,
+    nixpkgs,
+    nix,
+    nixos-hardware,
+    flake-utils,
+    shellrc,
+    ...
+  }:
     with flake-utils.lib;
-    {
-      overlays.default = final: prev: import ./pkgs { inherit self; nixpkgs = prev; };
-      nixosModules = import ./nixos self;
-      nixosConfigurations = import ./nixos/configurations.nix self;
-    } // eachDefaultSystem (system: {
-      packages = filterPackages system (flattenTree (
-        import ./pkgs { inherit self; nixpkgs = nixpkgs.legacyPackages."${system}"; }
-      ));
-      devShells = filterPackages system
-        (import ./devShells { inherit nixpkgs; inherit shellrc; inherit system; });
-    });
-
+      {
+        overlays.default = final: prev:
+          import ./pkgs {
+            inherit self;
+            nixpkgs = prev;
+          };
+        nixosModules = import ./nixos self;
+        nixosConfigurations = import ./nixos/configurations.nix self;
+      }
+      // eachDefaultSystem (system: {
+        packages = filterPackages system (flattenTree (
+          import ./pkgs {
+            inherit self;
+            nixpkgs = nixpkgs.legacyPackages."${system}";
+          }
+        ));
+        devShells =
+          filterPackages system
+          (import ./devShells {
+            inherit nixpkgs;
+            inherit shellrc;
+            inherit system;
+          });
+        formatter = nixpkgs.legacyPackages.${system}.alejandra;
+      });
 }

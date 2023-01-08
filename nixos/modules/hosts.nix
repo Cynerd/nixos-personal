@@ -1,18 +1,17 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
   cnf = config.cynerd.hosts;
 
   staticZoneOption = mkOption {
     type = types.attrsOf types.str;
     readOnly = true;
   };
-
 in {
-
   options = {
     cynerd.hosts = {
       enable = mkOption {
@@ -62,7 +61,7 @@ in {
         "3dprint" = "10.8.3.80";
         "mpd" = "192.168.0.51";
         # Portable
-        "albert" ="10.8.3.61";
+        "albert" = "10.8.3.61";
         "susan" = "10.8.3.62";
         "binky" = "10.8.3.63";
       };
@@ -100,5 +99,4 @@ in {
       "${cnf.adm.mpd}" = ["mpd.adm"];
     };
   };
-
 }
