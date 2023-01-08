@@ -17,7 +17,7 @@ in {
     cynerd.hosts = {
       enable = mkOption {
         type = types.bool;
-        default = false;
+        default = true;
         description = "Use my personal static hosts";
       };
       vpn = staticZoneOption;

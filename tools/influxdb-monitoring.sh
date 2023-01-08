@@ -3,11 +3,15 @@
 # telemetries.
 set -eu
 
+if ! command -v influx jq pass; then
+	exec nix shell 'nixpkgs#influxdb2' 'nixpkgs#jq' 'nixpkgs#pass' -c "$0" "$@"
+fi
+
 cd "${0%/*}/.."
 
 influx_args=(
 	# Warning: you might want to modify this when you move the InfluxDB host
-	"--host" "http://ridcully:8086"
+	"--host" "http://errol:8086"
 	"--token" "$(pass 'nixos-secrets/influxdb/token/cynerd')"
 )
 

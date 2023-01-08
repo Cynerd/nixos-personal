@@ -26,6 +26,10 @@ in {
               acl = ["readwrite bigclown/#"];
               passwordFile = "/run/secrets/mosquitto.bigclown.pass";
             };
+            telegraf = {
+              acl = ["read bigclown/node/#"];
+              passwordFile = "/run/secrets/mosquitto.telegraf.pass";
+            };
             homeassistant = {
               acl = [
                 "readwrite bigclown/#"
@@ -51,6 +55,7 @@ in {
         };
       };
       mqtt2influxdb = {
+        # TODO remove as we have telegraf
         enable = true;
         environmentFile = "/run/secrets/bigclown.env";
         mqtt = {
@@ -126,6 +131,50 @@ in {
       wantedBy = ["multi-user.target"];
       wants = ["mosquitto.service"];
       serviceConfig.ExecStart = "${pkgs.bigclown-leds}/bin/bigclown-leds /run/secrets/bigclown-leds.ini";
+    };
+
+    services.telegraf.extraConfig = {
+      outputs.influxdb_v2 = [{
+        urls = ["http://errol:8086"];
+        token = "$INFLUX_TOKEN";
+        organization = "personal";
+        bucket = "bigclown";
+        tagpass.source = ["bigclown"];
+      }];
+      inputs.mqtt_consumer = let
+        consumer = data_type: topics: {
+          tags = { source = "bigclown"; };
+          servers = ["tcp://localhost:1883"];
+          topics = topics;
+          username = "telegraf";
+          password = "$MQTT_PASSWORD";
+          data_format = "value";
+          data_type = data_type;
+          topic_parsing = [{
+            topic = "bigclown/node/+/+/+/+";
+            measurement = "_/_/_/_/_/measurement";
+            tags = "_/_/device/field/_/_";
+          }];
+        };
+      in [
+        (consumer "float" [
+          "bigclown/node/+/battery/+/voltage"
+          "bigclown/node/+/thermometer/+/temperature"
+          "bigclown/node/+/hygrometer/+/relative-humidity"
+          "bigclown/node/+/lux-meter/+/illuminance"
+          "bigclown/node/+/barometer/+/pressure"
+          "bigclown/node/+/pir/+/event-count"
+          "bigclown/node/+/push-button/+/event-count"
+        ])
+        (consumer "boolean" [
+          "bigclown/node/+/flood-detector/+/alarm"
+        ])
+      ];
+      processors.pivot = [{
+        tag_key = "field";
+        value_key = "value";
+        tagpass.source = ["bigclown"];
+      }];
     };
 
     services.home-assistant = {

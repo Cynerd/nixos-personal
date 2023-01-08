@@ -33,6 +33,9 @@ with lib;
     };
 
   in {
+    # MrPump won't see Errol anyway
+    cynerd.hosts.enable = false;
+    cynerd.monitoring.enable = false;
 
     # Docker for the gitlab runner
     virtualisation.docker = {

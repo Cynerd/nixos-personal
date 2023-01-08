@@ -23,8 +23,6 @@ in {
   };
 
   config = mkIf cnf.enable {
-    cynerd.hosts.enable = true;
-
     programs.sway.enable = true;
     programs.sway.wrapperFeatures.gtk = true;
     programs.sway.extraPackages = with pkgs; [
