@@ -39,7 +39,7 @@ with lib; {
         };
       };
       nameservers = ["127.0.0.1" "1.1.1.1" "8.8.8.8"];
-      dhcpcd.allowInterfaces = ["eth2"];
+      dhcpcd.allowInterfaces = ["end2"];
     };
 
     services.syncthing = {

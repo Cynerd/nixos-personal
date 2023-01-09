@@ -10,7 +10,7 @@ with lib; {
       bridges = {
         brlan = {
           interfaces = [
-            "eth2"
+            "end2"
             "lan0"
             "lan1"
             "lan2"
