@@ -111,11 +111,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1671565674,
-        "narHash": "sha256-Ma4xhjluhDBJgJPNxdTn8OutocC7HFcJTkLvcl5fLM4=",
+        "lastModified": 1673307919,
+        "narHash": "sha256-OULZCzWcy6o9uURcrCE6+DMaaZ2q/UyVmSjWLIPf9gE=",
         "owner": "cynerd",
         "repo": "nixbigclown",
-        "rev": "0a7d366428b874bf6eef7ed1b74ecdc6c7965954",
+        "rev": "f18479b9fbccd3e3d9bcdfc337b3b20653e29be7",
         "type": "github"
       },
       "original": {
@@ -126,11 +126,11 @@
     },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1672644464,
-        "narHash": "sha256-RYlvRMcQNT7FDoDkViijQBHg9g+blsB+U6AvL/gAsPI=",
+        "lastModified": 1673307158,
+        "narHash": "sha256-d/HYBkMWqQkhSH3hPtEB+uEEwkk9vsHQJ4J7zXdE1wo=",
         "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "ca29e25c39b8e117d4d76a81f1e229824a9b3a26",
+        "rev": "48745e081cfdcc678633c61dbf47a9bd3dfd93a7",
         "type": "github"
       },
       "original": {
@@ -186,11 +186,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1673179929,
-        "narHash": "sha256-mkDqQat24NMqf4z5rK6M4Y+68qVauCSDYouqD3hl66c=",
+        "lastModified": 1673296385,
+        "narHash": "sha256-zlDgiHh0k1GtB8g6wrBzWBDZIBoCNYXfI5+qWE5Rrjk=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "c109fe7e80390ebe9b55913646ecb6f621c1ddd2",
+        "rev": "92c151047e978f2e6abc809c20fb701b5b2d78b0",
         "type": "github"
       },
       "original": {
@@ -251,11 +251,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1673198739,
-        "narHash": "sha256-bXc1sdJNB2vJA3m8zv89v0wm9T8CcgAOIwEmGjTxt3A=",
+        "lastModified": 1673306963,
+        "narHash": "sha256-1ClBFSoPX1M2pnUTnfOAeikYPZM2nH5NMgCttR3xhSk=",
         "owner": "cynerd",
         "repo": "nixturris",
-        "rev": "8737039a954b88127bc6d9a431ba5442f2d0d247",
+        "rev": "4c28c4f0bfe6fb842a7c2f1906fb4e85d359067a",
         "type": "github"
       },
       "original": {
@@ -300,11 +300,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1671629135,
-        "narHash": "sha256-kxxe1vq50kBLK9BiqHytSHUBKhDnX0QFD08t1MIY1ew=",
+        "lastModified": 1673279365,
+        "narHash": "sha256-vdnoYLgbLom8F7M+OFgCgJ43ftWeDmOnmSvzaUqGGrw=",
         "ref": "refs/heads/master",
-        "rev": "3ec7f745b41b709816f936eb2c400626bb6f7d86",
-        "revCount": 87,
+        "rev": "6a755147b903324a0a5a481a631fa0a8082cad12",
+        "revCount": 88,
         "type": "git",
         "url": "https://git.cynerd.cz/shellrc"
       },

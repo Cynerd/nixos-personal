@@ -181,6 +181,7 @@ in {
         }
       ];
     };
+    systemd.services.telegraf.wants = ["mosquitto.service"];
 
     services.home-assistant = {
       enable = false;
