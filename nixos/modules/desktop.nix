@@ -69,7 +69,6 @@ in {
           exts.pass-audit
         ]))
 
-        firefox
         chromium
         ferdium
         signal-desktop
@@ -154,11 +153,16 @@ in {
         powertop
         acpi
       ]);
-    programs.vim.package = pkgs.vimHugeX;
-    programs.shellrc.desktop = true;
-    xdg.portal.enable = true;
-    xdg.portal.wlr.enable = true;
-    xdg.portal.extraPortals = with pkgs; [xdg-desktop-portal-gtk];
+    programs = {
+      vim.package = pkgs.vimHugeX;
+      shellrc.desktop = true;
+      firefox.enable = true;
+    };
+    xdg.portal = {
+      enable = true;
+      wlr.enable = true;
+      extraPortals = with pkgs; [xdg-desktop-portal-gtk];
+    };
     xdg.mime.defaultApplications = {
       "text/html" = ["firefox.desktop"];
       "application/pdf" = ["mupdf.desktop"];
