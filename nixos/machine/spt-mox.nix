@@ -9,15 +9,11 @@ with lib; {
   config = {
     cynerd.home-assistant = true;
 
-    environment.systemPackages = with pkgs; [
-      mosquitto
-    ];
-
     networking.wirelessAP = {
       enable = true;
       environmentFile = "/run/secrets/hostapd.env";
       interfaces = {
-        "wlp4s0" = {
+        "wls1" = {
           countryCode = "CZ";
           channel = 7;
           hwMode = "g";

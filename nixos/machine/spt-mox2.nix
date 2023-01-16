@@ -6,10 +6,6 @@
 }:
 with lib; {
   config = {
-    boot.kernelParams = [
-      "pcie_aspm=off" # Fix for crashes due to SError Interrupt on ath10k load
-    ];
-
     swapDevices = [
       {
         device = "/dev/disk/by-partlabel/NixTurrisSwap";
@@ -21,7 +17,7 @@ with lib; {
       enable = true;
       environmentFile = "/run/secrets/hostapd.env";
       interfaces = {
-        "wlp1s0" = {
+        "wls1" = {
           countryCode = "CZ";
           channel = 7;
           hwMode = "g";
