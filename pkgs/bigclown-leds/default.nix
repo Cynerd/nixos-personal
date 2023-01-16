@@ -12,11 +12,11 @@ with lib; let
     ]);
 in
   stdenvNoCC.mkDerivation rec {
-    name = "personal-devshells";
+    name = "bigclown-leds";
     src = fetchgit {
       url = "https://git.cynerd.cz/bigclown-leds";
-      rev = "1a2c69a2152c315a964c0eb9b2673c70e52051b4";
-      hash = "sha256-alApXwHZeUnNFkO2S+yw0qG18Wr5fF3ErGc0QIgPFU8=";
+      rev = "f84a97b9bf2665dea91f71fb1b0f938eeb725ccf";
+      hash = "sha256-jNbjgf1WdpgK5keSAPhyOXjt8YT8hcVDmkZ3uI2rnwE=";
     };
 
     nativeBuildInputs = [makeWrapper];
