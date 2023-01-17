@@ -3,7 +3,7 @@
 # telemetries.
 set -eu
 
-if ! command -v influx jq pass; then
+if ! command -v influx >/dev/null || ! command -v jq >/dev/null || ! command -v pass >/dev/null; then
 	exec nix shell 'nixpkgs#influxdb2' 'nixpkgs#jq' 'nixpkgs#pass' -c "$0" "$@"
 fi
 
@@ -31,7 +31,7 @@ ensure_token() {
 	pass_path="nixos-secrets/influxdb/token/$hostname"
 	if ! token="$(pass "$pass_path" 2>/dev/null)" \
 		|| ! token_is_valid "$token"; then
-			influx auth create -d "monitoring-$hostname" --write-buckets --json \
+			influx auth create "${influx_args[@]}" -o "personal" -d "monitoring-$hostname" --write-buckets --json \
 				| jq -r '.token' \
 				| sed 's/^\(.*\)$/\1\n\1/' \
 				| pass insert -f "$pass_path"
