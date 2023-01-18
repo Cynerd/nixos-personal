@@ -24,8 +24,7 @@ with lib; {
           ht_capab = ["LDPC" "HT40+" "SHORT-GI-20" "SHORT-GI-40" "TX-STBC" "RX-STBC1" "MAX-AMSDU-7935" "DSSS_CCK-40"];
           ssid = "TurrisRules";
           bridge = "brlan";
-          wpa = true;
-          wpa3 = false;
+          wpa = 2;
           wpaPassphrase = "@PASS_TURRIS_RULES@";
           #bss = {
           #  "wlp1s0host" = {
