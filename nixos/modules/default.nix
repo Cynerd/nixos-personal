@@ -9,6 +9,7 @@
   cynerd-hosts = import ./hosts.nix;
   cynerd-monitoring = import ./monitoring.nix;
   cynerd-openvpn = import ./openvpn.nix;
+  cynerd-router = import ./router.nix;
   cynerd-syncthing = import ./syncthing.nix;
   cynerd-wifi-client = import ./wifi-client.nix;
 }
