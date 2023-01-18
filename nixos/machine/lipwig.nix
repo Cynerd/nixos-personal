@@ -8,10 +8,10 @@ with lib; {
   config = {
     cynerd = {
       syncthing = {
-        #enable = true;
+        enable = false;
         baseDir = "/nas";
       };
-      openvpn.personal = true;
+      openvpn.oldpersonal = true;
     };
 
     fileSystems."/nas" = {
@@ -19,9 +19,51 @@ with lib; {
       fsType = "nfs";
     };
 
+    # Web ######################################################################
+    services.nginx = {
+      enable = true;
+      virtualHosts = {
+        "cynerd.cz" = {
+          forceSSL = true;
+          enableACME = true;
+          serverAliases = [
+            "grafana.cynerd.cz"
+          ];
+          locations."/" = {
+            root = ../../web;
+          };
+        };
+        "git.cynerd.cz" = {
+          forceSSL = true;
+          useACMEHost = "cynerd.cz";
+          locations."/".extraConfig = ''
+            fastcgi_param DOCUMENT_ROOT ${pkgs.cgit}/cgit/;
+            fastcgi_param SCRIPT_NAME cgit;
+            fastcgi_pass unix:${config.services.fcgiwrap.socketAddress};
+          '';
+        };
+        "grafana.cynerd.cz" = {
+          forceSSL = true;
+          useACMEHost = "cynerd.cz";
+          locations."/" = {
+            proxyPass = "http://127.0.0.1:${toString config.services.grafana.settings.server.http_port}/";
+            proxyWebsockets = true;
+          };
+        };
+      };
+    };
+    services.fcgiwrap = {
+      enable = true;
+      group = config.services.nginx.group;
+    };
+    security.acme = {
+      acceptTerms = true;
+      defaults.email = "cynerd+acme@email.cz";
+    };
+
     # Git ######################################################################
     services.gitolite = {
-      enable = false;
+      enable = true;
       user = "git";
       group = "git";
       dataDir = "/var/lib/git";
@@ -33,16 +75,56 @@ with lib; {
       group = "gitdaemon";
       basePath = "/var/lib/git/repositories";
     };
+    environment.etc."cgitrc".text = ''
+      root-title=Cynerd's git repository
+      root-desc=All my projects (at least those released to public)
+      logo=${../../web/wolf.svg}
+      virtual-root=/
+
+      # Allow download of tar.gz, tar.bz2 and zip-files
+      snapshots=tar.gz tar.bz2 zip
+      ## List of common mimetypes
+      mimetype.gif=image/gif
+      mimetype.html=text/html
+      mimetype.jpg=image/jpeg
+      mimetype.jpeg=image/jpeg
+      mimetype.pdf=application/pdf
+      mimetype.png=image/png
+      mimetype.svg=image/svg+xml
+
+      source-filter=${pkgs.cgit}/lib/cgit/filters/syntax-highlighting.py
+      about-filter=${pkgs.cgit}/lib/cgit/filters/about-formatting.sh
+
+      readme=:README.md
+      readme=:README.adoc
+
+      enable-index-owner=0
+      enable-index-links=1
+      enable-http-clone=1
+      clone-url=https://git.cynerd.cz/$CGIT_REPO_URL git://cynerd.cz/$CGIT_REPO_URL.git git@cynerd.cz:$CGIT_REPO_URL
+      enable-commit-graph=1
+      branch-sort=age
+
+      remove-suffix=1
+      enable-git-config=1
+      project-list=/var/lib/git/projects.list
+      scan-path=/var/lib/git/repositories/
+    '';
 
     # CalDAV and CardDAV #######################################################
     services.radicale = {
       enable = true;
+      rights.cynerd = {
+        user = "cynerd";
+        collection = ".*";
+        permission = "rw";
+      };
       settings = {
         server = {
           hosts = ["0.0.0.0:5232" "[::]:5232"];
           ssl = true;
-          certificate = "/run/secrets/radicale/radicale.crt";
-          key = "/run/secrets/radicale/radicale.key";
+          certificate = "/run/secrets/radicale.crt";
+          key = "/run/secrets/radicale.key";
         };
         encoding = {
           request = "utf-8";
@@ -50,17 +132,27 @@ with lib; {
         };
         auth = {
           type = "htpasswd";
-          htpasswd_filename = "/run/secrets/radicale/users";
+          htpasswd_filename = "${config.personal-secrets}/unencrypted/radicale.users";
           htpasswd_encryption = "bcrypt";
           delay = 1;
         };
         storage = {
           filesystem_folder = "/var/lib/radicale/";
         };
-        web = {
-          type = "none";
-        };
+        web.type = "none";
       };
+    };
+
+    # Old Syncthing ############################################################
+    services.syncthing = {
+      enable = true;
+      openDefaultPorts = true;
+
+      overrideDevices = false;
+      overrideFolders = false;
+
+      dataDir = "/nas";
+      configDir = "/nas/.syncthing";
     };
   };
 }

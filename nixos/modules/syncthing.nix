@@ -51,8 +51,8 @@ in {
     services.syncthing = {
       enable = any (n: n == hostName) allDevices;
       user = mkDefault "cynerd";
-      key = "/run/secrets/syncthing/key.pem";
-      cert = "/run/secrets/syncthing/cert.pem";
+      key = "/run/secrets/syncthing.key.pem";
+      cert = "/run/secrets/syncthing.cert.pem";
 
       openDefaultPorts = true;
 
