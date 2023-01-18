@@ -35,6 +35,7 @@
           };
         nixosModules = import ./nixos self;
         nixosConfigurations = import ./nixos/configurations.nix self;
+        lib = import ./lib nixpkgs.lib;
       }
       // eachDefaultSystem (system: {
         packages = filterPackages system (flattenTree (

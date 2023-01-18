@@ -18,6 +18,9 @@ with nixpkgs.lib; let
       }
     ]
     ++ (optional (hasAttr "machine-${hostname}" self.nixosModules) self.nixosModules."machine-${hostname}");
+  specialArgs = {
+    lib = nixpkgs.lib.extend (prev: final: import ../lib prev);
+  };
 
   genericSystem = {
     system ? "x86_64-linux",
@@ -26,6 +29,7 @@ with nixpkgs.lib; let
     ${hostname} = nixpkgs.lib.nixosSystem {
       system = system;
       modules = (modules hostname) ++ extra_modules;
+      specialArgs = specialArgs;
     };
   };
   amd64System = genericSystem {};
@@ -96,6 +100,7 @@ with nixpkgs.lib; let
       nixpkgs = nixpkgs;
       board = board;
       modules = modules hostname;
+      override.specialArgs = specialArgs;
     };
   };
   turrisMoxSystem = turrisSystem "mox";
