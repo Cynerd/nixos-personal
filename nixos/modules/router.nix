@@ -47,15 +47,14 @@ in {
 
   config = mkIf cnf.enable {
     networking = {
-      interfaces."${cnf.brlan}" = {
-        ipv4.addresses = [
-          {
-            address = cnf.lanIP;
-            prefixLength = cnf.lanPrefix;
-          }
-        ];
-      };
+      interfaces."${cnf.brlan}".ipv4.addresses = [
+        {
+          address = cnf.lanIP;
+          prefixLength = cnf.lanPrefix;
+        }
+      ];
       nat = {
+        enable = true;
         externalInterface = cnf.wan;
         internalInterfaces = [cnf.brlan];
       };
@@ -68,7 +67,7 @@ in {
       authoritative = true;
       interfaces = [cnf.brlan];
       extraConfig = ''
-        option domain-name-servers 1.1.1.1 8.8.8.8;
+        option domain-name-servers 1.1.1.1, 8.8.8.8;
         subnet ${ipv4.prefix2ip cnf.lanIP cnf.lanPrefix} netmask ${ipv4.prefix2netmask cnf.lanPrefix} {
             range ${
           ipv4.ipAdd cnf.lanIP cnf.lanPrefix cnf.dynIPStart
@@ -83,7 +82,8 @@ in {
     };
 
     services.dhcpd6 = {
-      enable = true;
+      # TODO
+      enable = false;
       authoritative = true;
       interfaces = [cnf.brlan];
       extraConfig = ''
