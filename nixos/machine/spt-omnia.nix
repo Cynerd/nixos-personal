@@ -15,8 +15,8 @@ with lib; {
       openvpn.oldpersonal = true;
     };
 
-    networking.vlan."end2.848" = {
-      id = "848";
+    networking.vlans."end2.848" = {
+      id = 848;
       interface = "end2";
     };
     # TODO pppd service requires end2.848 interface

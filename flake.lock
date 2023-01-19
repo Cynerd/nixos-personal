@@ -266,11 +266,11 @@
     },
     "personal-secret": {
       "locked": {
-        "lastModified": 1674075125,
-        "narHash": "sha256-LUsUUp8dtgLNbUak1EwPUA+XXWGUQ4iYtH3ED//K4BI=",
+        "lastModified": 1674079601,
+        "narHash": "sha256-AchABbDjOa54PHRNnzFkjL1qzzZ4jcbBM1uiueMgB1k=",
         "ref": "refs/heads/master",
-        "rev": "50cc85d6ab8f86b0b39216f012b2e0db9633461c",
-        "revCount": 62,
+        "rev": "1d985d755929d36757241af38840ed7affc09143",
+        "revCount": 63,
         "type": "git",
         "url": "ssh://git@cynerd.cz/nixos-personal-secret"
       },
