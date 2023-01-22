@@ -12,10 +12,14 @@ with lib; {
         wan = "end2"; # TODO pppoe-wan
         lanIP = config.cynerd.hosts.adm.omnia;
       };
+      wifiAP.adm = {
+        enable = true;
+        w24.interface = "wlp3s0";
+        w5.interface = "wlp2s0";
+      };
       openvpn.oldpersonal = false;
     };
 
-    # TODO pppd service requires end2 interface
     services.pppd = {
       enable = false;
       peers."wan".config = ''
@@ -33,38 +37,11 @@ with lib; {
         password 02
       '';
     };
+    #systemd.services."pppd-wan".after = ["sys-subsystem-net-devices-end2.device"];
 
     networking.bridges = {
-      brlan.interfaces = ["lan0" "lan1" "lan2" "lan3" "lan4"];
-    };
-
-    networking.wirelessAP = {
-      enable = true;
-      environmentFile = "/run/secrets/hostapd.env";
-      interfaces = {
-        "wlp2s0" = {
-          countryCode = "CZ";
-          hwMode = "a";
-          channel = 36;
-          ieee80211ac = true;
-          ht_capab = ["HT40+" "LDPC" "SHORT-GI-20" "SHORT-GI-40" "TX-STBC" "RX-STBC1" "MAX-AMSDU-7935" "DSSS_CCK-40"];
-          vht_capab = ["RXLDPC" "SHORT-GI-80" "TX-STBC-2BY1" "RX-ANTENNA-PATTERN" "TX-ANTENNA-PATTERN" "RX-STBC-1" "MAX-MPDU-11454" "MAX-A-MPDU-LEN-EXP7"];
-          ssid = "TurrisAdamkovi5";
-          wpa = 2;
-          wpaPassphrase = "@PASS_TURRIS_ADAMKOVI@";
-          bridge = "brlan";
-        };
-        "wlp3s0" = {
-          countryCode = "CZ";
-          hwMode = "g";
-          channel = 7;
-          ht_capab = ["HT40+" "SHORT-GI-20" "SHORT-GI-40" "TX-STBC" "RX-STBC1" "DSSS_CCK-40"];
-          ssid = "TurrisAdamkovi";
-          wpa = 2;
-          wpaPassphrase = "@PASS_TURRIS_ADAMKOVI@";
-          bridge = "brlan";
-        };
-      };
+      brlan.interfaces = ["lan1" "lan2" "lan3" "lan4"];
+      brguest.interfaces = ["lan0"];
     };
   };
 }

@@ -11,5 +11,6 @@
   cynerd-openvpn = import ./openvpn.nix;
   cynerd-router = import ./router.nix;
   cynerd-syncthing = import ./syncthing.nix;
+  cynerd-wifi-adm = import ./wifi-adm.nix;
   cynerd-wifi-client = import ./wifi-client.nix;
 }
