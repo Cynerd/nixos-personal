@@ -93,11 +93,11 @@
         "nixpkgs-regression": "nixpkgs-regression"
       },
       "locked": {
-        "lastModified": 1674221769,
-        "narHash": "sha256-R96ogn1ZZ9LFnGHzDV+Ns3jAPIwb7FiPBXYUbsJKGms=",
+        "lastModified": 1674463140,
+        "narHash": "sha256-l1TXSVuXDa7PJf1js1zSao8XDTxzOCim7HfrTxr7l1g=",
         "owner": "NixOS",
         "repo": "nix",
-        "rev": "04de0dd0b4059c75115c780dae8ddc49a847b0e5",
+        "rev": "90e630a542c163e4d0fa2fb28bc6e1782e4bd394",
         "type": "github"
       },
       "original": {
@@ -251,8 +251,8 @@
         ]
       },
       "locked": {
-        "lastModified": 1674418452,
-        "narHash": "sha256-sbvyo/FDdDTe1Vqbu0338cJGeixWq4Uu/HZCLBZtr1U=",
+        "lastModified": 1674466899,
+        "narHash": "sha256-3JK5N/n0hz1pLYngi451DIPy+Bo627ceaT+4E9gFDFQ=",
         "type": "git",
         "url": "file:///home/cynerd/projects/nixturris"
       },
@@ -263,11 +263,11 @@
     },
     "personal-secret": {
       "locked": {
-        "lastModified": 1674426375,
-        "narHash": "sha256-8FrAIKgvw+uMXOKMS6zqN6oTXuY2MN6N1GBxOPaAVj8=",
+        "lastModified": 1674470859,
+        "narHash": "sha256-hUGfB9KOwv7q526G0a/2S95vVmzCektir+Ej+udm5fE=",
         "ref": "refs/heads/master",
-        "rev": "7b32419d01a30262ac522288f2753f2b8ab5016a",
-        "revCount": 65,
+        "rev": "07aa2122b589de2f1cd824201b1bd38beeca0c92",
+        "revCount": 66,
         "type": "git",
         "url": "ssh://git@cynerd.cz/nixos-personal-secret"
       },

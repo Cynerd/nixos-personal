@@ -14,8 +14,8 @@ with lib; {
       };
       wifiAP.adm = {
         enable = true;
-        w24.interface = "wlp3s0";
-        w5.interface = "wlp2s0";
+        ar9287.interface = "wlp3s0";
+        qca988x.interface = "wlp2s0";
       };
       openvpn.oldpersonal = false;
     };

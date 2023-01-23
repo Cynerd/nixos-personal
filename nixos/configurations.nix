@@ -99,8 +99,8 @@ with nixpkgs.lib; let
     ${hostname} = nixturris.lib.nixturrisSystem {
       nixpkgs = nixpkgs;
       board = board;
-      modules = modules hostname;
-      override.specialArgs = specialArgs;
+      modules = [self.nixosModules.defaultRouters] ++ modules hostname;
+      specialArgs = specialArgs;
     };
   };
   turrisMoxSystem = turrisSystem "mox";

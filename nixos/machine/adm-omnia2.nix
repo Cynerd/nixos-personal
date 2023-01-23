@@ -9,8 +9,8 @@ with lib; {
     cynerd = {
       wifiAP.adm = {
         enable = true;
-        w24.interface = "wlp3s0";
-        w5.interface = "wlp2s0";
+        ar9287.interface = "wlp3s0";
+        qca988x.interface = "wlp2s0";
       };
     };
 
@@ -22,7 +22,7 @@ with lib; {
         };
       };
       bridges = {
-        brlan.interfaces = [ "end2" "lan0" "lan1" "lan2" "lan3" "lan4" ];
+        brlan.interfaces = ["end2" "lan0" "lan1" "lan2" "lan3" "lan4"];
         brguest.interfaces = ["brlan.guest"];
       };
       interfaces.brlan.ipv4.addresses = [
