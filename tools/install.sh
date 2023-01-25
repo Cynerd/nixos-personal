@@ -13,6 +13,15 @@ if ! command -v git >/dev/null; then
 	exec nix shell 'nixpkgs#git' -c "$0" "$@"
 fi
 
+# This is copied over from nixos-enter and prevents usage of two unshares
+if [ -z "$NIXOS_ENTER_REEXEC" ]; then
+	export NIXOS_ENTER_REEXEC=1
+	exec unshare --fork --mount --uts --mount-proc --pid -- "$0" "$@"
+else
+	mount --make-rprivate /
+fi
+
+################################################################################
 if [ ! -s "$root/.personal-secrets.key" ]; then
 	echo "Please paste the personal secret key (terminate using ^D)" >&2
 	sudo tee "$root/.personal-secrets.key" >/dev/null
