@@ -56,6 +56,9 @@ touch "$root/etc/NIXOS"
 
 # Copy over binfmt runners if required
 if [ "$buildSystem" != "$targetSystem" ]; then
+	mkdir -p "$root/run"
+	mountpoint -q "$root/run" \
+		|| mount -t tmpfs -o "nosuid,nodev,strictatime,mode=755" tmpfs "$root/run"
 	mkdir -p "$root/run/binfmt"
 	for binfmt in /run/binfmt/*; do
 		nix copy --to "$root" "$(readlink -f "$binfmt")" 
