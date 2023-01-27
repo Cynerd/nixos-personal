@@ -75,39 +75,69 @@ in {
       nameservers = ["1.1.1.1" "8.8.8.8"];
     };
 
-    services.dhcpd4 = {
-      enable = true;
-      authoritative = true;
-      interfaces = ["brlan" "brguest"];
-      extraConfig = ''
-        option domain-name-servers 1.1.1.1, 8.8.8.8;
-        subnet ${ipv4.prefix2ip cnf.lanIP cnf.lanPrefix} netmask ${ipv4.prefix2netmask cnf.lanPrefix} {
-            range ${
-          ipv4.ipAdd cnf.lanIP cnf.lanPrefix cnf.dynIPStart
-        } ${
-          ipv4.ipAdd cnf.lanIP cnf.lanPrefix (cnf.dynIPStart + cnf.dynIPCount)
+    services.kea = {
+      dhcp4 = {
+        enable = true;
+        settings = {
+          lease-database = {
+            name = "/var/lib/kea/dhcp4.leases";
+            persist = true;
+            type = "memfile";
+          };
+          valid-lifetime = 4000;
+          renew-timer = 1000;
+          rebind-timer = 2000;
+          interfaces-config = {
+            interfaces = ["brlan" "brguest"];
+            service-sockets-max-retries = -1;
+          };
+          option-data = [
+            {
+              name = "domain-name-servers";
+              data = "1.1.1.1, 8.8.8.8";
+            }
+          ];
+          subnet4 = [
+            {
+              interface = "brlan";
+              subnet = "${ipv4.prefix2ip cnf.lanIP cnf.lanPrefix}/${toString cnf.lanPrefix}";
+              pools = let
+                ip_start = ipv4.ipAdd cnf.lanIP cnf.lanPrefix cnf.dynIPStart;
+                ip_end = ipv4.ipAdd cnf.lanIP cnf.lanPrefix (cnf.dynIPStart + cnf.dynIPCount);
+              in [{pool = "${ip_start} - ${ip_end}";}];
+              option-data = [
+                {
+                  name = "routers";
+                  data = ipv4.prefix2netmask cnf.lanPrefix;
+                }
+              ];
+              reservations = [
+                {
+                  duid = "e4:6f:13:f3:d5:be";
+                  ip-address = ipv4.ipAdd cnf.lanIP cnf.lanPrefix 60;
+                }
+              ];
+            }
+            {
+              interface = "brguest";
+              subnet = "192.168.1.0/24";
+              pools = [{pool = "192.168.1.50 - 192.168.1.254";}];
+              "option-data" = [
+                {
+                  name = "routers";
+                  data = "192.168.1.1";
+                }
+              ];
+            }
+          ];
         };
-            option routers ${cnf.lanIP};
-            option subnet-mask ${ipv4.prefix2netmask cnf.lanPrefix};
-            option broadcast-address ${ipv4.prefix2broadcast cnf.lanIP cnf.lanPrefix};
-        }
-        subnet 192.168.1.0 netmask 255.255.255.0 {
-          range 192.168.1.50 192.168.1.254;
-          option routers 192.168.1.1;
-          option subnet-mask 255.255.255.0;
-          option broadcast-address 192.168.1.255;
-        }
-      '';
+      };
+      # TODO dhcp6
     };
-
-    services.dhcpd6 = {
-      # TODO
-      enable = false;
-      authoritative = true;
-      interfaces = ["brlan"];
-      extraConfig = ''
-      '';
-    };
+    systemd.services.kea-dhcp4-server.after = [
+      "sys-subsystem-net-devices-brlan.device"
+      "sys-subsystem-net-devices-brguest.device"
+    ];
 
     services.kresd = {
       enable = false;
