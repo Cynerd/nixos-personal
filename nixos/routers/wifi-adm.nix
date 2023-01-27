@@ -29,31 +29,29 @@ in {
   };
 
   config = mkIf cnf.enable {
-    networking.wirelessAP = {
-      enable = true;
+    services.hostapd = {
+      countryCode = "CZ";
       environmentFile = "/run/secrets/hostapd.env";
       interfaces =
         (optionalAttrs (cnf.ar9287.interface != null) {
           "${cnf.ar9287.interface}" =
-            wifiAP.qualcomAtherosAR9287 {
+            hostapd.qualcomAtherosAR9287 {
               channel = cnf.ar9287.channel;
-            }
-            // {
-              bssid = "@BSSID_W24_0@";
+              bssid = "@BSSID_AR9287_0@";
               ssid = "TurrisAdamkovi";
               wpa = 2;
               wpaPassphrase = "@PASS_TURRIS_ADAMKOVI@";
               bridge = "brlan";
               bss = {
                 "${cnf.ar9287.interface}.nela" = {
-                  bssid = "@BSSID_W24_1@";
+                  bssid = "@BSSID_AR9287_1@";
                   ssid = "Nela";
                   wpa = 2;
                   wpaPassphrase = "@PASS_NELA@";
                   bridge = "brguest";
                 };
                 "${cnf.ar9287.interface}.milan" = {
-                  bssid = "@BSSID_W24_2@";
+                  bssid = "@BSSID_AR9287_2@";
                   ssid = "MILAN-AC";
                   wpa = 2;
                   wpaPassphrase = "@PASS_MILAN_AC@";
@@ -64,26 +62,23 @@ in {
         })
         // (optionalAttrs (cnf.qca988x.interface != null) {
           "${cnf.qca988x.interface}" =
-            wifiAP.qualcomAtherosQCA988x {
+            hostapd.qualcomAtherosQCA988x {
               channel = cnf.qca988x.channel;
-            }
-            // {
-              bssid = "@BSSID_W5_0@";
-              countryCode = "CZ";
+              bssid = "@BSSID_AR9287_0@";
               ssid = "TurrisAdamkovi5";
               wpa = 2;
               wpaPassphrase = "@PASS_TURRIS_ADAMKOVI@";
               bridge = "brlan";
               bss = {
                 "${cnf.qca988x.interface}.nela" = {
-                  bssid = "@BSSID_W5_1@";
+                  bssid = "@BSSID_AR9287_1@";
                   ssid = "Nela5";
                   wpa = 2;
                   wpaPassphrase = "@PASS_NELA@";
                   bridge = "brguest";
                 };
                 "${cnf.qca988x.interface}.milan" = {
-                  bssid = "@BSSID_W5_2@";
+                  bssid = "@BSSID_AR9287_2@";
                   ssid = "MILAN-AC";
                   wpa = 2;
                   wpaPassphrase = "@PASS_MILAN_AC@";
