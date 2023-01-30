@@ -12,6 +12,11 @@ with lib; {
         wan = "pppoe-wan";
         lanIP = config.cynerd.hosts.spt.omnia;
       };
+      wifiAP.spt = {
+        enable = true;
+        ar9287.interface = "wlp3s0";
+        qca988x.interface = "wlp2s0";
+      };
       openvpn.oldpersonal = true;
     };
 
@@ -40,35 +45,6 @@ with lib; {
 
     networking.bridges = {
       brlan.interfaces = ["lan0" "lan1" "lan2" "lan3" "lan4"];
-    };
-
-    networking.wirelessAP = {
-      enable = true;
-      environmentFile = "/run/secrets/hostapd.env";
-      interfaces = {
-        "wlp2s0" = {
-          countryCode = "CZ";
-          hwMode = "a";
-          channel = 36;
-          ieee80211ac = true;
-          ht_capab = ["HT40+" "LDPC" "SHORT-GI-20" "SHORT-GI-40" "TX-STBC" "RX-STBC1" "MAX-AMSDU-7935" "DSSS_CCK-40"];
-          vht_capab = ["RXLDPC" "SHORT-GI-80" "TX-STBC-2BY1" "RX-ANTENNA-PATTERN" "TX-ANTENNA-PATTERN" "RX-STBC-1" "MAX-MPDU-11454" "MAX-A-MPDU-LEN-EXP7"];
-          ssid = "TurrisRules5";
-          wpa = 2;
-          wpaPassphrase = "@PASS_TURRIS_RULES@";
-          bridge = "brlan";
-        };
-        "wlp3s0" = {
-          countryCode = "CZ";
-          hwMode = "g";
-          channel = 7;
-          ht_capab = ["HT40+" "SHORT-GI-20" "SHORT-GI-40" "TX-STBC" "RX-STBC1" "DSSS_CCK-40"];
-          ssid = "TurrisRules";
-          wpa = 2;
-          wpaPassphrase = "@PASS_TURRIS_RULES@";
-          bridge = "brlan";
-        };
-      };
     };
 
     services.syncthing = {
