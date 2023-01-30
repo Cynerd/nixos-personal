@@ -19,7 +19,7 @@ with lib; {
       cores = 0;
     };
 
-    boot.binfmt.emulatedSystems = ["armv7l-linux" "aarch64-linux"];
+    #boot.binfmt.emulatedSystems = ["armv7l-linux" "aarch64-linux"];
 
     environment.systemPackages = with pkgs; [
       # Tools
