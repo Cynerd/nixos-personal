@@ -64,5 +64,10 @@ with lib; {
       dataDir = "/home/cynerd";
       configDir = "/home/cynerd/.config/syncthing";
     };
+
+    services.hardware.openrgb = {
+      enable = true;
+      motherboard = "amd";
+    };
   };
 }
