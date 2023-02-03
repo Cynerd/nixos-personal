@@ -9,8 +9,8 @@ known_shells="$(tr ':' '\n' <<<"${DEV_SHELLS:-}")"
 while IFS='=' read name drv res; do
 	if [ "$target" == "$name" ]; then
 		target="$drv"
-		# Note: we do not need substituters as this should be build
-		nixargs+=("--no-substitute")
+		# Note: no network should be needed as this should be available
+		nixargs+=("--offline")
 		break
 	fi
 done <<<"$known_shells"
