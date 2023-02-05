@@ -31,10 +31,10 @@ in {
         "lipwig" = "10.8.0.1";
         "dean" = "10.8.0.4";
         # Portable
-        "android" = "10.8.0.2";
+        "binky" = "10.8.0.2";
         "albert" = "10.8.0.3";
         "susan" = "10.8.0.5";
-        "binky" = "10.8.0.6";
+        "android" = "10.8.0.6";
         # Endpoints
         "spt-omnia" = "10.8.0.50";
         "adm-omnia" = "10.8.0.51";
