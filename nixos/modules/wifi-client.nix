@@ -14,6 +14,9 @@ with lib; {
   };
 
   config = mkIf config.cynerd.wifiClient {
+    environment.systemPackages = with pkgs; [
+      wpa_supplicant_gui
+    ];
     networking.wireless = {
       enable = true;
       networks = config.secrets.wifiNetworks;
