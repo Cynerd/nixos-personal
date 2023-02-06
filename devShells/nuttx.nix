@@ -18,9 +18,9 @@ with nixpkgs.lib; let
       libc = "newlib-nano";
       gcc =
         {
-          arch = arch;
+          inherit arch;
         }
-        // (optionalAttrs (fpu != null) {fpu = fpu;});
+        // (optionalAttrs (fpu != null) {inherit fpu;});
     };
   };
 in

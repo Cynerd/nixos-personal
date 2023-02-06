@@ -4,8 +4,7 @@
   pkgs,
   ...
 }:
-with lib; let
-in {
+with lib; {
   options = {
     cynerd.develop = mkOption {
       type = types.bool;

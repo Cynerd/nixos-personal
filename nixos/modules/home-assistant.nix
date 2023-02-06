@@ -76,11 +76,11 @@ in {
         consumer = data_type: topics: {
           tags = {source = "bigclown";};
           servers = ["tcp://localhost:1883"];
-          topics = topics;
+          inherit topics;
           username = "telegraf";
           password = "$MQTT_PASSWORD";
           data_format = "value";
-          data_type = data_type;
+          inherit data_type;
           topic_parsing = [
             {
               topic = "bigclown/node/+/+/+/+";

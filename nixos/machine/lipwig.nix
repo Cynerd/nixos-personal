@@ -54,7 +54,7 @@ with lib; {
     };
     services.fcgiwrap = {
       enable = true;
-      group = config.services.nginx.group;
+      inherit (config.services.nginx) group;
     };
     security.acme = {
       acceptTerms = true;

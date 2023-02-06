@@ -6,7 +6,7 @@
 }:
 with lib; let
   cnf = config.cynerd.monitoring;
-  hostName = config.networking.hostName;
+  inherit (config.networking) hostName;
   isHost = cnf.host == hostName;
 in {
   options.cynerd.monitoring = {

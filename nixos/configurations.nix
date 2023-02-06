@@ -27,9 +27,8 @@ with nixpkgs.lib; let
     extra_modules ? [],
   }: hostname: {
     ${hostname} = nixpkgs.lib.nixosSystem {
-      system = system;
+      inherit system specialArgs;
       modules = (modules hostname) ++ extra_modules;
-      specialArgs = specialArgs;
     };
   };
   amd64System = genericSystem {};
@@ -82,7 +81,7 @@ with nixpkgs.lib; let
 
   vmSystem = system: hostSystem:
     genericSystem {
-      system = system;
+      inherit system;
       extra_modules = [
         nixturris.nixosModules.turris-crossbuild
         {
@@ -97,10 +96,8 @@ with nixpkgs.lib; let
 
   turrisSystem = board: hostname: {
     ${hostname} = nixturris.lib.nixturrisSystem {
-      nixpkgs = nixpkgs;
-      board = board;
+      inherit nixpkgs board specialArgs;
       modules = [self.nixosModules.defaultRouters] ++ modules hostname;
-      specialArgs = specialArgs;
     };
   };
   turrisMoxSystem = turrisSystem "mox";

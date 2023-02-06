@@ -7,7 +7,7 @@
 with builtins;
 with lib; let
   cnf = config.cynerd.syncthing;
-  hostName = config.networking.hostName;
+  inherit (config.networking) hostName;
   allDevices = [
     "albert"
     "binky"
@@ -29,7 +29,7 @@ with lib; let
     "ridcully"
     "spt-omnia"
   ];
-  filterDevice = folders: filterAttrs (n: v: any (d: d == hostName) v.devices) folders;
+  filterDevice = filterAttrs (n: v: any (d: d == hostName) v.devices);
 in {
   options = {
     cynerd.syncthing = {

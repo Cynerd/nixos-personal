@@ -8,7 +8,7 @@ with builtins;
 with lib; {
   config = let
     localNix = import (self.inputs.nix.outPath + "/docker.nix") {
-      pkgs = pkgs;
+      inherit pkgs;
       name = "local/nix";
       tag = "latest";
       bundleNixpkgs = false;

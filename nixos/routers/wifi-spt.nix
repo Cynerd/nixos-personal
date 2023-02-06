@@ -35,7 +35,7 @@ in {
       interfaces =
         (optionalAttrs (cnf.ar9287.interface != null) {
           "${cnf.ar9287.interface}" = hostapd.qualcomAtherosAR9287 {
-            channel = cnf.ar9287.channel;
+            inherit (cnf.ar9287) channel;
             bssid = "@BSSID_AR9287_0@";
             ssid = "TurrisRules";
             wpa = 2;
@@ -54,7 +54,7 @@ in {
         })
         // (optionalAttrs (cnf.qca988x.interface != null) {
           "${cnf.qca988x.interface}" = hostapd.qualcomAtherosQCA988x {
-            channel = cnf.qca988x.channel;
+            inherit (cnf.qca988x) channel;
             bssid = "@BSSID_QCA988X_0@";
             ssid = "TurrisRules5";
             wpa = 2;
