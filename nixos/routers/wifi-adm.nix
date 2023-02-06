@@ -34,58 +34,56 @@ in {
       environmentFile = "/run/secrets/hostapd.env";
       interfaces =
         (optionalAttrs (cnf.ar9287.interface != null) {
-          "${cnf.ar9287.interface}" =
-            hostapd.qualcomAtherosAR9287 {
-              channel = cnf.ar9287.channel;
-              bssid = "@BSSID_AR9287_0@";
-              ssid = "TurrisAdamkovi";
-              wpa = 2;
-              wpaPassphrase = "@PASS_TURRIS_ADAMKOVI@";
-              bridge = "brlan";
-              bss = {
-                "${cnf.ar9287.interface}.nela" = {
-                  bssid = "@BSSID_AR9287_1@";
-                  ssid = "Nela";
-                  wpa = 2;
-                  wpaPassphrase = "@PASS_NELA@";
-                  bridge = "brguest";
-                };
-                "${cnf.ar9287.interface}.milan" = {
-                  bssid = "@BSSID_AR9287_2@";
-                  ssid = "MILAN-AC";
-                  wpa = 2;
-                  wpaPassphrase = "@PASS_MILAN_AC@";
-                  bridge = "brguest";
-                };
+          "${cnf.ar9287.interface}" = hostapd.qualcomAtherosAR9287 {
+            channel = cnf.ar9287.channel;
+            bssid = "@BSSID_AR9287_0@";
+            ssid = "TurrisAdamkovi";
+            wpa = 2;
+            wpaPassphrase = "@PASS_TURRIS_ADAMKOVI@";
+            bridge = "brlan";
+            bss = {
+              "${cnf.ar9287.interface}.nela" = {
+                bssid = "@BSSID_AR9287_1@";
+                ssid = "Nela";
+                wpa = 2;
+                wpaPassphrase = "@PASS_NELA@";
+                bridge = "brguest";
+              };
+              "${cnf.ar9287.interface}.milan" = {
+                bssid = "@BSSID_AR9287_2@";
+                ssid = "MILAN-AC";
+                wpa = 2;
+                wpaPassphrase = "@PASS_MILAN_AC@";
+                bridge = "brguest";
               };
             };
+          };
         })
         // (optionalAttrs (cnf.qca988x.interface != null) {
-          "${cnf.qca988x.interface}" =
-            hostapd.qualcomAtherosQCA988x {
-              channel = cnf.qca988x.channel;
-              bssid = "@BSSID_AR9287_0@";
-              ssid = "TurrisAdamkovi5";
-              wpa = 2;
-              wpaPassphrase = "@PASS_TURRIS_ADAMKOVI@";
-              bridge = "brlan";
-              bss = {
-                "${cnf.qca988x.interface}.nela" = {
-                  bssid = "@BSSID_AR9287_1@";
-                  ssid = "Nela5";
-                  wpa = 2;
-                  wpaPassphrase = "@PASS_NELA@";
-                  bridge = "brguest";
-                };
-                "${cnf.qca988x.interface}.milan" = {
-                  bssid = "@BSSID_AR9287_2@";
-                  ssid = "MILAN-AC";
-                  wpa = 2;
-                  wpaPassphrase = "@PASS_MILAN_AC@";
-                  bridge = "brguest";
-                };
+          "${cnf.qca988x.interface}" = hostapd.qualcomAtherosQCA988x {
+            channel = cnf.qca988x.channel;
+            bssid = "@BSSID_AR9287_0@";
+            ssid = "TurrisAdamkovi5";
+            wpa = 2;
+            wpaPassphrase = "@PASS_TURRIS_ADAMKOVI@";
+            bridge = "brlan";
+            bss = {
+              "${cnf.qca988x.interface}.nela" = {
+                bssid = "@BSSID_AR9287_1@";
+                ssid = "Nela5";
+                wpa = 2;
+                wpaPassphrase = "@PASS_NELA@";
+                bridge = "brguest";
+              };
+              "${cnf.qca988x.interface}.milan" = {
+                bssid = "@BSSID_AR9287_2@";
+                ssid = "MILAN-AC";
+                wpa = 2;
+                wpaPassphrase = "@PASS_MILAN_AC@";
+                bridge = "brguest";
               };
             };
+          };
         });
     };
   };
