@@ -31,12 +31,13 @@ in {
 
       # Nix
       dev
-      nix-prefetch-git
-      nix-prefetch-github
-      nix-prefetch-scripts
+      cachix
+      nurl
       nix-universal-prefetch
       rnix-lsp
-      cachix
+      statix
+      nixfmt
+      nixpkgs-fmt
 
       # Shell
       dash # Posix shell
