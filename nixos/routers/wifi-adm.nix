@@ -40,21 +40,18 @@ in {
             ssid = "TurrisAdamkovi";
             wpa = 2;
             wpaPassphrase = "@PASS_TURRIS_ADAMKOVI@";
-            bridge = "brlan";
             bss = {
               "${cnf.ar9287.interface}.nela" = {
                 bssid = "@BSSID_AR9287_1@";
                 ssid = "Nela";
                 wpa = 2;
                 wpaPassphrase = "@PASS_NELA@";
-                bridge = "brguest";
               };
               "${cnf.ar9287.interface}.milan" = {
                 bssid = "@BSSID_AR9287_2@";
                 ssid = "MILAN-AC";
                 wpa = 2;
                 wpaPassphrase = "@PASS_MILAN_AC@";
-                bridge = "brguest";
               };
             };
           };
@@ -66,25 +63,35 @@ in {
             ssid = "TurrisAdamkovi5";
             wpa = 2;
             wpaPassphrase = "@PASS_TURRIS_ADAMKOVI@";
-            bridge = "brlan";
             bss = {
               "${cnf.qca988x.interface}.nela" = {
                 bssid = "@BSSID_AR9287_1@";
                 ssid = "Nela5";
                 wpa = 2;
                 wpaPassphrase = "@PASS_NELA@";
-                bridge = "brguest";
               };
               "${cnf.qca988x.interface}.milan" = {
                 bssid = "@BSSID_AR9287_2@";
                 ssid = "MILAN-AC";
                 wpa = 2;
                 wpaPassphrase = "@PASS_MILAN_AC@";
-                bridge = "brguest";
               };
             };
           };
         });
+    };
+    networking.bridges = {
+      brlan.interfaces = filter (v: v != null) [
+        cnf.ar9287.interface
+        cnf.qca988x.interface
+      ];
+      brguest.interfaces = (optionals (cnf.ar9287.interface != null) [
+        "${cnf.ar9287.interface}.nela" 
+        "${cnf.ar9287.interface}.milan" 
+      ]) ++ (optionals (cnf.qca988x.interface != null) [
+        "${cnf.qca988x.interface}.nela" 
+        "${cnf.qca988x.interface}.milan" 
+      ]);
     };
   };
 }
