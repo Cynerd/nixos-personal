@@ -157,6 +157,7 @@ in {
       vim.package = pkgs.vimHugeX;
       shellrc.desktop = true;
       firefox.enable = true;
+      light.enable = mkIf cnf.laptop true;
     };
     xdg.portal = {
       enable = true;
