@@ -108,7 +108,7 @@ in {
               option-data = [
                 {
                   name = "routers";
-                  data = ipv4.prefix2netmask cnf.lanPrefix;
+                  data = cnf.lanIP;
                 }
               ];
               reservations = [
@@ -139,9 +139,7 @@ in {
       "sys-subsystem-net-devices-brguest.device"
     ];
 
-    services.kresd = {
-      enable = false;
-    };
+    services.kresd = {enable = false;};
 
     networking.nftables.enable = true;
     networking.firewall = {
