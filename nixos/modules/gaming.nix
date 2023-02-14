@@ -18,10 +18,6 @@ in {
   config = mkIf cnf {
     cynerd.desktop.enable = true;
 
-    environment.systemPackages = with pkgs; [
-      dwarf-fortress
-    ];
-
     programs.steam = {
       enable = true;
       remotePlay.openFirewall = true;
