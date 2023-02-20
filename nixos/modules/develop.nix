@@ -18,6 +18,7 @@ with lib; {
     environment.enableDebugInfo = true;
     environment.systemPackages = with pkgs; [
       # Tools
+      gitlint
       tig
       gource
       hub
@@ -45,6 +46,7 @@ with lib; {
       shfmt
       jq
       yq
+      fq
 
       # Python
       (python3.withPackages (pypkgs:
@@ -127,6 +129,7 @@ with lib; {
       man-pages
       man-pages-posix
       linux-manual
+      stdmanpages
 
       # SHV
       shvspy
