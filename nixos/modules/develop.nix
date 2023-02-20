@@ -28,6 +28,7 @@ with lib; {
       openssl
       sterm
       parted
+      vim-vint
 
       # Nix
       dev
