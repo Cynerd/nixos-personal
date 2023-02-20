@@ -29,8 +29,15 @@ with lib; {
           serverAliases = [
             "grafana.cynerd.cz"
           ];
-          locations."/" = {
-            root = ../../web;
+          locations = {
+            "/".root = ../../web;
+            "/radicale/" = {
+              proxyPass = "http://127.0.0.1:5232/";
+              extraConfig = ''
+                proxy_set_header  X-Script-Name /radicale;
+                proxy_pass_header Authorization;
+              '';
+            };
           };
         };
         "git.cynerd.cz" = {
@@ -120,12 +127,7 @@ with lib; {
         permission = "rw";
       };
       settings = {
-        server = {
-          hosts = ["0.0.0.0:5232" "[::]:5232"];
-          ssl = true;
-          certificate = "/run/secrets/radicale.crt";
-          key = "/run/secrets/radicale.key";
-        };
+        server.hosts = ["0.0.0.0:5232" "[::]:5232"];
         encoding = {
           request = "utf-8";
           stock = "utf-8";
