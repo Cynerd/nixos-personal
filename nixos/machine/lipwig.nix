@@ -153,8 +153,8 @@ with lib; {
       overrideDevices = false;
       overrideFolders = false;
 
-      dataDir = "/nas";
-      configDir = "/nas/.syncthing";
+      dataDir = "/nas/sync";
+      configDir = "/nas/sync/.syncthing";
     };
   };
 }
