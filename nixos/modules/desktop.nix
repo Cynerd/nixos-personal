@@ -135,8 +135,9 @@ in {
         gst_all_1.gst-plugins-ugly
         gst_all_1.gst-plugins-viperfx
 
-        # Latex
+        # Writing
         texlive.combined.scheme-full
+        vale
 
         # Gnome utils
         gnome-firmware
