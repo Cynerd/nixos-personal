@@ -85,13 +85,15 @@ in {
         cnf.ar9287.interface
         cnf.qca988x.interface
       ];
-      brguest.interfaces = (optionals (cnf.ar9287.interface != null) [
-        "${cnf.ar9287.interface}.nela" 
-        "${cnf.ar9287.interface}.milan" 
-      ]) ++ (optionals (cnf.qca988x.interface != null) [
-        "${cnf.qca988x.interface}.nela" 
-        "${cnf.qca988x.interface}.milan" 
-      ]);
+      brguest.interfaces =
+        (optionals (cnf.ar9287.interface != null) [
+          "${cnf.ar9287.interface}.nela"
+          "${cnf.ar9287.interface}.milan"
+        ])
+        ++ (optionals (cnf.qca988x.interface != null) [
+          "${cnf.qca988x.interface}.nela"
+          "${cnf.qca988x.interface}.milan"
+        ]);
     };
   };
 }

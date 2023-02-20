@@ -72,5 +72,18 @@ in {
           };
         });
     };
+    networking.bridges = {
+      brlan.interfaces = filter (v: v != null) [
+        cnf.ar9287.interface
+        cnf.qca988x.interface
+      ];
+      brguest.interfaces =
+        (optionals (cnf.ar9287.interface != null) [
+          "${cnf.ar9287.interface}.guest"
+        ])
+        ++ (optionals (cnf.qca988x.interface != null) [
+          "${cnf.qca988x.interface}.guest"
+        ]);
+    };
   };
 }
