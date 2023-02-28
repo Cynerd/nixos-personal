@@ -22,7 +22,7 @@
     espc = callDevelop ./nuttx.nix {arch = "rv32imc";};
     c = callDevelop ./c.nix {};
     qt = callDevelop ./qt.nix {};
-    #riscv = callDevelop ./riscv.nix { };
+    riscv = callDevelop ./riscv.nix { };
   };
 in
   shells

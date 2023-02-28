@@ -17,7 +17,7 @@
 in
   pkgs.buildPackages.mkShell {
     packages = with pkgs.buildPackages; [
-      qtrvsim
+      buildPackages.qtrvsim
       gcc
       pkg-config
     ];
