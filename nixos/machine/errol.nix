@@ -19,6 +19,7 @@ with lib; {
     boot.kernelModules = ["kvm-amd"];
 
     hardware.cpu.amd.updateMicrocode = true;
+    services.hardware.openrgb.motherboard = "amd";
 
     cynerd.autounlock = {
       "encroot" = "/dev/disk/by-uuid/8095988e-239b-4417-9df6-94a40e4133ed";

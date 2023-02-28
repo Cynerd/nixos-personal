@@ -19,6 +19,7 @@ with lib; {
     boot.kernelModules = ["kvm-amd"];
 
     hardware.cpu.amd.updateMicrocode = true;
+    services.hardware.openrgb.motherboard = "amd";
 
     cynerd.autounlock = {
       "encroot" = "/dev/disk/by-uuid/c07e929a-6eac-4f99-accf-f7cb3431290c";
@@ -63,11 +64,6 @@ with lib; {
 
       dataDir = "/home/cynerd";
       configDir = "/home/cynerd/.config/syncthing";
-    };
-
-    services.hardware.openrgb = {
-      enable = true;
-      motherboard = "amd";
     };
   };
 }
