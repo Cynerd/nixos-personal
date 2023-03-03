@@ -48,10 +48,10 @@ with lib; {
       };
     };
 
-    networking.vlans."enp6s0.adm" = {
-      id = 2;
-      interface = "enp6s0";
-    };
+    #networking.vlans."enp6s0.adm" = {
+    #id = 2;
+    #interface = "enp6s0";
+    #};
 
     services.syncthing = {
       enable = true;
