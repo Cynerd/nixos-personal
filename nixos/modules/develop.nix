@@ -29,6 +29,7 @@ with lib; {
       sterm
       parted
       vim-vint
+      nodePackages.vim-language-server
 
       # Nix
       dev
