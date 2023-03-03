@@ -36,7 +36,7 @@ with lib; {
       };
       interfaces.brlan.ipv4.addresses = [
         {
-          address = config.cynerd.hosts.spt.mox;
+          address = config.cynerd.hosts.spt.mox2;
           prefixLength = 24;
         }
       ];
