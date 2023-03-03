@@ -125,7 +125,8 @@ copy() {
 	store="$(readlink -f "$(result "$device")")"
 
 	local freespace required;
-	freespace="$(_ssh "$device" df -B 1 /nix | awk 'NR == 2 { print $4 }')"
+	freespace_raw="$(_ssh "$device" df -B 1 --output=avail /nix)"
+	freespace="$(echo "$freespace_raw" | tail -1)"
 	required="$(nix path-info -S "$store" | awk '{ print $2 }')"
 	info "Free space on device: $(numfmt --to=iec "$freespace")"
 	info "Required space: $(numfmt --to=iec "$required")"

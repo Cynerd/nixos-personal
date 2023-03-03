@@ -93,11 +93,11 @@
         "nixpkgs-regression": "nixpkgs-regression"
       },
       "locked": {
-        "lastModified": 1677226426,
-        "narHash": "sha256-eLBKTZegg9qSyylUbNQQDSwdkz6PT9r/wPqnxcEa2uU=",
+        "lastModified": 1677847796,
+        "narHash": "sha256-nuJpPPzJyZvar/aQxTz28pYpdUEmNbuM3grI9YTPMik=",
         "owner": "NixOS",
         "repo": "nix",
-        "rev": "92611e6e4c1c5c712ca7d5f9a258640662d006df",
+        "rev": "0507462c0626d19b59b78e490b7b203df29e7bb0",
         "type": "github"
       },
       "original": {
@@ -126,11 +126,11 @@
     },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1677232326,
-        "narHash": "sha256-rAk2/80kLvA3yIMmSV86T1B4kNvwCFMSQ1FxXndaUB0=",
+        "lastModified": 1677591639,
+        "narHash": "sha256-DMlAyge+u3K+JOFLA5YfdjqagdAYJf29YGBWpy5izg4=",
         "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "2d44015779cced4eec9df5b8dab238b9f6312cb2",
+        "rev": "77de4cd09db4dbee9551ed2853cfcf113d7dc5ce",
         "type": "github"
       },
       "original": {
@@ -186,11 +186,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1677098068,
-        "narHash": "sha256-ZvxvGkPxp0fg/YKqqrW8sapr/1GJ2CmA+IBAFS+NuMs=",
+        "lastModified": 1677845674,
+        "narHash": "sha256-9wy/QFibdJUp7WQUe50U5bZKocg3OOHBpJhpl5ddfbE=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "3d566e183b71fec07b6d466375190f9e79b1e735",
+        "rev": "dcc47fef8bd1e91baeab8fb34a35337ab8f3a3fd",
         "type": "github"
       },
       "original": {
@@ -266,11 +266,11 @@
     },
     "personal-secret": {
       "locked": {
-        "lastModified": 1676992796,
-        "narHash": "sha256-Bweyzl164Ce0Vmmg3NVVL8Quj8G+X3/o/gTKgPSMVHU=",
+        "lastModified": 1677870303,
+        "narHash": "sha256-w1WHQGNLT7BRKOhe1ryZKRbrC2DH5nc0a5EpqhU+bg0=",
         "ref": "refs/heads/master",
-        "rev": "78cb722bb5a2dbfd678c85806252fbdd1c22f5d8",
-        "revCount": 67,
+        "rev": "0784e1aefb1352ce15bfce309f11eeac8356b841",
+        "revCount": 69,
         "type": "git",
         "url": "ssh://git@cynerd.cz/nixos-personal-secret"
       },
