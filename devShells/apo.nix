@@ -15,19 +15,19 @@
       };
     };
   };
-  mipsPkgs = import nixpkgs.outPath {
-    localSystem = system;
-    crossSystem = {
-      config = "mips-none-elf";
-      libc = "newlib-nano";
-    };
-  };
+  #mipsPkgs = import nixpkgs.outPath {
+  #  localSystem = system;
+  #  crossSystem = {
+  #    config = "mips-none-elf";
+  #    libc = "newlib-nano";
+  #  };
+  #};
 in
   pkgs.buildPackages.mkShell {
     packages = with pkgs; [
       qtrvsim
       riscvPkgs.buildPackages.gcc
-      mipsPkgs.buildPackages.gcc
+      #mipsPkgs.buildPackages.gcc
     ];
     inputsFrom = [default c];
     meta.platforms = nixpkgs.lib.platforms.linux;
