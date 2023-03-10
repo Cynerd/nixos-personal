@@ -71,7 +71,21 @@ in {
         externalInterface = cnf.wan;
         internalInterfaces = ["brlan" "brguest"];
       };
-      dhcpcd.allowInterfaces = [cnf.wan];
+      dhcpcd = {
+        allowInterfaces = [cnf.wan];
+        extraConfig = ''
+          duid
+          noipv6rs
+          waitip 6
+
+          interface ${cnf.wan}
+          ipv6rs
+          iaid 1
+
+          ia_pd 1 brlan
+          #ia_pd 1/::/64 LAN/0/64
+        '';
+      };
       nameservers = ["1.1.1.1" "8.8.8.8"];
     };
 
@@ -132,12 +146,29 @@ in {
           ];
         };
       };
-      # TODO dhcp6
     };
     systemd.services.kea-dhcp4-server.after = [
       "sys-subsystem-net-devices-brlan.device"
       "sys-subsystem-net-devices-brguest.device"
     ];
+
+    services.radvd = {
+      enable = true;
+      config = ''
+        interface ${cnf.wan} {
+          AdvSendAdvert on;
+          MinRtrAdvInterval 3;
+          MaxRtrAdvInterval 10;
+          prefix ::/64 {
+            AdvOnLink on;
+            AdvAutonomous on;
+            AdvRouterAddr on;
+          };
+          RDNSS 2001:4860:4860::8888 2001:4860:4860::8844 {
+          };
+        };
+      '';
+    };
 
     services.kresd = {enable = false;};
 
