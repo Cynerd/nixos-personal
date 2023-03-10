@@ -287,6 +287,9 @@ in {
       '');
     };
 
+    # Leds group is required for light
+    users.users.cynerd.extraGroups = ["leds"];
+
     # VTI settings
     console = {
       colors = [
