@@ -4,20 +4,19 @@
   fetchFromGitHub,
   cmake,
   doctest,
-  libsForQt5,
-  qcoro_task_exception_handling,
+  qt6,
   makeDesktopItem,
   copyDesktopItems,
 }:
-with libsForQt5;
+with qt6;
   stdenv.mkDerivation rec {
     name = "shvspy";
 
     src = fetchFromGitHub {
       owner = "silicon-heaven";
       repo = "shvspy";
-      rev = "a922e963bf7884164fe2b124a7a4366f7fc802a3";
-      sha256 = "ExA+sFlkxFKXk69DKoGzKm80ypiNFwN281MwZkMgaVY=";
+      rev = "c8a3b52e7300f1f05a54569121da8a2e9bb015aa";
+      hash = "sha256-+aknZ/Uo0VuMm45PHqSrvdyfD73hofS8HKVSfkIyM5I=";
       fetchSubmodules = true;
     };
 
@@ -31,8 +30,8 @@ with libsForQt5;
       qtbase
       qtserialport
       qtwebsockets
+      qtsvg
       doctest
-      qcoro_task_exception_handling
     ];
 
     desktopItems = [
