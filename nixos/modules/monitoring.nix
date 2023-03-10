@@ -7,7 +7,7 @@
 with lib; let
   cnf = config.cynerd.monitoring;
   inherit (config.networking) hostName;
-  isHost = cnf.host == hostName;
+  isHost = cnf.host == hostName || hostName == "errol";
 in {
   options.cynerd.monitoring = {
     enable = mkOption {
@@ -29,7 +29,7 @@ in {
   };
 
   config = mkMerge [
-    {cynerd.monitoring.host = "errol";}
+    {cynerd.monitoring.host = "lipwig";}
 
     (mkIf cnf.enable {
       # Telegraf configuration
@@ -40,6 +40,7 @@ in {
           agent = {};
           outputs.influxdb_v2 = [
             {
+              # TODO change to lipwig!!
               urls = ["http://errol:8086"];
               token = "$INFLUX_TOKEN";
               organization = "personal";
