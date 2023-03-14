@@ -68,6 +68,7 @@ in {
         mc
         screen
         tmux
+        pv
 
         # ls tools
         tree

@@ -22,7 +22,7 @@ with lib; {
     services.hardware.openrgb.motherboard = "amd";
 
     cynerd.autounlock = {
-      "encroot" = "/dev/disk/by-uuid/8095988e-239b-4417-9df6-94a40e4133ed";
+      "encroot" = "/dev/disk/by-uuid/7c412ae6-6016-45af-8c2a-8fcc394dbbe6";
       "enchdd1" = "/dev/disk/by-uuid/87f16080-5ff6-43dd-89f3-307455a46fbe";
       "enchdd2" = "/dev/disk/by-uuid/be4a33fa-8bc6-431d-a3ac-787668f223ed";
     };
@@ -38,7 +38,7 @@ with lib; {
         options = ["compress=lzo" "subvol=@home"];
       };
       "/boot" = {
-        device = "/dev/disk/by-uuid/87B0-A1D5";
+        device = "/dev/disk/by-uuid/49D9-3A0D";
         fsType = "vfat";
       };
 
@@ -93,6 +93,7 @@ with lib; {
         extraPackages = pkgs:
           with pkgs; [
             securetar
+            pyipp
           ];
       };
     };
