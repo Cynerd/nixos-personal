@@ -62,35 +62,13 @@ with lib; {
           python-lsp-black
           pylint
           pydocstyle
-
           mypy
 
-          pygobject3
           pygraphviz
           matplotlib
 
           python-gitlab
           PyGithub
-
-          schema
-          jinja2
-          ruamel-yaml
-          msgpack
-          urllib3
-          influxdb-client
-
-          psycopg
-
-          humanize
-          rich
-          lorem-text.pythonPackage
-
-          pyserial
-          pylibftdi
-          pylxd
-          selenium
-
-          paho-mqtt
         ]))
       geckodriver
       chromedriver

@@ -22,6 +22,7 @@
     espc = callDevelop ./nuttx.nix {arch = "rv32imc";};
     c = callDevelop ./c.nix {};
     qt = callDevelop ./qt.nix {};
+    python = callDevelop ./python.nix {};
     apo = callDevelop ./apo.nix {};
   };
 in
