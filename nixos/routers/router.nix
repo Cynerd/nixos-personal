@@ -155,7 +155,7 @@ in {
     services.radvd = {
       enable = true;
       config = ''
-        interface ${cnf.wan} {
+        interface brlan {
           AdvSendAdvert on;
           MinRtrAdvInterval 3;
           MaxRtrAdvInterval 10;
