@@ -29,31 +29,18 @@
     with flake-utils.lib;
       {
         lib = import ./lib nixpkgs.lib;
-        overlays.default = final: prev:
-          import ./pkgs {
-            inherit self;
-            nixpkgs = prev;
-          };
+        overlays.default = final: import ./pkgs;
         nixosModules = import ./nixos self;
         nixosConfigurations = import ./nixos/configurations.nix self;
       }
       // eachDefaultSystem (system: let
-        pkgs = nixpkgs.legacyPackages."${system}";
+        pkgs = nixpkgs.legacyPackages."${system}".appendOverlays [
+          shellrc.overlays.default
+        ];
       in {
-        packages = filterPackages system (flattenTree (
-          import ./pkgs {
-            inherit self;
-            nixpkgs = pkgs;
-          }
-        ));
+        packages = filterPackages system (flattenTree (import ./pkgs pkgs));
         legacyPackages = pkgs.extend self.overlays.default;
-        devShells =
-          filterPackages system
-          (import ./devShells {
-            inherit nixpkgs;
-            inherit shellrc;
-            inherit system;
-          });
+        devShells = filterPackages system (import ./devShells pkgs);
         formatter = pkgs.alejandra;
       });
 }

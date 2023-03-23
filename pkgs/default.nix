@@ -1,13 +1,10 @@
-{
-  self,
-  nixpkgs,
-}: let
-  callPackage = nixpkgs.newScope personalpkgs;
+pkgs: let
+  callPackage = pkgs.newScope personalpkgs;
 
   personalpkgs = rec {
     luks-hw-password = callPackage ./luks-hw-password {};
     dev = callPackage ./dev {
-      devShells = self.devShells.${nixpkgs.system};
+      devShells = import ../devShells pkgs;
     };
 
     delft-icon-theme = callPackage ./theme/delft-icon-theme.nix {};
@@ -26,15 +23,6 @@
     lorem-text = callPackage ./lorem-text {};
 
     bigclown-leds = callPackage ./bigclown-leds {};
-
-    # Package to be installed to the user's profile
-    cynerd-profile = nixpkgs.symlinkJoin {
-      name = "cynerd-profile";
-      paths = [
-        self.inputs.shellrc.packages.${nixpkgs.system}.default
-        nixpkgs.tig
-      ];
-    };
 
     # Elektroline packages
     shvspy = callPackage ./shvspy {};

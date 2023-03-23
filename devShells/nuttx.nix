@@ -1,15 +1,14 @@
 {
-  system,
-  nixpkgs,
+  pkgs,
   default,
   c,
   arch,
   fpu ? null,
 }:
 with builtins;
-with nixpkgs.lib; let
-  pkgs = import nixpkgs.outPath {
-    localSystem = system;
+with pkgs.lib; let
+  pkgsCross = import pkgs.path {
+    localSystem = pkgs.buildPlatform.system;
     crossSystem = {
       config =
         if (hasPrefix "armv" arch)
@@ -24,8 +23,8 @@ with nixpkgs.lib; let
     };
   };
 in
-  pkgs.buildPackages.mkShell {
-    packages = with pkgs.buildPackages;
+  pkgsCross.buildPackages.mkShell {
+    packages = with pkgsCross.buildPackages;
       [
         kconfig-frontends
         genromfs
@@ -38,5 +37,5 @@ in
         esptool
       ]);
     inputsFrom = [default c];
-    meta.platforms = nixpkgs.lib.platforms.linux;
+    meta.platforms = pkgsCross.lib.platforms.linux;
   }

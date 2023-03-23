@@ -79,7 +79,7 @@ result() {
 
 # Get system of the device
 device_system() {
-	nix eval --raw ".#nixosConfigurations.$1.config.nixpkgs.system"
+	nix eval --raw ".#nixosConfigurations.$1.config.nixpkgs.hostPlatform.system"
 }
 
 build_system() {
@@ -102,7 +102,7 @@ build() {
 	local toplevel="config.system.build.toplevel"
 	local bsystem="$(build_system)"
 	if [ "$bsystem" != "$(device_system "$device")" ]; then
-		toplevel="config.system.build.cross.$bsystem.$toplevel"
+		toplevel="buildPlatform.$bsystem.$toplevel"
 	fi
 
 	stage "Building system for device: $device"

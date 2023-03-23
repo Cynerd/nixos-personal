@@ -26,10 +26,17 @@ with nixpkgs.lib; let
     system ? "x86_64-linux",
     extra_modules ? [],
   }: hostname: {
-    ${hostname} = nixpkgs.lib.nixosSystem {
+    ${hostname} = nixturris.lib.addBuildPlatform (nixpkgs.lib.nixosSystem {
       inherit system specialArgs;
-      modules = (modules hostname) ++ extra_modules;
-    };
+      modules =
+        (modules hostname)
+        ++ extra_modules
+        ++ [
+          {
+            nixpkgs.hostPlatform.system = system;
+          }
+        ];
+    });
   };
   amd64System = genericSystem {};
   vpsSystem = genericSystem {
@@ -42,7 +49,6 @@ with nixpkgs.lib; let
     system = "armv7l-linux";
     extra_modules = [
       nixos-hardware.nixosModules.raspberry-pi-2
-      nixturris.nixosModules.turris-crossbuild
       nixturris.nixosModules.armv7l-overlay
       ({pkgs, ...}: {
         boot.loader.systemd-boot.enable = false;
@@ -53,7 +59,6 @@ with nixpkgs.lib; let
   raspi3System = genericSystem {
     system = "aarch64-linux";
     extra_modules = [
-      nixturris.nixosModules.turris-crossbuild
       ({pkgs, ...}: {
         boot.kernelPackages = pkgs.linuxPackages_rpi3;
         boot.initrd.includeDefaultModules = false;
@@ -69,7 +74,6 @@ with nixpkgs.lib; let
   beagleboneSystem = genericSystem {
     system = "armv7l-linux";
     extra_modules = [
-      nixturris.nixosModules.turris-crossbuild
       nixturris.nixosModules.armv7l-overlay
       {
         boot.loader.grub.enable = false;
@@ -83,8 +87,8 @@ with nixpkgs.lib; let
     genericSystem {
       inherit system;
       extra_modules = [
-        nixturris.nixosModules.turris-crossbuild
         {
+          nixpkgs.hostPlatform.system = system;
           boot.loader.systemd-boot.enable = false;
           virtualisation.qemu.package = self.nixosConfigurations."${hostSystem}".pkgs.qemu;
         }

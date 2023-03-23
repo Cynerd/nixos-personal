@@ -1,58 +1,55 @@
 {
-  system,
-  nixpkgs,
+  pkgs,
   default,
-}: let
-  pkgs = nixpkgs.legacyPackages.${system};
-in
-  pkgs.mkShell {
-    packages = with pkgs; [
-      (python3.withPackages (pypkgs:
-        with pypkgs; [
-          ipython
+}:
+pkgs.mkShell {
+  packages = with pkgs; [
+    (python3.withPackages (pypkgs:
+      with pypkgs; [
+        ipython
 
-          pytest
-          pytest-html
-          pytest-tap
-          coverage
-          python-lsp-black
-          pylint
-          pydocstyle
-          mypy
+        pytest
+        pytest-html
+        pytest-tap
+        coverage
+        python-lsp-black
+        pylint
+        pydocstyle
+        mypy
 
-          pygraphviz
-          matplotlib
+        pygraphviz
+        matplotlib
 
-          python-gitlab
-          PyGithub
+        python-gitlab
+        PyGithub
 
-          schema
-          jinja2
-          ruamel-yaml
-          msgpack
-          urllib3
+        schema
+        jinja2
+        ruamel-yaml
+        msgpack
+        urllib3
 
-          influxdb-client
-          psycopg
-          paho-mqtt
+        influxdb-client
+        psycopg
+        paho-mqtt
 
-          humanize
-          rich
+        humanize
+        rich
 
-          pygobject3
+        pygobject3
 
-          pyserial
-          pylibftdi
-          pylxd
-          selenium
-        ]))
-      geckodriver
-      chromedriver
+        pyserial
+        pylibftdi
+        pylxd
+        selenium
+      ]))
+    geckodriver
+    chromedriver
 
-      gobject-introspection
-      gtk3
-      gtk4
-    ];
-    inputsFrom = with pkgs; [default];
-    meta.platforms = nixpkgs.lib.platforms.linux;
-  }
+    gobject-introspection
+    gtk3
+    gtk4
+  ];
+  inputsFrom = with pkgs; [default];
+  meta.platforms = pkgs.lib.platforms.linux;
+}

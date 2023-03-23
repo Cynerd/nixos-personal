@@ -1,17 +1,9 @@
-{
-  nixpkgs,
-  shellrc,
-  system,
-}: let
-  callDevelop = nixpkgs.lib.callPackageWith ({
-      inherit system;
-      inherit nixpkgs;
-    }
-    // shells);
+pkgs: let
+  callDevelop = pkgs.lib.callPackageWith (shells // {inherit pkgs;});
 
   shells = {
-    default = nixpkgs.legacyPackages.${system}.mkShell {
-      inputsFrom = [shellrc.packages.${system}.default];
+    default = pkgs.mkShell {
+      packages = [];
     };
 
     armv6 = callDevelop ./nuttx.nix {arch = "armv6s-m";};

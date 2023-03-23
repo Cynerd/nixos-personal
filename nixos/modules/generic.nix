@@ -5,7 +5,7 @@
   ...
 }:
 with lib; let
-  isNative = config.nixpkgs.crossSystem == null;
+  isNative = config.nixpkgs.hostPlatform == config.nixpkgs.buildPlatform;
 in {
   config = {
     system.stateVersion = "22.05";
@@ -89,6 +89,7 @@ in {
         nethogs
         sshfs
         wakeonlan
+        speedtest-cli
 
         lm_sensors
       ]
@@ -139,8 +140,11 @@ in {
         ];
       };
     };
-    programs.zsh.enable = isNative;
-    programs.shellrc.enable = true;
+    programs.zsh = {
+      enable = isNative;
+      syntaxHighlighting.enable = isNative;
+    };
+    programs.shellrc = true;
     programs.vim.defaultEditor = mkDefault true;
 
     security.sudo.extraRules = [

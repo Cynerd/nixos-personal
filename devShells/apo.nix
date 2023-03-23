@@ -1,12 +1,10 @@
 {
-  system,
-  nixpkgs,
+  pkgs,
   default,
   c,
 }: let
-  pkgs = nixpkgs.legacyPackages.${system};
-  riscvPkgs = import nixpkgs.outPath {
-    localSystem = system;
+  riscvPkgs = import pkgs.path {
+    localSystem = pkgs.buildPlatform.system;
     crossSystem = {
       config = "riscv32-none-elf";
       libc = "newlib-nano";
@@ -23,5 +21,5 @@ in
       riscvPkgs.buildPackages.gcc
     ];
     inputsFrom = [default c];
-    meta.platforms = nixpkgs.lib.platforms.linux;
+    meta.platforms = pkgs.lib.platforms.linux;
   }
