@@ -20,6 +20,11 @@ in {
       default = true;
       description = "If hardware should be reported";
     };
+    speedtest = mkOption {
+      type = types.bool;
+      default = false;
+      description = "If speedtest should be used to measure connection speed";
+    };
 
     host = mkOption {
       type = types.str;
@@ -87,6 +92,14 @@ in {
                 }
               ];
               wireless = [{}];
+            }) // (optionaAttrs cnf.speedtest {
+              exec = [{
+                commands = ["${pkgs.speedtest-cli}/bin/speedtest --json"];
+                name_override = "speedtest";
+                timeout = "5m";
+                interval = "15m";
+                data_format = "json";
+              }];
             });
         };
       };

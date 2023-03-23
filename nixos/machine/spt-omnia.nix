@@ -18,6 +18,7 @@ with lib; {
         qca988x.interface = "wlp2s0";
       };
       openvpn.oldpersonal = true;
+      monitoring.speedtest = true;
     };
 
     networking.vlans."end2.848" = {
