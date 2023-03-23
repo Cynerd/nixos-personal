@@ -92,14 +92,17 @@ in {
                 }
               ];
               wireless = [{}];
-            }) // (optionaAttrs cnf.speedtest {
-              exec = [{
-                commands = ["${pkgs.speedtest-cli}/bin/speedtest --json"];
-                name_override = "speedtest";
-                timeout = "5m";
-                interval = "15m";
-                data_format = "json";
-              }];
+            })
+            // (optionalAttrs cnf.speedtest {
+              exec = [
+                {
+                  commands = ["${pkgs.speedtest-cli}/bin/speedtest --json"];
+                  name_override = "speedtest";
+                  timeout = "5m";
+                  interval = "15m";
+                  data_format = "json";
+                }
+              ];
             });
         };
       };
