@@ -38,6 +38,7 @@ in {
       elektroline = mkIf cnf.elektroline {
         autoStart = false;
         config = "config /run/secrets/elektroline.ovpn";
+        updateResolvConf = true;
       };
     };
   };
