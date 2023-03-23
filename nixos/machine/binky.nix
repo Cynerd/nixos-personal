@@ -20,8 +20,6 @@ with lib; {
       };
     };
 
-    # Try older kernel to see if it helps with USB monitor
-    boot.kernelPackages = pkgs.linuxPackages;
     boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "usb_storage" "sd_mod"];
     boot.kernelModules = ["kvm-amd"];
 
