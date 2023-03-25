@@ -15,6 +15,7 @@ with nixpkgs.lib; let
           self.overlays.default
           sterm.overlay
         ];
+        system.configurationRevision = self.rev or "dirty";
       }
     ]
     ++ (optional (hasAttr "machine-${hostname}" self.nixosModules) self.nixosModules."machine-${hostname}");
