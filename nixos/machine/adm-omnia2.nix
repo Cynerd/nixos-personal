@@ -9,8 +9,8 @@ with lib; {
     cynerd = {
       wifiAP.adm = {
         enable = true;
-        ar9287.interface = "wlp3s0";
-        qca988x.interface = "wlp2s0";
+        ar9287.interface = "wlp2s0";
+        qca988x.interface = "wlp1s0";
       };
     };
 
@@ -18,7 +18,7 @@ with lib; {
       vlans = {
         "brlan.guest" = {
           interface = "brlan";
-          id = 100;
+          id = 2; # TODO later use 100
         };
       };
       bridges = {
