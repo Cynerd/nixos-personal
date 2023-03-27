@@ -39,5 +39,8 @@ with lib; {
       #openocd
       sterm
     ];
+
+    # TODO: ubootTools build is broken!
+    firmware.environment.enable = false;
   };
 }
