@@ -85,9 +85,10 @@ with lib; {
       # Qemmu
       qemu
       virt-manager
+      cdrtools
 
       # U-Boot
-      #ubootTools
+      ubootTools
       tftp-hpa
 
       # Network
@@ -133,8 +134,11 @@ with lib; {
       enable = true;
       recommendedSysctlSettings = true;
     };
-    virtualisation.lxc.enable = true;
-    virtualisation.libvirtd.enable = true;
+    virtualisation = {
+      lxc.enable = true;
+      libvirtd.enable = true;
+      spiceUSBRedirection.enable = true;
+    };
 
     users.groups.develop = {};
     users.users.cynerd.extraGroups = [

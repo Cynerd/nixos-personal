@@ -191,12 +191,12 @@ in {
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
-      config.pipewire = {
-        context.modules = [
-          {name = "libpipewire-module-zeroconf-discover";}
-        ];
-      };
     };
+    environment.etc."pipewire/pipewire.conf.d/zeroconf.conf".text = ''
+      context.modules = [
+        { name = libpipewire-module-zeroconf-discover }
+      ]
+    '';
     security.rtkit.enable = true;
 
     services.printing = {
