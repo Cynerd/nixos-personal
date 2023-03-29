@@ -27,6 +27,18 @@ pkgs: let
     # Elektroline packages
     shvspy = callPackage ./shvspy {};
 
+    # cyrus_sasl with curus_sasl_xoauth2
+    cyrus_sasl_xoauth2 = callPackage ./cyrus-sasl-xoauth2 {
+      cyrus_sasl = pkgs.cyrus_sasl; # prevent infinite cycle
+    };
+    cyrus_sasl = pkgs.cyrus_sasl.overrideAttrs (div: rec {
+      postInstall = ''
+        for lib in ${cyrus_sasl_xoauth2}/usr/lib/sasl2/*; do
+          ln -sf $lib $out/lib/sasl2/
+        done
+      '';
+    });
+
     # Nixpkgs fixes
     khal = pkgs.khal.overrideAttrs (oldAttrs: {
       disabledTests =
