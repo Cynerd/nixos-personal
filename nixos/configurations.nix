@@ -50,7 +50,6 @@ with nixpkgs.lib; let
     system = "armv7l-linux";
     extra_modules = [
       nixos-hardware.nixosModules.raspberry-pi-2
-      nixturris.nixosModules.armv7l-overlay
       ({pkgs, ...}: {
         boot.loader.systemd-boot.enable = false;
         boot.initrd.includeDefaultModules = false;
@@ -75,7 +74,6 @@ with nixpkgs.lib; let
   beagleboneSystem = genericSystem {
     system = "armv7l-linux";
     extra_modules = [
-      nixturris.nixosModules.armv7l-overlay
       {
         boot.loader.grub.enable = false;
         boot.loader.systemd-boot.enable = false;

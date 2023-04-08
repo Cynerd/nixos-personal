@@ -44,5 +44,8 @@ with lib; {
       nameservers = ["1.1.1.1" "8.8.8.8"];
       dhcpcd.allowInterfaces = [];
     };
+
+    # TODO: ubootTools build is broken!
+    firmware.environment.enable = false;
   };
 }
