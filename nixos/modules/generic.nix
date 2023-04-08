@@ -90,6 +90,7 @@ in {
         sshfs
         wakeonlan
         speedtest-cli
+        librespeed-cli
 
         lm_sensors
       ]
