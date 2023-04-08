@@ -112,7 +112,6 @@ in
   // amd64System "ridcully"
   // amd64System "susan"
   // vpsSystem "lipwig"
-  // vpsSystem "mrpump"
   // raspi2System "spt-mpd"
   // raspi3System "adm-mpd"
   // beagleboneSystem "gaspode"
