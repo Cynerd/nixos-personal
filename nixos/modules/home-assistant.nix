@@ -136,10 +136,6 @@ in {
         };
         http.server_port = 8808;
         mqtt = {
-          broker = "localhost";
-          port = 1883;
-          username = "homeassistant";
-          password = "!secret mqtt_password";
           sensor = import ./home-assistant/sensors.nix;
           light = import ./home-assistant/light.nix;
         };

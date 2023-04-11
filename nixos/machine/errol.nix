@@ -77,10 +77,6 @@ with lib; {
         };
         http.server_port = 8808;
         mqtt = {
-          broker = config.cynerd.hosts.spt.mox;
-          port = 1883;
-          username = "homeassistant";
-          password = "!secret mqtt_password";
           sensor = import ../modules/home-assistant/sensors.nix;
           light = import ../modules/home-assistant/light.nix;
         };
