@@ -14,7 +14,7 @@ with pkgs.lib; let
         if (hasPrefix "armv" arch)
         then "arm-none-eabi" + (optionalString (fpu != null) "hf")
         else "riscv32-none-elf";
-      libc = "newlib-nano";
+      libc = "newlib";
       gcc =
         {
           inherit arch;

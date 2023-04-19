@@ -7,10 +7,8 @@
     localSystem = pkgs.buildPlatform.system;
     crossSystem = {
       config = "riscv32-none-elf";
-      libc = "newlib-nano";
-      gcc = {
-        arch = "rv32i";
-      };
+      libc = "newlib";
+      gcc.arch = "rv32i";
     };
   };
 in
