@@ -15,7 +15,7 @@ with lib; {
 
   config = mkIf config.cynerd.compile {
     nix.settings = {
-      max-jobs = 32;
+      max-jobs = mkDefault 32;
       cores = 0;
     };
 

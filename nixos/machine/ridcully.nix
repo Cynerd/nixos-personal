@@ -65,5 +65,8 @@ with lib; {
       dataDir = "/home/cynerd";
       configDir = "/home/cynerd/.config/syncthing";
     };
+
+    # Force nix to use less jobs
+    nix.settings.max-jobs = 8;
   };
 }
