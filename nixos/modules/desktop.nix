@@ -74,6 +74,7 @@ in {
         signal-desktop
         libreoffice
         mupdf
+        zathura
         pdfgrep
 
         xdg-utils
@@ -166,7 +167,7 @@ in {
     };
     xdg.mime.defaultApplications = {
       "text/html" = ["firefox.desktop"];
-      "application/pdf" = ["mupdf.desktop"];
+      "application/pdf" = ["zathura.desktop"];
       "image/jpeg" = ["feh.desktop"];
       "image/png" = ["feh.desktop"];
       "image/svg" = ["feh.desktop"];
