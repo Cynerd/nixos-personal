@@ -13,6 +13,7 @@ with nixpkgs.lib; let
         networking.hostName = hostname;
         nixpkgs.overlays = [
           self.overlays.default
+          agenix.overlays.default
           sterm.overlay
         ];
         system.configurationRevision = self.rev or "dirty";

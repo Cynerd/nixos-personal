@@ -5,6 +5,8 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     personal-secret.url = "git+ssh://git@cynerd.cz/nixos-personal-secret";
 
+    agenix.url = "github:ryantm/agenix";
+
     nixturris = {
       url = "github:cynerd/nixturris";
       inputs.nixpkgs.follows = "nixpkgs";

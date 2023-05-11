@@ -40,6 +40,7 @@ with lib; {
       statix
       nixfmt
       nixpkgs-fmt
+      agenix
 
       # Shell
       dash # Posix shell
