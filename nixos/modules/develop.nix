@@ -30,6 +30,7 @@ with lib; {
       parted
       vim-vint
       nodePackages.vim-language-server
+      ctags
 
       # Nix
       dev
@@ -115,6 +116,9 @@ with lib; {
 
       # SHV
       shvspy
+
+      # Images
+      imagemagick
     ];
     programs.wireshark.enable = true;
 
