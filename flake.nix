@@ -6,6 +6,7 @@
     personal-secret.url = "git+ssh://git@cynerd.cz/nixos-personal-secret";
 
     agenix.url = "github:ryantm/agenix";
+    shvspy.url = "git+https://github.com/silicon-heaven/shvspy.git?submodules=1";
 
     nixturris = {
       url = "github:cynerd/nixturris";

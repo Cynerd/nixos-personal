@@ -24,9 +24,6 @@ pkgs: let
 
     bigclown-leds = callPackage ./bigclown-leds {};
 
-    # Elektroline packages
-    shvspy = callPackage ./shvspy {};
-
     # cyrus_sasl with curus_sasl_xoauth2
     cyrus_sasl_xoauth2 = callPackage ./cyrus-sasl-xoauth2 {
       inherit (pkgs) cyrus_sasl;
