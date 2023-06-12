@@ -38,6 +38,8 @@ with lib; {
       nurl
       nix-universal-prefetch
       rnix-lsp
+      nixd
+      alejandra
       statix
       nixfmt
       nixpkgs-fmt

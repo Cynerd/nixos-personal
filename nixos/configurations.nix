@@ -14,6 +14,7 @@ with nixpkgs.lib; let
         nixpkgs.overlays = [
           self.overlays.default
           agenix.overlays.default
+          nixd.overlays.default
           shvspy.overlays.default
           sterm.overlay
         ];
