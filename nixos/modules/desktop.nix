@@ -250,27 +250,10 @@ in {
 
     services.snapper.configs = {
       home = {
-        subvolume = "/home";
-        extraConfig = ''
-          ALLOW_GROUPS="users"
-          BACKGROUND_COMPARISON="yes"
-          EMPTY_PRE_POST_CLEANUP="yes"
-          EMPTY_PRE_POST_MIN_AGE="1800"
-          FREE_LIMIT="0.2"
-          NUMBER_CLEANUP="yes"
-          NUMBER_LIMIT="50"
-          NUMBER_LIMIT_IMPORTANT="10"
-          NUMBER_MIN_AGE="1800"
-          SPACE_LIMIT="0.5"
-          TIMELINE_CLEANUP="yes"
-          TIMELINE_CREATE="yes"
-          TIMELINE_LIMIT_DAILY="10"
-          TIMELINE_LIMIT_HOURLY="10"
-          TIMELINE_LIMIT_MONTHLY="10"
-          TIMELINE_LIMIT_WEEKLY="0"
-          TIMELINE_LIMIT_YEARLY="10"
-          TIMELINE_MIN_AGE="1800"
-        '';
+        SUBVOLUME = "/home";
+        ALLOW_GROUPS = [ "users" ];
+        TIMELINE_CREATE = true;
+        TIMELINE_CLEANUP = true;
       };
     };
 
