@@ -139,11 +139,10 @@ in {
           sensor = import ./home-assistant/sensors.nix;
           light = import ./home-assistant/light.nix;
         };
-        met = {};
         default_config = {};
         automation = "!include automations.yaml";
       };
-      extraComponents = [];
+      extraComponents = ["met"];
       package = pkgs.home-assistant.override {
         extraPackages = pkgs:
           with pkgs; [
