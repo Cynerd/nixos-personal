@@ -102,7 +102,7 @@ with lib; {
       inetutils
 
       # Gtk
-      glade
+      cambalache
 
       # Barcode generation
       barcode
