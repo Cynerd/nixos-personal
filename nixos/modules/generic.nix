@@ -82,7 +82,6 @@ in {
         unzip
 
         # Network
-        nmap
         netcat
         traceroute
         iftop
@@ -95,6 +94,7 @@ in {
         lm_sensors
       ]
       ++ optionals (system == "x86_64-linux") [
+        nmap
         ltrace
       ]
       ++ optionals (!isNative) [
