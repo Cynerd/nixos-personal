@@ -167,7 +167,7 @@ in {
     };
     xdg.mime.defaultApplications = {
       "text/html" = ["firefox.desktop"];
-      "application/pdf" = ["zathura.desktop"];
+      "application/pdf" = ["org.pwmt.zathura.desktop"];
       "image/jpeg" = ["feh.desktop"];
       "image/png" = ["feh.desktop"];
       "image/svg" = ["feh.desktop"];
