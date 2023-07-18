@@ -92,6 +92,7 @@ in {
         vlc
         mpv
         youtube-dl
+        spotify
 
         nordic
         delft-icon-theme
