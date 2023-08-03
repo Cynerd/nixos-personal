@@ -132,6 +132,9 @@ with lib; {
       SUBSYSTEMS=="usb", ATTRS{idVendor}=="1366", ATTRS{idProduct}=="0105", MODE:="0660", GROUP="develop", SYMLINK+="jlink_%n"
     '';
 
+    virtualisation.containers = {
+      enable = true;
+    };
     virtualisation.docker = {
       enable = true;
       autoPrune.enable = true;

@@ -218,7 +218,7 @@ in {
     networking.firewall.allowedTCPPorts = [5357];
     networking.firewall.allowedUDPPorts = [3702];
 
-    fonts.fonts = with pkgs; [
+    fonts.packages = with pkgs; [
       arkpandora_ttf
       corefonts
       dejavu_fonts
