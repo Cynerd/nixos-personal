@@ -9,7 +9,7 @@ with lib; let
 in {
   options = {
     cynerd.autounlock = mkOption {
-      type = with types; attrsOf string;
+      type = with types; attrsOf str;
       default = {};
       description = "Devices to be auto-unlocked.";
     };
