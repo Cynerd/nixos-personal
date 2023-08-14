@@ -22,7 +22,7 @@ with lib; {
     services.hardware.openrgb.motherboard = "amd";
 
     cynerd.autounlock = {
-      "encroot" = "/dev/disk/by-uuid/c07e929a-6eac-4f99-accf-f7cb3431290c";
+      "encroot" = "/dev/disk/by-uuid/bc7d2ba4-6e04-4c49-b40c-3aecd1a86c71";
       "enchdd" = "/dev/disk/by-uuid/7fee3cda-efa0-47cd-8832-fdead9a7e6db";
     };
     fileSystems = {
@@ -37,7 +37,7 @@ with lib; {
         options = ["compress=lzo" "subvol=@home"];
       };
       "/boot" = {
-        device = "/dev/disk/by-uuid/C1A0-B7C9";
+        device = "/dev/disk/by-uuid/6DAD-3819";
         fsType = "vfat";
       };
 

@@ -33,7 +33,7 @@ warning() {
 # Convert hostname to the SSH destination
 sshdest() {
 	if [ "$1" = "lipwig" ]; then
-		echo "newlipwig"
+		echo "cynerd.cz"
 	elif [ "$1" = "binky" ]; then
 		echo "binky.vpn"
 	else

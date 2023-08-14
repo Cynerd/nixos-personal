@@ -19,6 +19,11 @@ with lib; {
       fsType = "nfs";
     };
 
+    networking.firewall = {
+      allowedTCPPorts = [80 443];
+      allowedUDPPorts = [1194];
+    };
+
     # Web ######################################################################
     services.nginx = {
       enable = true;
@@ -26,9 +31,6 @@ with lib; {
         "cynerd.cz" = {
           forceSSL = true;
           enableACME = true;
-          serverAliases = [
-            "grafana.cynerd.cz"
-          ];
           locations = {
             "/".root = ../../web;
             "/radicale/" = {
@@ -43,10 +45,14 @@ with lib; {
         "git.cynerd.cz" = {
           forceSSL = true;
           useACMEHost = "cynerd.cz";
-          locations."/".extraConfig = ''
-            fastcgi_param DOCUMENT_ROOT ${pkgs.cgit}/cgit/;
-            fastcgi_param SCRIPT_NAME cgit;
+          root = "${pkgs.cgit}/cgit";
+          locations."/".tryFiles = "$uri @cgit";
+          locations."@cgit".extraConfig = ''
+            fastcgi_param SCRIPT_FILENAME ${pkgs.cgit}/cgit/cgit.cgi;
             fastcgi_pass unix:${config.services.fcgiwrap.socketAddress};
+            fastcgi_param PATH_INFO    $uri;
+            fastcgi_param QUERY_STRING $args;
+            fastcgi_param HTTP_HOST    $server_name;
           '';
         };
         "grafana.cynerd.cz" = {
@@ -66,6 +72,10 @@ with lib; {
     security.acme = {
       acceptTerms = true;
       defaults.email = "cynerd+acme@email.cz";
+      certs."cynerd.cz".extraDomainNames = [
+        "git.cynerd.cz"
+        "grafana.cynerd.cz"
+      ];
     };
 
     # Git ######################################################################
@@ -85,7 +95,7 @@ with lib; {
     environment.etc."cgitrc".text = ''
       root-title=Cynerd's git repository
       root-desc=All my projects (at least those released to public)
-      logo=${../../web/wolf.svg}
+      #logo=cynerd.cz/wolf.svg
       virtual-root=/
 
       # Allow download of tar.gz, tar.bz2 and zip-files
@@ -119,6 +129,7 @@ with lib; {
     '';
 
     # CalDAV and CardDAV #######################################################
+    # TODO vdirsyncer needs CA
     services.radicale = {
       enable = true;
       rights.cynerd = {
