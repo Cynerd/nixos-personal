@@ -124,7 +124,10 @@ with lib; {
     ];
     programs.wireshark.enable = true;
 
-    documentation.dev.enable = true;
+    documentation = {
+      dev.enable = true;
+      doc.enable = true;
+    };
 
     services.udev.extraRules = ''
       SUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="3748", MODE:="0660", GROUP="develop", SYMLINK+="stlinkv2_%n"

@@ -247,7 +247,13 @@ in {
       package = pkgs.openrgb-with-all-plugins;
     };
 
-    documentation.man.man-db.enable = true;
+    documentation = {
+      man = {
+        enable = true;
+        generateCaches = true;
+      };
+      info.enable = true;
+    };
 
     services.snapper.configs = {
       home = {
