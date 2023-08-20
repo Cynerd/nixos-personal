@@ -67,10 +67,7 @@ with nixpkgs.lib; let
         boot.initrd.includeDefaultModules = false;
         boot.loader.grub.enable = false;
         boot.loader.systemd-boot.enable = false;
-        boot.loader.raspberryPi = {
-          enable = true;
-          version = 3;
-        };
+        boot.loader.generic-extlinux-compatible.enable = true;
       })
     ];
   };
