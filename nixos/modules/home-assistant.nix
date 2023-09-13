@@ -147,6 +147,7 @@ in {
         extraPackages = pkgs:
           with pkgs; [
             securetar
+            pyipp
           ];
         packageOverrides = self: super: {
           scapy = super.scapy.override {
