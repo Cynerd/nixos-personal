@@ -43,6 +43,9 @@ sshdest() {
 
 # Reverse opeartion for sshdest
 sshhost() {
+	if [ "$1" = "cynerd.cz" ]; then
+		echo "lipwig"
+	fi
 	awk -F. 'NF > 1 { print $2"-"$1; exit } { print $1 }' <<<"$1"
 }
 

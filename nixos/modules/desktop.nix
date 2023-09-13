@@ -258,7 +258,7 @@ in {
     services.snapper.configs = {
       home = {
         SUBVOLUME = "/home";
-        ALLOW_GROUPS = [ "users" ];
+        ALLOW_GROUPS = ["users"];
         TIMELINE_CREATE = true;
         TIMELINE_CLEANUP = true;
       };
