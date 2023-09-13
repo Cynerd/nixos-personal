@@ -6,8 +6,6 @@
 }:
 with lib; let
   cnf = config.cynerd.monitoring;
-  inherit (config.networking) hostName;
-  isHost = cnf.host == hostName || hostName == "errol";
 in {
   options.cynerd.monitoring = {
     enable = mkOption {
@@ -25,17 +23,9 @@ in {
       default = false;
       description = "If speedtest should be used to measure connection speed";
     };
-
-    host = mkOption {
-      type = types.str;
-      description = "Host name of the monitoring hosting system";
-      readOnly = true;
-    };
   };
 
   config = mkMerge [
-    {cynerd.monitoring.host = "lipwig";}
-
     (mkIf cnf.enable {
       # Telegraf configuration
       services.telegraf = {
@@ -127,14 +117,14 @@ in {
       ];
     })
 
-    (mkIf isHost {
+    (mkIf (config.networking.hostName == "lipwig") {
       # InfluxDB
-      services.influxdb2.enable = mkIf isHost true;
+      services.influxdb2.enable = true;
       services.telegraf.extraConfig.inputs.prometheus = {
         urls = ["http://localhost:8086/metrics"];
       };
       # Grafana
-      services.grafana = mkIf isHost {
+      services.grafana = {
         enable = true;
         settings = {
           users.allow_sign_up = false;
