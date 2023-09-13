@@ -8,6 +8,7 @@
     agenix.url = "github:ryantm/agenix";
     nixd.url = "github:nix-community/nixd";
     shvspy.url = "git+https://github.com/silicon-heaven/shvspy.git?submodules=1";
+    flatline.url = "git+http://jessie.elektroline.cz/elektroline/flatlineng.git?submodules=1";
 
     nixturris = {
       url = "github:cynerd/nixturris";

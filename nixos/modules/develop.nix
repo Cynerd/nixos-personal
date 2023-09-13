@@ -118,6 +118,7 @@ with lib; {
 
       # SHV
       shvspy
+      flatline
 
       # Images
       imagemagick

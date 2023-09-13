@@ -16,6 +16,7 @@ with nixpkgs.lib; let
           agenix.overlays.default
           nixd.overlays.default
           shvspy.overlays.default
+          flatline.overlays.default
           sterm.overlay
         ];
         system.configurationRevision = self.rev or "dirty";
