@@ -73,7 +73,7 @@ in {
     services.telegraf.extraConfig = {
       outputs.influxdb_v2 = [
         {
-          urls = ["http://errol:8086"];
+          urls = ["http://cynerd.cz:8086"];
           token = "$INFLUX_TOKEN";
           organization = "personal";
           bucket = "bigclown";

@@ -5,20 +5,17 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     personal-secret.url = "git+ssh://git@cynerd.cz/nixos-personal-secret";
 
+    sterm.url = "github:wentasah/sterm";
     agenix.url = "github:ryantm/agenix";
-    nixd.url = "github:nix-community/nixd";
     shvspy.url = "git+https://github.com/silicon-heaven/shvspy.git?submodules=1";
     flatline.url = "git+http://jessie.elektroline.cz/elektroline/flatlineng.git?submodules=1";
+    shvcli.url = "git+https://gitlab.com/elektroline-predator/shvcli.git?ref=dev";
 
-    nixturris = {
-      url = "github:cynerd/nixturris";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixturris.url = "github:cynerd/nixturris";
     nixbigclown.url = "github:cynerd/nixbigclown";
     vpsadminos.url = "github:vpsfreecz/vpsadminos";
 
     shellrc.url = "git+https://git.cynerd.cz/shellrc";
-    sterm.url = "github:wentasah/sterm";
     usbkey.url = "git+https://git.cynerd.cz/usbkey?ref=modules";
   };
 

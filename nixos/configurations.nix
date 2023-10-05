@@ -13,11 +13,11 @@ with nixpkgs.lib; let
         networking.hostName = hostname;
         nixpkgs.overlays = [
           self.overlays.default
+          sterm.overlay
           agenix.overlays.default
-          nixd.overlays.default
           shvspy.overlays.default
           flatline.overlays.default
-          sterm.overlay
+          shvcli.overlays.default
         ];
         system.configurationRevision = self.rev or "dirty";
       }
@@ -64,11 +64,15 @@ with nixpkgs.lib; let
     system = "aarch64-linux";
     extra_modules = [
       ({pkgs, ...}: {
-        boot.kernelPackages = pkgs.linuxPackages_rpi3;
-        boot.initrd.includeDefaultModules = false;
-        boot.loader.grub.enable = false;
-        boot.loader.systemd-boot.enable = false;
-        boot.loader.generic-extlinux-compatible.enable = true;
+        boot = {
+          kernelPackages = pkgs.linuxPackages_rpi3;
+          initrd.includeDefaultModules = false;
+          loader = {
+            grub.enable = false;
+            systemd-boot.enable = false;
+            generic-extlinux-compatible.enable = true;
+          };
+        };
       })
     ];
   };
@@ -76,9 +80,11 @@ with nixpkgs.lib; let
     system = "armv7l-linux";
     extra_modules = [
       {
-        boot.loader.grub.enable = false;
-        boot.loader.systemd-boot.enable = false;
-        boot.loader.generic-extlinux-compatible.enable = true;
+        boot.loader = {
+          grub.enable = false;
+          systemd-boot.enable = false;
+          generic-extlinux-compatible.enable = true;
+        };
       }
     ];
   };

@@ -8,7 +8,7 @@ with lib; let
   isNative = config.nixpkgs.hostPlatform == config.nixpkgs.buildPlatform;
 in {
   config = {
-    system.stateVersion = "22.05";
+    system.stateVersion = "23.11";
 
     nix = {
       extraOptions = "experimental-features = nix-command flakes";
@@ -111,7 +111,7 @@ in {
     users.groups.cynerd.gid = 1000;
     users.users = {
       root = {
-        passwordFile = "/run/secrets/root.pass";
+        hashedPasswordFile = "/run/secrets/root.pass";
       };
       cynerd = {
         group = "cynerd";
@@ -135,7 +135,7 @@ in {
           if isNative
           then pkgs.zsh.out
           else pkgs.bash.out;
-        passwordFile = "/run/secrets/cynerd.pass";
+        hashedPasswordFile = "/run/secrets/cynerd.pass";
         openssh.authorizedKeys.keyFiles = [
           (config.personal-secrets + "/unencrypted/git-private.pub")
         ];

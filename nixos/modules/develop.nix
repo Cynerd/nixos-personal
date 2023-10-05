@@ -27,6 +27,7 @@ with lib; {
       cloc
       openssl
       sterm
+      tio
       parted
       vim-vint
       nodePackages.vim-language-server
@@ -41,8 +42,7 @@ with lib; {
       nixd
       alejandra
       statix
-      nixfmt
-      nixpkgs-fmt
+      deadnix
       agenix
 
       # Shell
@@ -119,6 +119,7 @@ with lib; {
       # SHV
       shvspy
       flatline
+      shvcli
 
       # Images
       imagemagick

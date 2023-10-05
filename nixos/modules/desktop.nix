@@ -147,7 +147,7 @@ in {
 
         # CAD
         freecad
-        kicad-with-packages3d
+        kicad
         sweethome3d.application
         qelectrotech
       ]
@@ -248,10 +248,7 @@ in {
     };
 
     documentation = {
-      man = {
-        enable = true;
-        generateCaches = true;
-      };
+      man.enable = true;
       info.enable = true;
     };
 
