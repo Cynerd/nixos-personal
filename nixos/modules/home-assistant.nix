@@ -48,7 +48,9 @@ in {
         }
       ];
     };
-    networking.firewall.allowedTCPPorts = [1883];
+    networking.firewall.allowedTCPPorts = [
+      1883 # Mosquitto
+    ];
 
     services.bigclown = {
       gateway = {

@@ -16,7 +16,7 @@
     vpsadminos.url = "github:vpsfreecz/vpsadminos";
 
     shellrc.url = "git+https://git.cynerd.cz/shellrc";
-    usbkey.url = "git+https://git.cynerd.cz/usbkey?ref=modules";
+    usbkey.url = "git+https://gitlab.com/cynerd/usbkey";
   };
 
   outputs = {

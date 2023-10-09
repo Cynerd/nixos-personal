@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 with lib; let
@@ -89,88 +88,88 @@ in {
       nameservers = ["1.1.1.1" "8.8.8.8"];
     };
 
-    services.kea = {
-      dhcp4 = {
-        enable = true;
-        settings = {
-          lease-database = {
-            name = "/var/lib/kea/dhcp4.leases";
-            persist = true;
-            type = "memfile";
+    services = {
+      kea = {
+        dhcp4 = {
+          enable = true;
+          settings = {
+            lease-database = {
+              name = "/var/lib/kea/dhcp4.leases";
+              persist = true;
+              type = "memfile";
+            };
+            valid-lifetime = 4000;
+            renew-timer = 1000;
+            rebind-timer = 2000;
+            interfaces-config = {
+              interfaces = ["brlan" "brguest"];
+              service-sockets-max-retries = -1;
+            };
+            option-data = [
+              {
+                name = "domain-name-servers";
+                data = "1.1.1.1, 8.8.8.8";
+              }
+            ];
+            subnet4 = [
+              {
+                interface = "brlan";
+                subnet = "${ipv4.prefix2ip cnf.lanIP cnf.lanPrefix}/${toString cnf.lanPrefix}";
+                pools = let
+                  ip_start = ipv4.ipAdd cnf.lanIP cnf.lanPrefix cnf.dynIPStart;
+                  ip_end = ipv4.ipAdd cnf.lanIP cnf.lanPrefix (cnf.dynIPStart + cnf.dynIPCount);
+                in [{pool = "${ip_start} - ${ip_end}";}];
+                option-data = [
+                  {
+                    name = "routers";
+                    data = cnf.lanIP;
+                  }
+                ];
+                reservations = [
+                  {
+                    duid = "e4:6f:13:f3:d5:be";
+                    ip-address = ipv4.ipAdd cnf.lanIP cnf.lanPrefix 60;
+                  }
+                ];
+              }
+              {
+                interface = "brguest";
+                subnet = "192.168.1.0/24";
+                pools = [{pool = "192.168.1.50 - 192.168.1.254";}];
+                "option-data" = [
+                  {
+                    name = "routers";
+                    data = "192.168.1.1";
+                  }
+                ];
+              }
+            ];
           };
-          valid-lifetime = 4000;
-          renew-timer = 1000;
-          rebind-timer = 2000;
-          interfaces-config = {
-            interfaces = ["brlan" "brguest"];
-            service-sockets-max-retries = -1;
-          };
-          option-data = [
-            {
-              name = "domain-name-servers";
-              data = "1.1.1.1, 8.8.8.8";
-            }
-          ];
-          subnet4 = [
-            {
-              interface = "brlan";
-              subnet = "${ipv4.prefix2ip cnf.lanIP cnf.lanPrefix}/${toString cnf.lanPrefix}";
-              pools = let
-                ip_start = ipv4.ipAdd cnf.lanIP cnf.lanPrefix cnf.dynIPStart;
-                ip_end = ipv4.ipAdd cnf.lanIP cnf.lanPrefix (cnf.dynIPStart + cnf.dynIPCount);
-              in [{pool = "${ip_start} - ${ip_end}";}];
-              option-data = [
-                {
-                  name = "routers";
-                  data = cnf.lanIP;
-                }
-              ];
-              reservations = [
-                {
-                  duid = "e4:6f:13:f3:d5:be";
-                  ip-address = ipv4.ipAdd cnf.lanIP cnf.lanPrefix 60;
-                }
-              ];
-            }
-            {
-              interface = "brguest";
-              subnet = "192.168.1.0/24";
-              pools = [{pool = "192.168.1.50 - 192.168.1.254";}];
-              "option-data" = [
-                {
-                  name = "routers";
-                  data = "192.168.1.1";
-                }
-              ];
-            }
-          ];
         };
       };
+      radvd = {
+        enable = true;
+        config = ''
+          interface brlan {
+            AdvSendAdvert on;
+            MinRtrAdvInterval 3;
+            MaxRtrAdvInterval 10;
+            prefix ::/64 {
+              AdvOnLink on;
+              AdvAutonomous on;
+              AdvRouterAddr on;
+            };
+            RDNSS 2001:4860:4860::8888 2001:4860:4860::8844 {
+            };
+          };
+        '';
+      };
+      kresd = {enable = false;};
     };
     systemd.services.kea-dhcp4-server.after = [
       "sys-subsystem-net-devices-brlan.device"
       "sys-subsystem-net-devices-brguest.device"
     ];
-
-    services.radvd = {
-      enable = true;
-      config = ''
-        interface brlan {
-          AdvSendAdvert on;
-          MinRtrAdvInterval 3;
-          MaxRtrAdvInterval 10;
-          prefix ::/64 {
-            AdvOnLink on;
-            AdvAutonomous on;
-            AdvRouterAddr on;
-          };
-          RDNSS 2001:4860:4860::8888 2001:4860:4860::8844 {
-          };
-        };
-      '';
-    };
-
-    services.kresd = {enable = false;};
 
     networking.nftables.enable = true;
     networking.firewall = {

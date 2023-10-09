@@ -23,139 +23,141 @@ in {
   };
 
   config = mkIf cnf.enable {
-    programs.sway.enable = true;
-    programs.sway.wrapperFeatures.gtk = true;
-    programs.sway.extraPackages = with pkgs;
-      [
-        gnome.dconf-editor
-        glib
-        gsettings-desktop-schemas
-        i3blocks
-        sysstat
-        wofi
-        rofimoji
-        wev
-        swaybackground
-        myswaylock
+    programs.sway = {
+      enable = true;
+      wrapperFeatures.gtk = true;
+      extraPackages = with pkgs;
+        [
+          gnome.dconf-editor
+          glib
+          gsettings-desktop-schemas
+          i3blocks
+          sysstat
+          wofi
+          rofimoji
+          wev
+          swaybackground
+          myswaylock
 
-        alacritty
+          alacritty
 
-        kanshi
-        wdisplays
-        wayvnc
-        wl-mirror
-        slurp
-        grim
-        wf-recorder
-        wl-clipboard
-        wl-color-picker
-        swayidle
-        dunst
-        libnotify
+          kanshi
+          wdisplays
+          wayvnc
+          wl-mirror
+          slurp
+          grim
+          wf-recorder
+          wl-clipboard
+          wl-color-picker
+          swayidle
+          dunst
+          libnotify
 
-        isync
-        msmtp
-        notmuch
-        astroid
-        taskwarrior
-        vdirsyncer
-        khal
-        khard
-        gnupg
-        pinentry-gnome
-        pinentry-curses
-        (pass.withExtensions (exts: [
-          exts.pass-otp
-          exts.pass-audit
-        ]))
+          isync
+          msmtp
+          notmuch
+          astroid
+          taskwarrior
+          vdirsyncer
+          khal
+          khard
+          gnupg
+          pinentry-gnome
+          pinentry-curses
+          (pass.withExtensions (exts: [
+            exts.pass-otp
+            exts.pass-audit
+          ]))
 
-        chromium
-        ferdium
-        signal-desktop
-        libreoffice
-        mupdf
-        zathura
-        pdfgrep
+          chromium
+          ferdium
+          signal-desktop
+          libreoffice
+          mupdf
+          zathura
+          pdfgrep
 
-        xdg-utils
-        xdg-launch
-        mesa-demos
-        vulkan-tools
+          xdg-utils
+          xdg-launch
+          mesa-demos
+          vulkan-tools
 
-        pulsemixer
-        mpd
-        mpc-cli
-        ncmpcpp
-        feh
-        shotwell
-        id3lib
-        vlc
-        mpv
-        youtube-dl
-        spotify
+          pulsemixer
+          mpd
+          mpc-cli
+          ncmpcpp
+          feh
+          shotwell
+          id3lib
+          vlc
+          mpv
+          youtube-dl
+          spotify
 
-        nordic
-        delft-icon-theme
-        gnome.adwaita-icon-theme
-        vanilla-dmz
-        sound-theme-freedesktop
-        gucharmap
+          nordic
+          delft-icon-theme
+          gnome.adwaita-icon-theme
+          vanilla-dmz
+          sound-theme-freedesktop
+          gucharmap
 
-        (sdcv.withDictionaries [stardict-en-cz stardict-de-cz stardict-cz])
+          (sdcv.withDictionaries [stardict-en-cz stardict-de-cz stardict-cz])
 
-        samba
-        cifs-utils
+          samba
+          cifs-utils
 
-        tigervnc
-        freerdp
-        plasma5Packages.kdeconnect-kde
+          tigervnc
+          freerdp
+          plasma5Packages.kdeconnect-kde
 
-        hdparm
-        ethtool
-        multipath-tools
-        usb-modeswitch
-        v4l-utils
+          hdparm
+          ethtool
+          multipath-tools
+          usb-modeswitch
+          v4l-utils
 
-        # Calculating
-        python3Packages.numpy
-        python3Packages.sympy
-        python3Packages.matplotlib
+          # Calculating
+          python3Packages.numpy
+          python3Packages.sympy
+          python3Packages.matplotlib
 
-        # Creation
-        simple-scan
-        audacity
-        gimp
-        inkscape
-        blender
-        kdenlive
+          # Creation
+          simple-scan
+          audacity
+          gimp
+          inkscape
+          blender
+          kdenlive
 
-        # GStreamer
-        gst_all_1.gst-libav
-        gst_all_1.gst-plugins-bad
-        gst_all_1.gst-plugins-base
-        gst_all_1.gst-plugins-good
-        gst_all_1.gst-plugins-ugly
-        gst_all_1.gst-plugins-viperfx
+          # GStreamer
+          gst_all_1.gst-libav
+          gst_all_1.gst-plugins-bad
+          gst_all_1.gst-plugins-base
+          gst_all_1.gst-plugins-good
+          gst_all_1.gst-plugins-ugly
+          gst_all_1.gst-plugins-viperfx
 
-        # Writing
-        texlive.combined.scheme-full
-        vale
+          # Writing
+          texlive.combined.scheme-full
+          vale
 
-        # Gnome utils
-        gnome-firmware
-        gaphor
+          # Gnome utils
+          gnome-firmware
+          gaphor
 
-        # CAD
-        freecad
-        kicad
-        sweethome3d.application
-        qelectrotech
-      ]
-      ++ (optionals cnf.laptop [
-        # Power management
-        powertop
-        acpi
-      ]);
+          # CAD
+          freecad
+          kicad
+          sweethome3d.application
+          qelectrotech
+        ]
+        ++ (optionals cnf.laptop [
+          # Power management
+          powertop
+          acpi
+        ]);
+    };
     programs = {
       vim.package = pkgs.vimHugeX;
       firefox.enable = true;

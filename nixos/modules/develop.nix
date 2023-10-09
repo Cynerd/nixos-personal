@@ -77,14 +77,8 @@ with lib; {
       geckodriver
       chromedriver
 
-      # Lua
-      (lua5_1.withPackages (luapkgs:
-        with luapkgs; [
-          luacheck
-        ]))
-
-      # Ansible
-      ansible
+      # Julia
+      julia
 
       # Qemmu
       qemu
@@ -96,7 +90,6 @@ with lib; {
       tftp-hpa
 
       # Network
-      iperf2
       iperf3
       wireshark
       inetutils
@@ -137,19 +130,17 @@ with lib; {
       SUBSYSTEMS=="usb", ATTRS{idVendor}=="1366", ATTRS{idProduct}=="0105", MODE:="0660", GROUP="develop", SYMLINK+="jlink_%n"
     '';
 
-    virtualisation.containers = {
-      enable = true;
-    };
-    virtualisation.docker = {
-      enable = true;
-      autoPrune.enable = true;
-      storageDriver = "btrfs";
-    };
-    virtualisation.lxd = {
-      enable = true;
-      recommendedSysctlSettings = true;
-    };
     virtualisation = {
+      containers.enable = true;
+      docker = {
+        enable = true;
+        autoPrune.enable = true;
+        storageDriver = "btrfs";
+      };
+      lxd = {
+        enable = true;
+        recommendedSysctlSettings = true;
+      };
       lxc.enable = true;
       libvirtd.enable = true;
       spiceUSBRedirection.enable = true;
