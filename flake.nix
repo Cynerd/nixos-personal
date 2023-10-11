@@ -22,8 +22,6 @@
   outputs = {
     self,
     nixpkgs,
-    nix,
-    nixos-hardware,
     flake-utils,
     shellrc,
     ...

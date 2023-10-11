@@ -140,6 +140,10 @@ in {
 
           # Writing
           texlive.combined.scheme-full
+          typst
+          typst-fmt
+          typst-live
+          typst-lsp
           vale
 
           # Gnome utils
