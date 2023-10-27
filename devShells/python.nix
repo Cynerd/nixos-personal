@@ -30,7 +30,7 @@ pkgs.mkShell {
         urllib3
 
         influxdb-client
-        psycopg
+        #psycopg
         paho-mqtt
 
         humanize

@@ -9,14 +9,15 @@
     agenix.url = "github:ryantm/agenix";
     shvspy.url = "git+https://github.com/silicon-heaven/shvspy.git?submodules=1";
     flatline.url = "git+http://jessie.elektroline.cz/elektroline/flatlineng.git?submodules=1";
-    shvcli.url = "git+https://gitlab.com/elektroline-predator/shvcli.git?ref=dev";
+    shvcli.url = "git+https://gitlab.com/elektroline-predator/shvcli.git";
 
-    nixturris.url = "github:cynerd/nixturris";
+    #nixturris.url = "github:cynerd/nixturris";
+    nixturris.url = "git+https://gitlab.com/cynerd/nixturris?ref=new-ci";
     nixbigclown.url = "github:cynerd/nixbigclown";
     vpsadminos.url = "github:vpsfreecz/vpsadminos";
 
     shellrc.url = "git+https://git.cynerd.cz/shellrc";
-    usbkey.url = "git+https://gitlab.com/cynerd/usbkey";
+    usbkey.url = "git+https://gitlab.com/cynerd/usbkey.git/";
   };
 
   outputs = {
