@@ -23,18 +23,6 @@ pkgs: let
     lorem-text = callPackage ./lorem-text {};
 
     bigclown-leds = callPackage ./bigclown-leds {};
-
-    # NixOS patches
-    systemd = pkgs.systemd.overrideAttrs (oldAttrs: {
-      patches =
-        oldAttrs.patches
-        ++ [
-          (pkgs.fetchpatch {
-            url = "https://github.com/systemd/systemd/commit/cecbb162a3134b43d2ca160e13198c73ff34c3ef.patch";
-            hash = "sha256-hWpUosTDA18mYm5nIb9KnjwOlnzbEHgzha/WpyHoC54=";
-          })
-        ];
-    });
   };
 in
   personalpkgs

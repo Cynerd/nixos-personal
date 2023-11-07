@@ -212,11 +212,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1698306327,
-        "narHash": "sha256-fygrx3yODn/yL6YN4j1kONjhURWBgqE0t+TaXG7qdfk=",
+        "lastModified": 1699007833,
+        "narHash": "sha256-A/T6xCTX48s8kJ2D79/WoyCkK71+Oq/tsP4snkOTKAY=",
         "ref": "refs/heads/master",
-        "rev": "d1276dd4acdf8881789f382bc861f02dcc253579",
-        "revCount": 3257,
+        "rev": "24efa7b72c90a7cdbb388d2a0a723ab705dd81f7",
+        "revCount": 3273,
         "submodules": true,
         "type": "git",
         "url": "http://jessie.elektroline.cz/elektroline/flatlineng.git"
@@ -377,11 +377,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1698313226,
-        "narHash": "sha256-PpTtdlt/MeqmTlbnJA4lwR5gvxZFsfsicvLuCEOQCnE=",
+        "lastModified": 1699087154,
+        "narHash": "sha256-Eq8VMqpRtMonqeOlLi+F86S39l+RLx/0EbqystNaswc=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "37c290f0203a9eaad110535c923c7e6b4013e801",
+        "rev": "e4082efedb483eb0478c3f014fa851449bca43f9",
         "type": "github"
       },
       "original": {
@@ -578,11 +578,11 @@
         "nixpkgs": "nixpkgs_10"
       },
       "locked": {
-        "lastModified": 1698248912,
-        "narHash": "sha256-MIHdVf+TN4j1sybeZcAOyk+DOQLHvhweS5nVWT4zwBo=",
+        "lastModified": 1698995707,
+        "narHash": "sha256-r8JBnMdof7GxJ3bGkq8KhgOAqPsgP84m/W2JZkLLe1c=",
         "ref": "refs/heads/master",
-        "rev": "69c4ac78e020f9d859c84380243c1bc68826f9d1",
-        "revCount": 411,
+        "rev": "d315a79a6a197204605ce952c30807963a98d523",
+        "revCount": 413,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/silicon-heaven/shvspy.git"
@@ -752,11 +752,11 @@
     },
     "vpsadminos": {
       "locked": {
-        "lastModified": 1697893625,
-        "narHash": "sha256-Mv3EhCA0lhqlesByUbffm4wmDmGsKsjEgvL6naosLWU=",
+        "lastModified": 1698841907,
+        "narHash": "sha256-hkpc/CNIK3sOJR4THaBzzzC5HxR8DrdhQZAL1n7HkEc=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "b19f095f9bb280a253651d33aff86958626f4773",
+        "rev": "7aef93cecfd196f4ad246eb1111b4c4be7352379",
         "type": "github"
       },
       "original": {
