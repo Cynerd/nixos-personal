@@ -164,7 +164,11 @@ in {
           ]);
       };
       vim.package = pkgs.vimHugeX;
-      firefox.enable = true;
+      firefox = {
+        enable = true;
+        languagePacks = ["en-US" "cs"];
+        nativeMessagingHosts.packages = with pkgs; [browserpass];
+      };
       light.enable = mkIf cnf.laptop true;
     };
     xdg.portal = {
