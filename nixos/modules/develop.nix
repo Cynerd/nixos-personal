@@ -111,7 +111,7 @@ with lib; {
 
       # SHV
       shvspy
-      flatline
+      #flatline
       shvcli
 
       # Images
