@@ -67,8 +67,8 @@ in {
             pinentry-gnome
             pinentry-curses
             (pass.withExtensions (exts: [
-              #exts.pass-otp
-              #exts.pass-audit
+              exts.pass-otp
+              exts.pass-audit
             ]))
 
             chromium
@@ -152,7 +152,7 @@ in {
             gaphor
 
             # CAD
-            #freecad
+            freecad
             kicad
             sweethome3d.application
             qelectrotech

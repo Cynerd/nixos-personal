@@ -212,19 +212,19 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1699633158,
-        "narHash": "sha256-8AQVHT8SpiScPSpCtu0GV7Is6tcaYHzG9xMRfOreiQA=",
+        "lastModified": 1700054720,
+        "narHash": "sha256-guW9g07cbxhXKAPb0FpvhhSDnUbCSlDJ3oKkBK3V0VE=",
         "ref": "refs/heads/master",
-        "rev": "51c018d36a73312e406c5009a0eaf8a2976bb734",
-        "revCount": 3296,
+        "rev": "5222ee18c00d4bae49f63d46281f4f6c1dc12d84",
+        "revCount": 3317,
         "submodules": true,
         "type": "git",
-        "url": "http://jessie.elektroline.cz/elektroline/flatlineng.git"
+        "url": "http://gitlab.elektroline.cz/elektroline/flatlineng.git"
       },
       "original": {
         "submodules": true,
         "type": "git",
-        "url": "http://jessie.elektroline.cz/elektroline/flatlineng.git"
+        "url": "http://gitlab.elektroline.cz/elektroline/flatlineng.git"
       }
     },
     "home-manager": {
@@ -377,11 +377,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1699686971,
-        "narHash": "sha256-fttf55Uo88Ei57sxTuDOwKXg8izdR365lFjI13+XfwE=",
+        "lastModified": 1700083842,
+        "narHash": "sha256-uC5v4VyUPgC5L3zv7e9q6+TRCm+eiA+Ow5vcH67ef/I=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "d638da8b6a17041483d90ba9af6c3b5e30b4fbcc",
+        "rev": "9008bc4eb62c878d0812105ea1b34255d651df88",
         "type": "github"
       },
       "original": {
@@ -752,11 +752,11 @@
     },
     "vpsadminos": {
       "locked": {
-        "lastModified": 1699376038,
-        "narHash": "sha256-uk7pWEwTVC408Ft7ASFc9rvRTFtrXan/aNMQbKx6P9k=",
+        "lastModified": 1699919832,
+        "narHash": "sha256-K+tXV9t3lp3uYJ08J4kngRaYxaGn04Sz1C90lg5RDjo=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "0b7107015de85e6c4f5bca966674e2edcda40ae9",
+        "rev": "7c4b905481c91ea66c59916884cbe91fb216e038",
         "type": "github"
       },
       "original": {
