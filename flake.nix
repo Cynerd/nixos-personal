@@ -8,7 +8,7 @@
     sterm.url = "github:wentasah/sterm";
     agenix.url = "github:ryantm/agenix";
     shvspy.url = "git+https://github.com/silicon-heaven/shvspy.git?submodules=1";
-    flatline.url = "git+http://gitlab.elektroline.cz/elektroline/flatlineng.git?submodules=1";
+    flatline.url = "git+https://gitlab.elektroline.cz/elektroline/flatlineng.git?submodules=1";
     shvcli.url = "git+https://gitlab.com/elektroline-predator/shvcli.git";
 
     #nixturris.url = "github:cynerd/nixturris";

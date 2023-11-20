@@ -212,19 +212,19 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1700054720,
-        "narHash": "sha256-guW9g07cbxhXKAPb0FpvhhSDnUbCSlDJ3oKkBK3V0VE=",
+        "lastModified": 1700136545,
+        "narHash": "sha256-hAl8vXycJW8WEwWMKVIYIjJrpvyopKPzcvAhrhab63Q=",
         "ref": "refs/heads/master",
-        "rev": "5222ee18c00d4bae49f63d46281f4f6c1dc12d84",
-        "revCount": 3317,
+        "rev": "1205f4cbda12919961a186e848e655049a67b119",
+        "revCount": 3321,
         "submodules": true,
         "type": "git",
-        "url": "http://gitlab.elektroline.cz/elektroline/flatlineng.git"
+        "url": "https://gitlab.elektroline.cz/elektroline/flatlineng.git"
       },
       "original": {
         "submodules": true,
         "type": "git",
-        "url": "http://gitlab.elektroline.cz/elektroline/flatlineng.git"
+        "url": "https://gitlab.elektroline.cz/elektroline/flatlineng.git"
       }
     },
     "home-manager": {
@@ -377,11 +377,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1700083842,
-        "narHash": "sha256-uC5v4VyUPgC5L3zv7e9q6+TRCm+eiA+Ow5vcH67ef/I=",
+        "lastModified": 1700375254,
+        "narHash": "sha256-S4AzIm/Eoz0bYpgEc27UbRvjVoc2+tt71gNQReSTsP4=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "9008bc4eb62c878d0812105ea1b34255d651df88",
+        "rev": "0ace63bed8f561e4cc5b1c8fa5fee6be61fbcf8b",
         "type": "github"
       },
       "original": {
@@ -483,11 +483,11 @@
     },
     "personal-secret": {
       "locked": {
-        "lastModified": 1694075868,
-        "narHash": "sha256-jJCQUukLJdqU+VeL1vRGgvl8LvF94PE18Owxi2iFZB0=",
+        "lastModified": 1700135597,
+        "narHash": "sha256-LqT/uwyas9aqBiJ+ezMCxo8n/2fA7sAXiX7xiCNb6oI=",
         "ref": "refs/heads/master",
-        "rev": "bf3b1eeb72636d4a6fed9b461375795c3d17cb65",
-        "revCount": 78,
+        "rev": "92dce4538bba4b1a8fc41eb67bf56bea0a41a49e",
+        "revCount": 79,
         "type": "git",
         "url": "ssh://git@cynerd.cz/nixos-personal-secret"
       },
@@ -752,11 +752,11 @@
     },
     "vpsadminos": {
       "locked": {
-        "lastModified": 1699919832,
-        "narHash": "sha256-K+tXV9t3lp3uYJ08J4kngRaYxaGn04Sz1C90lg5RDjo=",
+        "lastModified": 1700252261,
+        "narHash": "sha256-uoBmITWKnYv+FFvv11oQgxo/XzXW6d1A+HNxrgs2pnY=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "7c4b905481c91ea66c59916884cbe91fb216e038",
+        "rev": "1a99e415fbd32dce7da1e78f7ff20833f606e1d5",
         "type": "github"
       },
       "original": {
