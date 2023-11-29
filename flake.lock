@@ -212,11 +212,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1700136545,
-        "narHash": "sha256-hAl8vXycJW8WEwWMKVIYIjJrpvyopKPzcvAhrhab63Q=",
+        "lastModified": 1701176687,
+        "narHash": "sha256-YJXxfMCkHAsz/KjOw/N6VcZKdLE5t2Wk2YRIH9OUWog=",
         "ref": "refs/heads/master",
-        "rev": "1205f4cbda12919961a186e848e655049a67b119",
-        "revCount": 3321,
+        "rev": "d05cd2f501be7d01202a9061af09400af4d3700d",
+        "revCount": 3341,
         "submodules": true,
         "type": "git",
         "url": "https://gitlab.elektroline.cz/elektroline/flatlineng.git"
@@ -377,18 +377,17 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1700375254,
-        "narHash": "sha256-S4AzIm/Eoz0bYpgEc27UbRvjVoc2+tt71gNQReSTsP4=",
+        "lastModified": 1701172651,
+        "narHash": "sha256-wP2F6NTa4Sh5tgfP2Ya0AOwt/6SvCAXylW0R6ASRS9w=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "0ace63bed8f561e4cc5b1c8fa5fee6be61fbcf8b",
+        "rev": "024e4447a42868b4c8f3ac8b3e6a2da83c682de1",
         "type": "github"
       },
       "original": {
-        "owner": "NixOS",
+        "id": "nixpkgs",
         "ref": "nixos-unstable-small",
-        "repo": "nixpkgs",
-        "type": "github"
+        "type": "indirect"
       }
     },
     "nixpkgs_5": {
@@ -467,18 +466,17 @@
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1698261789,
-        "narHash": "sha256-IChf24UlV29QGp2XAdktslPDPfCEu2vLNei+kZsanaQ=",
-        "ref": "new-ci",
-        "rev": "10b3bca2fbf6a90a929765801061fdccb510ac94",
-        "revCount": 132,
-        "type": "git",
-        "url": "https://gitlab.com/cynerd/nixturris"
+        "lastModified": 1680711275,
+        "narHash": "sha256-WSKHOP65VEp9hyB0h4kcNbJT02zaJHc40hIq9l+uG4U=",
+        "owner": "cynerd",
+        "repo": "nixturris",
+        "rev": "45e61620f26b4d8f293b4e8ec6a29f1bdded2657",
+        "type": "gitlab"
       },
       "original": {
-        "ref": "new-ci",
-        "type": "git",
-        "url": "https://gitlab.com/cynerd/nixturris"
+        "owner": "cynerd",
+        "repo": "nixturris",
+        "type": "gitlab"
       }
     },
     "personal-secret": {
@@ -559,17 +557,17 @@
         "pyshv": "pyshv"
       },
       "locked": {
-        "lastModified": 1699626052,
-        "narHash": "sha256-lBqySVnV4IX1v2zgNjDexR4pqidQ/xNfc8k3I7R0qYg=",
-        "ref": "refs/heads/master",
-        "rev": "639c03c86b2db3f0b6e102c82a1f22c223a284ee",
-        "revCount": 52,
-        "type": "git",
-        "url": "https://gitlab.com/elektroline-predator/shvcli.git"
+        "lastModified": 1700733387,
+        "narHash": "sha256-k/1OzuO7sw90nH1JzuqQ3GzbV+r1dSFqtvFMOR33HPg=",
+        "owner": "silicon-heaven",
+        "repo": "shvcli",
+        "rev": "86131cb5cf8b42f885a0539db3ac670dead94705",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "https://gitlab.com/elektroline-predator/shvcli.git"
+        "owner": "silicon-heaven",
+        "repo": "shvcli",
+        "type": "github"
       }
     },
     "shvspy": {
@@ -578,11 +576,11 @@
         "nixpkgs": "nixpkgs_10"
       },
       "locked": {
-        "lastModified": 1698995707,
-        "narHash": "sha256-r8JBnMdof7GxJ3bGkq8KhgOAqPsgP84m/W2JZkLLe1c=",
+        "lastModified": 1701080464,
+        "narHash": "sha256-YKo35TarvYKVHGk3ffN+qQ/5nVzZAdDd9Fsqira0zOU=",
         "ref": "refs/heads/master",
-        "rev": "d315a79a6a197204605ce952c30807963a98d523",
-        "revCount": 413,
+        "rev": "334da50ac8308588492cc73018763bcbe1eadc39",
+        "revCount": 417,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/silicon-heaven/shvspy.git"
@@ -739,24 +737,24 @@
       "locked": {
         "lastModified": 1696631236,
         "narHash": "sha256-zWYntwZjYroLLMpO2zmxCvaBiisF2XvBWwQIyek7+n4=",
-        "ref": "refs/heads/master",
+        "owner": "cynerd",
+        "repo": "usbkey",
         "rev": "65a86a439a1340539891f83078b01cef0e1172de",
-        "revCount": 20,
-        "type": "git",
-        "url": "https://gitlab.com/cynerd/usbkey.git/"
+        "type": "gitlab"
       },
       "original": {
-        "type": "git",
-        "url": "https://gitlab.com/cynerd/usbkey.git/"
+        "owner": "cynerd",
+        "repo": "usbkey",
+        "type": "gitlab"
       }
     },
     "vpsadminos": {
       "locked": {
-        "lastModified": 1700252261,
-        "narHash": "sha256-uoBmITWKnYv+FFvv11oQgxo/XzXW6d1A+HNxrgs2pnY=",
+        "lastModified": 1700929470,
+        "narHash": "sha256-17xvoLBtp5C6BxoPL4U8spk98/wOdLWpR7YlzJtXS54=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "1a99e415fbd32dce7da1e78f7ff20833f606e1d5",
+        "rev": "e607adf796f3152e65e27e70ef885c63bb8cb84f",
         "type": "github"
       },
       "original": {

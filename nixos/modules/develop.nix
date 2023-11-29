@@ -26,7 +26,6 @@ with lib; {
       wlc # Weblate
       cloc
       openssl
-      sterm
       tio
       parted
       vim-vint
@@ -110,7 +109,7 @@ with lib; {
       stdmanpages
 
       # SHV
-      shvspy
+      #shvspy
       flatline
       shvcli
 

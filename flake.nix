@@ -2,22 +2,20 @@
   description = "Cynerd's personal flake";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+    nixpkgs.url = "nixpkgs/nixos-unstable-small";
     personal-secret.url = "git+ssh://git@cynerd.cz/nixos-personal-secret";
 
-    sterm.url = "github:wentasah/sterm";
     agenix.url = "github:ryantm/agenix";
     shvspy.url = "git+https://github.com/silicon-heaven/shvspy.git?submodules=1";
     flatline.url = "git+https://gitlab.elektroline.cz/elektroline/flatlineng.git?submodules=1";
-    shvcli.url = "git+https://gitlab.com/elektroline-predator/shvcli.git";
+    shvcli.url = "github:silicon-heaven/shvcli";
 
-    #nixturris.url = "github:cynerd/nixturris";
-    nixturris.url = "git+https://gitlab.com/cynerd/nixturris?ref=new-ci";
+    nixturris.url = "gitlab:cynerd/nixturris";
     nixbigclown.url = "github:cynerd/nixbigclown";
     vpsadminos.url = "github:vpsfreecz/vpsadminos";
 
     shellrc.url = "git+https://git.cynerd.cz/shellrc";
-    usbkey.url = "git+https://gitlab.com/cynerd/usbkey.git/";
+    usbkey.url = "gitlab:cynerd/usbkey";
   };
 
   outputs = {

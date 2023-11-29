@@ -61,7 +61,7 @@ in {
             astroid
             taskwarrior
             vdirsyncer
-            #khal
+            khal
             khard
             gnupg
             pinentry-gnome
