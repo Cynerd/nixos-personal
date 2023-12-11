@@ -7,6 +7,14 @@ in
   modules
   // machines
   // {
-    default = {imports = attrValues modules;};
+    default = {
+      imports = with self.inputs;
+        [
+          shellrc.nixosModules.default
+          usbkey.nixosModules.default
+          nixbigclown.nixosModules.default
+        ]
+        ++ attrValues modules;
+    };
     defaultRouters = {imports = attrValues routers;};
   }

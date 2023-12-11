@@ -37,7 +37,7 @@ with lib; {
 
     environment.systemPackages = with pkgs; [
       #openocd
-      sterm
+      tio
     ];
 
     # TODO: ubootTools build is broken!

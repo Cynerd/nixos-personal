@@ -1,24 +1,15 @@
 self:
-with self.inputs;
 with builtins;
-with nixpkgs.lib; let
+with self.inputs.nixpkgs.lib; let
+  inherit (self.inputs) nixpkgs nixos-hardware nixturris vpsadminos;
+
   modules = hostname:
     [
       self.nixosModules.default
-      shellrc.nixosModules.default
-      usbkey.nixosModules.default
-      nixbigclown.nixosModules.default
-      (personal-secret.lib.personalSecrets hostname)
+      (self.inputs.personal-secret.lib.personalSecrets hostname)
       {
         networking.hostName = hostname;
-        nixpkgs.overlays = [
-          self.overlays.default
-          sterm.overlay
-          agenix.overlays.default
-          shvspy.overlays.default
-          flatline.overlays.default
-          shvcli.overlays.default
-        ];
+        nixpkgs.overlays = [self.overlays.default];
         system.configurationRevision = self.rev or "dirty";
       }
     ]

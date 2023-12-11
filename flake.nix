@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable-small";
+    nixos-hardware.url = "nixos-hardware";
     personal-secret.url = "git+ssh://git@cynerd.cz/nixos-personal-secret";
 
     agenix.url = "github:ryantm/agenix";
@@ -22,20 +23,34 @@
     self,
     nixpkgs,
     flake-utils,
+    agenix,
+    shvspy,
+    flatline,
+    shvcli,
     shellrc,
+    usbkey,
     ...
   }:
     with flake-utils.lib;
       {
         lib = import ./lib nixpkgs.lib;
-        overlays.default = final: import ./pkgs;
+        overlays = {
+          noInherit = final: prev: import ./pkgs prev;
+          default = nixpkgs.lib.composeManyExtensions [
+            agenix.overlays.default
+            shvspy.overlays.default
+            flatline.overlays.default
+            shvcli.overlays.default
+            shellrc.overlays.default
+            usbkey.overlays.default
+            self.overlays.noInherit
+          ];
+        };
         nixosModules = import ./nixos self;
         nixosConfigurations = import ./nixos/configurations.nix self;
       }
       // eachDefaultSystem (system: let
-        pkgs = nixpkgs.legacyPackages."${system}".appendOverlays [
-          shellrc.overlays.default
-        ];
+        pkgs = nixpkgs.legacyPackages."${system}".extend self.overlays.default;
       in {
         packages = filterPackages system (flattenTree (import ./pkgs pkgs));
         legacyPackages = pkgs.extend self.overlays.default;
