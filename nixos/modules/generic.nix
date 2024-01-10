@@ -32,10 +32,12 @@ in {
       };
     };
 
-    boot.loader.systemd-boot.enable = mkOverride 1100 true;
-    boot.loader.efi.canTouchEfiVariables = mkDefault true;
-    boot.kernelPackages = mkOverride 1100 pkgs.linuxPackages_latest;
-    boot.kernelParams = ["boot.shell_on_fail"];
+    boot = {
+      loader.systemd-boot.enable = mkOverride 1100 true;
+      loader.efi.canTouchEfiVariables = mkDefault true;
+      kernelPackages = mkOverride 1100 pkgs.linuxPackages_latest;
+      kernelParams = ["boot.shell_on_fail"];
+    };
     hardware.enableAllFirmware = true;
     services.fwupd.enable = mkIf (pkgs.system == "x86_64-linux") true;
 
@@ -107,46 +109,50 @@ in {
         mlocate
       ];
 
-    users.mutableUsers = false;
-    users.groups.cynerd.gid = 1000;
-    users.users = {
-      root = {
-        hashedPasswordFile = "/run/secrets/root.pass";
-      };
-      cynerd = {
-        group = "cynerd";
-        extraGroups = ["users" "wheel" "dialout" "kvm" "uucp"];
-        uid = 1000;
-        subUidRanges = [
-          {
-            count = 65534;
-            startUid = 10000;
-          }
-        ];
-        subGidRanges = [
-          {
-            count = 65534;
-            startGid = 10000;
-          }
-        ];
-        isNormalUser = true;
-        createHome = true;
-        shell =
-          if isNative
-          then pkgs.zsh.out
-          else pkgs.bash.out;
-        hashedPasswordFile = "/run/secrets/cynerd.pass";
-        openssh.authorizedKeys.keyFiles = [
-          (config.personal-secrets + "/unencrypted/git-private.pub")
-        ];
+    users = {
+      mutableUsers = false;
+      groups.cynerd.gid = 1000;
+      users = {
+        root = {
+          hashedPasswordFile = "/run/secrets/root.pass";
+        };
+        cynerd = {
+          group = "cynerd";
+          extraGroups = ["users" "wheel" "dialout" "kvm" "uucp"];
+          uid = 1000;
+          subUidRanges = [
+            {
+              count = 65534;
+              startUid = 10000;
+            }
+          ];
+          subGidRanges = [
+            {
+              count = 65534;
+              startGid = 10000;
+            }
+          ];
+          isNormalUser = true;
+          createHome = true;
+          shell =
+            if isNative
+            then pkgs.zsh.out
+            else pkgs.bash.out;
+          hashedPasswordFile = "/run/secrets/cynerd.pass";
+          openssh.authorizedKeys.keyFiles = [
+            (config.personal-secrets + "/unencrypted/git-private.pub")
+          ];
+        };
       };
     };
-    programs.zsh = {
-      enable = isNative;
-      syntaxHighlighting.enable = isNative;
+    programs = {
+      zsh = {
+        enable = isNative;
+        syntaxHighlighting.enable = isNative;
+      };
+      shellrc = true;
+      vim.defaultEditor = mkDefault true;
     };
-    programs.shellrc = true;
-    programs.vim.defaultEditor = mkDefault true;
 
     security.sudo.extraRules = [
       {

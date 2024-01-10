@@ -3,8 +3,10 @@ source "${0%/*}/tools/common.sh"
 declare -a default_hosts
 ################################################################################
 ## x86_64
+# Desktops
+default_hosts+=( "errol" "ridcully" )
 # VPSFree
-default_hosts+=( "lipwig" "mrpump" )
+default_hosts+=( "lipwig" )
 
 ## aarch64
 # Mox
@@ -85,7 +87,7 @@ case "$operation" in
 	build-boot|bb)
 		for_hosts build copy boot
 		;;
-	default)
+	*)
 		echo "Unknown operation: $operation" >&2
 		exit 2
 		;;

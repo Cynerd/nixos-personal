@@ -62,6 +62,7 @@ with lib; {
       configDir = "/home/cynerd/.config/syncthing";
     };
 
+    nixpkgs.config.permittedInsecurePackages = ["openssl-1.1.1w"]; # TODO
     services.home-assistant = {
       enable = true;
       openFirewall = true;

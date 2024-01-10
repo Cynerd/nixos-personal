@@ -11,7 +11,7 @@
     flatline.url = "git+https://gitlab.elektroline.cz/elektroline/flatlineng.git?submodules=1";
     shvcli.url = "github:silicon-heaven/shvcli";
 
-    nixturris.url = "gitlab:cynerd/nixturris";
+    nixturris.url = "gitlab:cynerd/nixturris/new-ci";
     nixbigclown.url = "github:cynerd/nixbigclown";
     vpsadminos.url = "github:vpsfreecz/vpsadminos";
 
