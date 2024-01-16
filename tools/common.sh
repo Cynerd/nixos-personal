@@ -168,7 +168,7 @@ setenv() {
 		local _store _switchop
 		printf -v _store '%q' "$store"
 		printf -v _switchop '%q' "$switchop"
-		_rootssh "$device" "$_store/bin/nixos-system -s $_switchop"
+		_rootssh "$device" "$_store/bin/nixos-system $_switchop"
 	else
 		warning "The latest system might have been already set."
 	fi

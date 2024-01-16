@@ -3,8 +3,8 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
+}: let
+  inherit (lib) mkOption types mkIf;
   cnf = config.cynerd.hosts;
 
   staticZoneOption = mkOption {
@@ -33,7 +33,6 @@ in {
         # Portable
         "binky" = "10.8.0.2";
         "albert" = "10.8.0.3";
-        "susan" = "10.8.0.5";
         "android" = "10.8.0.6";
         # Endpoints
         "spt-omnia" = "10.8.0.50";
@@ -49,7 +48,6 @@ in {
         "errol" = "10.8.2.60";
         # Portable
         "albert" = "10.8.2.61";
-        "susan" = "10.8.2.62";
         "binky" = "10.8.2.63";
       };
       adm = {
@@ -62,7 +60,6 @@ in {
         "mpd" = "10.8.3.51";
         # Portable
         "albert" = "10.8.3.61";
-        "susan" = "10.8.3.62";
         "binky" = "10.8.3.63";
       };
     };
@@ -73,7 +70,6 @@ in {
       "${cnf.vpn.android}" = ["android.vpn"];
       "${cnf.vpn.albert}" = ["albert.vpn"];
       "${cnf.vpn.dean}" = ["dean" "dean.vpn"];
-      "${cnf.vpn.susan}" = ["susan.vpn"];
       "${cnf.vpn.binky}" = ["binky.vpn"];
       "${cnf.vpn.spt-omnia}" = ["spt.vpn"];
       "${cnf.vpn.adm-omnia}" = ["adm.vpn"];
@@ -85,7 +81,6 @@ in {
       "${cnf.spt.mpd}" = ["mpd.spt"];
       "${cnf.spt.errol}" = ["errol" "desktop.spt"];
       "${cnf.spt.albert}" = ["albert.spt"];
-      "${cnf.spt.susan}" = ["susan.spt"];
       "${cnf.spt.binky}" = ["binky.spt"];
       # Adm
       "${cnf.adm.omnia}" = ["omnia.adm"];
@@ -93,7 +88,6 @@ in {
       "${cnf.adm.omnia2}" = ["omnia2.adm"];
       "${cnf.adm.ridcully}" = ["ridcully" "desktop.adm"];
       "${cnf.adm.albert}" = ["albert.adm"];
-      "${cnf.adm.susan}" = ["susan.adm"];
       "${cnf.adm.binky}" = ["binky.adm"];
       "${cnf.adm."3dprint"}" = ["3dprint"];
       "${cnf.adm.mpd}" = ["mpd.adm"];

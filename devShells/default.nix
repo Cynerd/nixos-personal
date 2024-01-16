@@ -1,21 +1,11 @@
-pkgs: let
-  callDevelop = pkgs.lib.callPackageWith (shells // {inherit pkgs;});
-
-  shells = {
-    default = pkgs.mkShell {
-      packages = [];
-    };
-
-    armv6 = callDevelop ./nuttx.nix {arch = "armv6s-m";};
-    armv7e = callDevelop ./nuttx.nix {
-      arch = "armv7e-m";
-      fpu = "vfpv3-d16";
-    };
-    espc = callDevelop ./nuttx.nix {arch = "rv32imc";};
-    c = callDevelop ./c.nix {};
-    qt = callDevelop ./qt.nix {};
-    python = callDevelop ./python.nix {};
-    apo = callDevelop ./apo.nix {};
+pkgs: rec {
+  armv7e = import ./nuttx.nix pkgs c {
+    arch = "armv7e-m";
+    fpu = "vfpv3-d16";
   };
-in
-  shells
+  espc = import ./nuttx.nix pkgs c {arch = "rv32imc";};
+  c = import ./c.nix pkgs;
+  qt = import ./qt.nix pkgs c;
+  python = import ./python.nix pkgs;
+  apo = import ./apo.nix pkgs c;
+}

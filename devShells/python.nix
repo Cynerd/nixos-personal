@@ -1,7 +1,4 @@
-{
-  pkgs,
-  default,
-}:
+pkgs:
 pkgs.mkShell {
   packages = with pkgs; [
     (python3.withPackages (pypkgs:
@@ -50,6 +47,5 @@ pkgs.mkShell {
     gtk3
     gtk4
   ];
-  inputsFrom = with pkgs; [default];
   meta.platforms = pkgs.lib.platforms.linux;
 }

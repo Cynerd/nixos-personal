@@ -3,9 +3,8 @@
   lib,
   pkgs,
   ...
-}:
-with builtins;
-with lib; let
+}: let
+  inherit (lib) filterAttrs mkOption types mkIf any mkDefault recursiveUpdate genAttrs;
   cnf = config.cynerd.syncthing;
   inherit (config.networking) hostName;
   allDevices = [

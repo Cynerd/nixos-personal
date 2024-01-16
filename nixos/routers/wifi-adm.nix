@@ -30,70 +30,111 @@ in {
 
   config = mkIf cnf.enable {
     services.hostapd = {
-      countryCode = "CZ";
-      environmentFile = "/run/secrets/hostapd.env";
-      interfaces =
-        (optionalAttrs (cnf.ar9287.interface != null) {
-          "${cnf.ar9287.interface}" = hostapd.qualcomAtherosAR9287 {
-            inherit (cnf.ar9287) channel;
-            bssid = "@BSSID_AR9287_0@";
-            ssid = "TurrisAdamkovi";
-            wpa = 2;
-            wpaPassphrase = "@PASS_TURRIS_ADAMKOVI@";
-            bss = {
-              "${cnf.ar9287.interface}.nela" = {
-                bssid = "@BSSID_AR9287_1@";
-                ssid = "Nela";
-                wpa = 2;
-                wpaPassphrase = "@PASS_NELA@";
+      enable = true;
+      radios = {
+        "${cnf.ar9287.interface}" = mkIf (cnf.ar9287.interface != null) {
+          countryCode = "CZ";
+          inherit (cnf.ar9287) channel;
+          wifi4 = {
+            enable = true;
+            inherit (hostapd.qualcomAtherosAR9287.wifi4) capabilities;
+          };
+          networks = {
+            "${cnf.ar9287.interface}" = {
+              bssid = "02:f0:21:23:2b:00";
+              ssid = "TurrisAdamkovi";
+              authentication = {
+                mode = "wpa2-sha256";
+                wpaPasswordFile = "/run/secrets/hostapd-TurrisAdamkovi.pass";
               };
-              "${cnf.ar9287.interface}.milan" = {
-                bssid = "@BSSID_AR9287_2@";
-                ssid = "MILAN-AC";
-                wpa = 2;
-                wpaPassphrase = "@PASS_MILAN_AC@";
+            };
+            "${cnf.ar9287.interface}.nela" = {
+              bssid = "06:f0:21:23:2b:00";
+              ssid = "Nela";
+              authentication = {
+                mode = "wpa2-sha256";
+                wpaPasswordFile = "/run/secrets/hostapd-Nela.pass";
+              };
+            };
+            "${cnf.ar9287.interface}.milan" = {
+              bssid = "0a:f0:21:23:2b:00";
+              ssid = "MILAN-AC";
+              authentication = {
+                mode = "wpa2-sha256";
+                wpaPasswordFile = "/run/secrets/hostapd-MILAN-AC.pass";
               };
             };
           };
-        })
-        // (optionalAttrs (cnf.qca988x.interface != null) {
-          "${cnf.qca988x.interface}" = hostapd.qualcomAtherosQCA988x {
-            inherit (cnf.qca988x) channel;
-            bssid = "@BSSID_AR9287_0@";
-            ssid = "TurrisAdamkovi5";
-            wpa = 2;
-            wpaPassphrase = "@PASS_TURRIS_ADAMKOVI@";
-            bss = {
-              "${cnf.qca988x.interface}.nela" = {
-                bssid = "@BSSID_AR9287_1@";
-                ssid = "Nela5";
-                wpa = 2;
-                wpaPassphrase = "@PASS_NELA@";
+        };
+        "${cnf.qca988x.interface}" = mkIf (cnf.qca988x.interface != null) {
+          countryCode = "CZ";
+          inherit (cnf.qca988x) channel;
+          band = "5g";
+          wifi4 = {
+            enable = true;
+            inherit (hostapd.qualcomAtherosQCA988x.wifi4) capabilities;
+          };
+          wifi5 = {
+            enable = true;
+            inherit (hostapd.qualcomAtherosQCA988x.wifi5) capabilities;
+          };
+          networks = {
+            "${cnf.qca988x.interface}" = {
+              bssid = "04:f0:21:24:24:d2";
+              ssid = "TurrisAdamkovi";
+              authentication = {
+                mode = "wpa2-sha256";
+                wpaPasswordFile = "/run/secrets/hostapd-TurrisAdamkovi.pass";
               };
-              "${cnf.qca988x.interface}.milan" = {
-                bssid = "@BSSID_AR9287_2@";
-                ssid = "MILAN-AC";
-                wpa = 2;
-                wpaPassphrase = "@PASS_MILAN_AC@";
+            };
+            "${cnf.qca988x.interface}.nela" = {
+              bssid = "06:f0:21:24:24:d2";
+              ssid = "Nela";
+              authentication = {
+                mode = "wpa2-sha256";
+                wpaPasswordFile = "/run/secrets/hostapd-Nela.pass";
+              };
+            };
+            "${cnf.qca988x.interface}.milan" = {
+              bssid = "0a:f0:21:24:24:d2";
+              ssid = "MILAN-AC";
+              authentication = {
+                mode = "wpa2-sha256";
+                wpaPasswordFile = "/run/secrets/hostapd-MILAN-AC.pass";
               };
             };
           };
-        });
+        };
+      };
     };
-    networking.bridges = {
-      brlan.interfaces = filter (v: v != null) [
-        cnf.ar9287.interface
-        cnf.qca988x.interface
-      ];
-      brguest.interfaces =
-        (optionals (cnf.ar9287.interface != null) [
+    networking = {
+      # TODO wlanInterface doesn't work right now because it uses invalid
+      # command and seems to just configure only first interface. It is just
+      # wrong.
+      #wlanInterfaces = {
+      #  "${cnf.ar9287.interface}.nela" = {
+      #    device = "${cnf.ar9287.interface}";
+      #    mac = "06:f0:21:23:2b:00";
+      #  };
+      #  "${cnf.ar9287.interface}.milan" = {
+      #    device = "${cnf.ar9287.interface}";
+      #    mac = "0a:f0:21:23:2b:00";
+      #  };
+      #};
+      bridges = {
+        brlan.interfaces = filter (v: v != null) [
+          cnf.ar9287.interface
+          cnf.qca988x.interface
+        ];
+        brguest.interfaces = optionals (cnf.ar9287.interface != null) [
           "${cnf.ar9287.interface}.nela"
           "${cnf.ar9287.interface}.milan"
-        ])
-        ++ (optionals (cnf.qca988x.interface != null) [
-          "${cnf.qca988x.interface}.nela"
-          "${cnf.qca988x.interface}.milan"
-        ]);
+        ];
+        #  ++ (optionals (cnf.qca988x.interface != null) [
+        #    "${cnf.qca988x.interface}.nela"
+        #    "${cnf.qca988x.interface}.milan"
+        #  ]);
+      };
     };
   };
 }

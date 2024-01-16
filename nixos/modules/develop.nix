@@ -3,8 +3,9 @@
   lib,
   pkgs,
   ...
-}:
-with lib; {
+}: let
+  inherit (lib) mkOption mkIf types;
+in {
   options = {
     cynerd.develop = mkOption {
       type = types.bool;
@@ -109,7 +110,7 @@ with lib; {
       stdmanpages
 
       # SHV
-      #shvspy
+      shvspy
       flatline
       shvcli
 

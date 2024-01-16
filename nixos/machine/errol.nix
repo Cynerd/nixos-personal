@@ -3,8 +3,9 @@
   lib,
   pkgs,
   ...
-}:
-with lib; {
+}: let
+  inherit (lib) mkDefault;
+in {
   config = {
     cynerd = {
       desktop.enable = true;

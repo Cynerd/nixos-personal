@@ -108,7 +108,6 @@ in
   // amd64System "binky"
   // amd64System "errol"
   // amd64System "ridcully"
-  // amd64System "susan"
   // vpsSystem "lipwig"
   // raspi2System "spt-mpd"
   // raspi3System "adm-mpd"

@@ -3,8 +3,8 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
+}: let
+  inherit (lib) mkOption types mkMerge mkIf optionalAttrs optionals;
   cnf = config.cynerd.monitoring;
 in {
   options.cynerd.monitoring = {

@@ -3,8 +3,8 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
+}: let
+  inherit (lib) mkOption mkIf types optionals;
   cnf = config.cynerd.desktop;
 in {
   options = {
@@ -60,9 +60,9 @@ in {
             notmuch
             astroid
             taskwarrior
-            vdirsyncer
-            khal
-            khard
+            #vdirsyncer
+            #khal
+            #khard
             gnupg
             pinentry-gnome
             pinentry-curses
@@ -70,6 +70,7 @@ in {
               exts.pass-otp
               exts.pass-audit
             ]))
+            nextcloud-client
 
             chromium
             ferdium
@@ -149,7 +150,7 @@ in {
 
             # Gnome utils
             gnome-firmware
-            gaphor
+            #gaphor
 
             # CAD
             freecad

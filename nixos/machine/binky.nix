@@ -3,8 +3,9 @@
   lib,
   pkgs,
   ...
-}:
-with lib; {
+}: let
+  inherit (lib) mkDefault;
+in {
   config = {
     cynerd = {
       desktop = {
@@ -20,8 +21,10 @@ with lib; {
       };
     };
 
-    boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "usb_storage" "sd_mod"];
-    boot.kernelModules = ["kvm-amd"];
+    boot = {
+      initrd.availableKernelModules = ["nvme" "xhci_pci" "usb_storage" "sd_mod"];
+      kernelModules = ["kvm-amd"];
+    };
 
     hardware.cpu.amd.updateMicrocode = true;
 

@@ -9,9 +9,9 @@
     agenix.url = "github:ryantm/agenix";
     shvspy.url = "git+https://github.com/silicon-heaven/shvspy.git?submodules=1";
     flatline.url = "git+https://gitlab.elektroline.cz/elektroline/flatlineng.git?submodules=1";
-    shvcli.url = "github:silicon-heaven/shvcli";
+    shvcli.url = "github:silicon-heaven/shvcli/indent-cpon";
 
-    nixturris.url = "gitlab:cynerd/nixturris/new-ci";
+    nixturris.url = "gitlab:cynerd/nixturris";
     nixbigclown.url = "github:cynerd/nixbigclown";
     vpsadminos.url = "github:vpsfreecz/vpsadminos";
 
@@ -35,7 +35,7 @@
       {
         lib = import ./lib nixpkgs.lib;
         overlays = {
-          noInherit = final: prev: import ./pkgs prev;
+          noInherit = final: prev: import ./pkgs final prev;
           default = nixpkgs.lib.composeManyExtensions [
             agenix.overlays.default
             shvspy.overlays.default
@@ -52,8 +52,14 @@
       // eachDefaultSystem (system: let
         pkgs = nixpkgs.legacyPackages."${system}".extend self.overlays.default;
       in {
-        packages = filterPackages system (flattenTree (import ./pkgs pkgs));
-        legacyPackages = pkgs.extend self.overlays.default;
+        packages = with nixpkgs.lib;
+          mapAttrs' (n: v:
+            nameValuePair
+            "tarball-${n}"
+            v.buildPlatform.${system}.config.system.build.tarball) (filterAttrs
+            (n: v: v.config.system.build ? tarball)
+            self.nixosConfigurations);
+        legacyPackages = pkgs;
         devShells = filterPackages system (import ./devShells pkgs);
         formatter = pkgs.alejandra;
       });

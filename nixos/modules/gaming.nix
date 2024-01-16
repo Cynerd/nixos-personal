@@ -3,8 +3,8 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
+}: let
+  inherit (lib) mkOption mkIf types;
   cnf = config.cynerd.gaming;
 in {
   options = {

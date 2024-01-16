@@ -3,8 +3,8 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
+}: let
+  inherit (lib) mkOption types mkIf;
   cnf = config.cynerd.openvpn;
 in {
   options = {

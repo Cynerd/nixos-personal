@@ -1,7 +1,4 @@
-{
-  pkgs,
-  default,
-}:
+pkgs:
 pkgs.mkShell {
   packages = with pkgs; [
     clang-tools_14
@@ -44,6 +41,5 @@ pkgs.mkShell {
     SDL2
     libffi.dev
   ];
-  inputsFrom = with pkgs; [default];
   meta.platforms = pkgs.lib.platforms.linux;
 }

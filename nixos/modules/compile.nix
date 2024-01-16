@@ -3,8 +3,9 @@
   lib,
   pkgs,
   ...
-}:
-with lib; {
+}: let
+  inherit (lib) mkOption mkIf mkDefault types;
+in {
   options = {
     cynerd.compile = mkOption {
       type = types.bool;

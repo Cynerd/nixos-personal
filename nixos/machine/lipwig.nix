@@ -3,8 +3,7 @@
   lib,
   pkgs,
   ...
-}:
-with lib; {
+}: {
   config = {
     cynerd = {
       syncthing = {
@@ -55,6 +54,10 @@ with lib; {
             fastcgi_param HTTP_HOST    $server_name;
           '';
         };
+        "cloud.cynerd.cz" = {
+          forceSSL = true;
+          useACMEHost = "cynerd.cz";
+        };
         "grafana.cynerd.cz" = {
           forceSSL = true;
           useACMEHost = "cynerd.cz";
@@ -75,6 +78,7 @@ with lib; {
       defaults.email = "cynerd+acme@email.cz";
       certs."cynerd.cz".extraDomainNames = [
         "git.cynerd.cz"
+        "cloud.cynerd.cz"
         "grafana.cynerd.cz"
       ];
     };
@@ -154,6 +158,48 @@ with lib; {
           filesystem_folder = "/var/lib/radicale/";
         };
         web.type = "none";
+      };
+    };
+
+    # Nextcloud ################################################################
+    services.nextcloud = {
+      enable = true;
+      package = pkgs.nextcloud28;
+      https = true;
+      hostName = "cloud.cynerd.cz";
+      datadir = "/nas/nextcloud";
+      config = {
+        adminuser = "cynerd";
+        adminpassFile = "/run/secrets/nextcloud.admin.pass";
+      };
+      extraOptions = {
+        #log_type = "systemd";
+        default_phone_region = "CZ";
+      };
+      phpOptions = {
+        "opcache.interned_strings_buffer" = "16";
+      };
+      maxUploadSize = "1G";
+      appstoreEnable = false;
+      extraApps = {
+        inherit
+          (config.services.nextcloud.package.packages.apps)
+          calendar
+          contacts
+          cookbook
+          deck
+          groupfolders
+          notes
+          phonetrack
+          tasks
+          twofactor_nextcloud_notification
+          twofactor_webauthn
+          ;
+        passwords = pkgs.fetchNextcloudApp {
+          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2023.12.2/passwords.tar.gz";
+          sha256 = "17qkkkmc3gai6pryl3lb4y074pzbjk26swnpgvy6qfvkp64n8bw1";
+          license = "agpl3";
+        };
       };
     };
 

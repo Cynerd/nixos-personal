@@ -10,7 +10,7 @@ with lib; {
     cynerd = {
       home-assistant = true;
       wifiAP.spt = {
-        enable = false;
+        enable = true;
         qca988x = {
           interface = "wls1";
           channel = 7;

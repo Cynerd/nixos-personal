@@ -1,8 +1,4 @@
-{
-  pkgs,
-  default,
-  c,
-}: let
+pkgs: c: let
   riscvPkgs = import pkgs.path {
     localSystem = pkgs.buildPlatform.system;
     crossSystem = {
@@ -18,6 +14,6 @@ in
       glibc.static
       riscvPkgs.buildPackages.gcc
     ];
-    inputsFrom = [default c];
+    inputsFrom = [c];
     meta.platforms = pkgs.lib.platforms.linux;
   }

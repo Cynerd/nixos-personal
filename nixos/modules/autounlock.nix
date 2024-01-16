@@ -3,8 +3,8 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
+}: let
+  inherit (lib) mapAttrs mkOption mkIf types;
   cnf = config.cynerd.autounlock;
 in {
   options = {

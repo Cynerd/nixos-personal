@@ -3,8 +3,8 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
+}: let
+  inherit (lib) mkOverride mkDefault mkIf optionals;
   isNative = config.nixpkgs.hostPlatform == config.nixpkgs.buildPlatform;
 in {
   config = {

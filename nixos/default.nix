@@ -1,7 +1,6 @@
-self:
-with builtins; let
+self: let
   machines = import ./machine self;
-  modules = import ./modules;
+  modules = import ./modules self;
   routers = import ./routers;
 in
   modules
@@ -14,7 +13,7 @@ in
           usbkey.nixosModules.default
           nixbigclown.nixosModules.default
         ]
-        ++ attrValues modules;
+        ++ builtins.attrValues modules;
     };
-    defaultRouters = {imports = attrValues routers;};
+    defaultRouters = {imports = builtins.attrValues routers;};
   }

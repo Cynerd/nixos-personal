@@ -3,8 +3,7 @@
   lib,
   pkgs,
   ...
-}:
-with lib; {
+}: {
   config = {
     cynerd = {
       desktop = {

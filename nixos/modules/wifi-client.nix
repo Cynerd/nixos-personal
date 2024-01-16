@@ -3,8 +3,9 @@
   lib,
   pkgs,
   ...
-}:
-with lib; {
+}: let
+  inherit (lib) mkOption types mkIf;
+in {
   options = {
     cynerd.wifiClient = mkOption {
       type = types.bool;

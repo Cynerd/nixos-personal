@@ -1,7 +1,4 @@
-{
-  pkgs,
-  default,
-  c,
+pkgs: c: {
   arch,
   fpu ? null,
 }:
@@ -36,6 +33,6 @@ in
       ++ (optionals (hasPrefix "rv32" arch) [
         esptool
       ]);
-    inputsFrom = [default c];
+    inputsFrom = [c];
     meta.platforms = pkgsCross.lib.platforms.linux;
   }

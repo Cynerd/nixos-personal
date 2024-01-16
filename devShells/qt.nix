@@ -1,8 +1,4 @@
-{
-  pkgs,
-  default,
-  c,
-}:
+pkgs: c:
 pkgs.mkShell {
   packages = with pkgs;
   with libsForQt5; [
@@ -14,6 +10,6 @@ pkgs.mkShell {
     qtcharts
     qtwayland
   ];
-  inputsFrom = with pkgs; [default c];
+  inputsFrom = [c];
   meta.platforms = pkgs.lib.platforms.linux;
 }
