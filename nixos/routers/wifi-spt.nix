@@ -30,60 +30,84 @@ in {
 
   config = mkIf cnf.enable {
     services.hostapd = {
-      #enable = true;
-      #countryCode = "CZ";
-      #interfaces =
-      #  (optionalAttrs (cnf.ar9287.interface != null) {
-      #    "${cnf.ar9287.interface}" = hostapd.qualcomAtherosAR9287 {
-      #      inherit (cnf.ar9287) channel;
-      #      bssid = "@BSSID_AR9287_0@";
-      #      ssid = "TurrisRules";
-      #      wpa = 2;
-      #      wpaPassphrase = "@PASS_TURRIS_RULES@";
-      #      bridge = "brlan";
-      #      bss = {
-      #        "${cnf.ar9287.interface}.guest" = {
-      #          bssid = "@BSSID_AR9287_1@";
-      #          ssid = "Kocovi";
-      #          wpa = 2;
-      #          wpaPassphrase = "@PASS_KOCOVI@";
-      #          bridge = "brguest";
-      #        };
-      #      };
-      #    };
-      #  })
-      #  // (optionalAttrs (cnf.qca988x.interface != null) {
-      #    "${cnf.qca988x.interface}" = hostapd.qualcomAtherosQCA988x {
-      #      inherit (cnf.qca988x) channel;
-      #      bssid = "@BSSID_QCA988X_0@";
-      #      ssid = "TurrisRules5";
-      #      wpa = 2;
-      #      wpaPassphrase = "@PASS_TURRIS_RULES@";
-      #      bridge = "brlan";
-      #      bss = {
-      #        "${cnf.qca988x.interface}.guest" = {
-      #          bssid = "@BSSID_QCA988X_1@";
-      #          ssid = "Kocovi";
-      #          wpa = 2;
-      #          wpaPassphrase = "@PASS_KOCOVI@";
-      #          bridge = "brguest";
-      #        };
-      #      };
-      #    };
-      #  });
+      enable = true;
+      radios = {
+        "${cnf.ar9287.interface}" = mkIf (cnf.ar9287.interface != null) {
+          countryCode = "CZ";
+          inherit (cnf.ar9287) channel;
+          wifi4 = {
+            enable = true;
+            inherit (hostapd.qualcomAtherosAR9287.wifi4) capabilities;
+          };
+          networks = {
+            "${cnf.ar9287.interface}" = {
+              bssid = "02:f0:21:23:2b:00";
+              ssid = "TurrisRules";
+              authentication = {
+                mode = "wpa2-sha256";
+                wpaPasswordFile = "/run/secrets/hostapd-TurrisRules.pass";
+              };
+            };
+            "${cnf.ar9287.interface}.guest" = {
+              bssid = "0a:f0:21:23:2b:00";
+              ssid = "Kocovi";
+              authentication = {
+                mode = "wpa2-sha256";
+                wpaPasswordFile = "/run/secrets/hostapd-Kocovi.pass";
+              };
+            };
+          };
+        };
+        "${cnf.qca988x.interface}" = mkIf (cnf.qca988x.interface != null) {
+          countryCode = "CZ";
+          inherit (cnf.qca988x) channel;
+          band = "5g";
+          wifi4 = {
+            enable = true;
+            inherit (hostapd.qualcomAtherosQCA988x.wifi4) capabilities;
+          };
+          wifi5 = {
+            enable = true;
+            inherit (hostapd.qualcomAtherosQCA988x.wifi5) capabilities;
+          };
+          networks = {
+            "${cnf.qca988x.interface}" = {
+              bssid = "04:f0:21:24:24:d2";
+              ssid = "TurrisRules5";
+              authentication = {
+                mode = "wpa2-sha256";
+                wpaPasswordFile = "/run/secrets/hostapd-TurrisRules.pass";
+              };
+            };
+            "${cnf.qca988x.interface}.guest" = {
+              bssid = "0a:f0:21:24:24:d2";
+              ssid = "Kocovi";
+              authentication = {
+                mode = "wpa2-sha256";
+                wpaPasswordFile = "/run/secrets/hostapd-Kocovi.pass";
+              };
+            };
+          };
+        };
+      };
     };
-    networking.bridges = {
-      brlan.interfaces = filter (v: v != null) [
-        cnf.ar9287.interface
-        cnf.qca988x.interface
-      ];
-      brguest.interfaces =
-        (optionals (cnf.ar9287.interface != null) [
-          "${cnf.ar9287.interface}.guest"
-        ])
-        ++ (optionals (cnf.qca988x.interface != null) [
-          "${cnf.qca988x.interface}.guest"
-        ]);
+    systemd.network.networks = {
+      "lan-${cnf.ar9287.interface}" = {
+        matchConfig.Name = cnf.ar9287.interface;
+        networkConfig.Bridge = "brlan";
+      };
+      "lan-${cnf.ar9287.interface}.guest" = {
+        matchConfig.Name = "${cnf.ar9287.interface}.guest";
+        networkConfig.Bridge = "brguest";
+      };
+      "lan-${cnf.qca988x.interface}" = {
+        matchConfig.Name = cnf.qca988x.interface;
+        networkConfig.Bridge = "brlan";
+      };
+      "lan-${cnf.qca988x.interface}.guest" = {
+        matchConfig.Name = "${cnf.qca988x.interface}.guest";
+        networkConfig.Bridge = "brguest";
+      };
     };
   };
 }

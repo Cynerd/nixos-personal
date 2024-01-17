@@ -40,9 +40,21 @@ with lib; {
     };
     #systemd.services."pppd-wan".after = ["sys-subsystem-net-devices-end2.device"];
 
-    networking.bridges = {
-      brlan.interfaces = ["lan1" "lan2" "lan3" "lan4"];
-      brguest.interfaces = ["lan0"];
+    environment.systemPackages = [pkgs.tcpdump];
+
+    networking = {
+      useNetworkd = true;
+      useDHCP = false;
+    };
+    systemd.network.networks = {
+      "lan-brlan" = {
+        matchConfig.Name = "lan[1-4]";
+        networkConfig.Bridge = "brlan";
+      };
+      "lan0-brguest" = {
+        matchConfig.Name = "lan0";
+        networkConfig.Bridge = "brguest";
+      };
     };
   };
 }

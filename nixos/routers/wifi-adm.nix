@@ -107,33 +107,30 @@ in {
         };
       };
     };
-    networking = {
-      # TODO wlanInterface doesn't work right now because it uses invalid
-      # command and seems to just configure only first interface. It is just
-      # wrong.
-      #wlanInterfaces = {
-      #  "${cnf.ar9287.interface}.nela" = {
-      #    device = "${cnf.ar9287.interface}";
-      #    mac = "06:f0:21:23:2b:00";
-      #  };
-      #  "${cnf.ar9287.interface}.milan" = {
-      #    device = "${cnf.ar9287.interface}";
-      #    mac = "0a:f0:21:23:2b:00";
-      #  };
-      #};
-      bridges = {
-        brlan.interfaces = filter (v: v != null) [
-          cnf.ar9287.interface
-          cnf.qca988x.interface
-        ];
-        brguest.interfaces = optionals (cnf.ar9287.interface != null) [
-          "${cnf.ar9287.interface}.nela"
-          "${cnf.ar9287.interface}.milan"
-        ];
-        #  ++ (optionals (cnf.qca988x.interface != null) [
-        #    "${cnf.qca988x.interface}.nela"
-        #    "${cnf.qca988x.interface}.milan"
-        #  ]);
+    systemd.network.networks = {
+      "lan-${cnf.ar9287.interface}" = {
+        matchConfig.Name = cnf.ar9287.interface;
+        networkConfig.Bridge = "brlan";
+      };
+      "lan-${cnf.ar9287.interface}.nela" = {
+        matchConfig.Name = "${cnf.ar9287.interface}.nela";
+        networkConfig.Bridge = "brguest";
+      };
+      "lan-${cnf.ar9287.interface}.milan" = {
+        matchConfig.Name = "${cnf.ar9287.interface}.milan";
+        networkConfig.Bridge = "brguest";
+      };
+      "lan-${cnf.qca988x.interface}" = {
+        matchConfig.Name = cnf.qca988x.interface;
+        networkConfig.Bridge = "brlan";
+      };
+      "lan-${cnf.qca988x.interface}.nela" = {
+        matchConfig.Name = "${cnf.qca988x.interface}.nela";
+        networkConfig.Bridge = "brguest";
+      };
+      "lan-${cnf.qca988x.interface}.milan" = {
+        matchConfig.Name = "${cnf.qca988x.interface}.milan";
+        networkConfig.Bridge = "brguest";
       };
     };
   };
