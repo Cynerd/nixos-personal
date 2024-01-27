@@ -60,7 +60,7 @@ in {
             notmuch
             astroid
             taskwarrior
-            #vdirsyncer
+            vdirsyncer
             #khal
             #khard
             gnupg
@@ -171,6 +171,10 @@ in {
         nativeMessagingHosts.packages = with pkgs; [browserpass];
       };
       light.enable = mkIf cnf.laptop true;
+      nix-ld = {
+        enable = true;
+        libraries = with pkgs; [xorg.libXpm];
+      };
     };
     xdg.portal = {
       enable = true;
