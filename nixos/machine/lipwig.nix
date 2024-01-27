@@ -133,34 +133,6 @@
       scan-path=/var/lib/git/repositories/
     '';
 
-    # CalDAV and CardDAV #######################################################
-    # TODO vdirsyncer needs CA
-    services.radicale = {
-      enable = true;
-      rights.cynerd = {
-        user = "cynerd";
-        collection = ".*";
-        permission = "rw";
-      };
-      settings = {
-        server.hosts = ["0.0.0.0:5232" "[::]:5232"];
-        encoding = {
-          request = "utf-8";
-          stock = "utf-8";
-        };
-        auth = {
-          type = "htpasswd";
-          htpasswd_filename = "${config.personal-secrets}/unencrypted/radicale.users";
-          htpasswd_encryption = "bcrypt";
-          delay = 1;
-        };
-        storage = {
-          filesystem_folder = "/var/lib/radicale/";
-        };
-        web.type = "none";
-      };
-    };
-
     # Nextcloud ################################################################
     services.nextcloud = {
       enable = true;
@@ -171,11 +143,15 @@
       config = {
         adminuser = "cynerd";
         adminpassFile = "/run/secrets/nextcloud.admin.pass";
+        dbtype = "pgsql";
+        dbhost = "/run/postgresql";
+        dbtableprefix = "oc_";
       };
       extraOptions = {
         #log_type = "systemd";
         default_phone_region = "CZ";
       };
+      phpExtraExtensions = php: [php.pgsql php.pdo_pgsql];
       phpOptions = {
         "opcache.interned_strings_buffer" = "16";
       };
@@ -184,13 +160,17 @@
       extraApps = {
         inherit
           (config.services.nextcloud.package.packages.apps)
+          bookmarks
           calendar
           contacts
           cookbook
           deck
           groupfolders
+          maps
+          memories
           notes
           phonetrack
+          previewgenerator
           tasks
           twofactor_nextcloud_notification
           twofactor_webauthn
@@ -201,6 +181,19 @@
           license = "agpl3";
         };
       };
+    };
+    environment.systemPackages = with pkgs; [exiftool ffmpeg-headless nodejs];
+
+    # Postgresql ###############################################################
+    services.postgresql = {
+      enable = true;
+      ensureUsers = [
+        {
+          name = "nextcloud";
+          ensureDBOwnership = true;
+        }
+      ];
+      ensureDatabases = ["nextcloud"];
     };
 
     # Old Syncthing ############################################################
