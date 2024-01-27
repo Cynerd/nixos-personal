@@ -7,6 +7,11 @@
 with lib; {
   config = {
     cynerd = {
+      switch = {
+        enable = true;
+        lanAddress = "${config.cynerd.hosts.adm.omnia2}/24";
+        lanGateway = config.cynerd.hosts.adm.omnia;
+      };
       wifiAP.adm = {
         enable = true;
         ar9287.interface = "wlp2s0";
@@ -15,28 +20,23 @@ with lib; {
     };
 
     networking = {
-      vlans = {
-        "brlan.guest" = {
-          interface = "brlan";
-          id = 2; # TODO later use 100
-        };
-      };
-      bridges = {
-        brlan.interfaces = ["end2" "lan0" "lan1" "lan2" "lan3" "lan4"];
-        brguest.interfaces = ["brlan.guest"];
-      };
-      interfaces.brlan.ipv4.addresses = [
-        {
-          address = config.cynerd.hosts.adm.omnia2;
-          prefixLength = 24;
-        }
-      ];
-      defaultGateway = config.cynerd.hosts.adm.omnia;
-      nameservers = ["1.1.1.1" "8.8.8.8"];
-      dhcpcd.allowInterfaces = [];
+      useNetworkd = true;
+      useDHCP = false;
     };
-
-    # TODO: ubootTools build is broken!
-    firmware.environment.enable = false;
+    systemd.network.networks = {
+      "lan-brlan" = {
+        matchConfig.Name = "lan* eth0";
+        networkConfig.Bridge = "brlan";
+        bridgeVLANs = [
+          {
+            bridgeVLANConfig = {
+              EgressUntagged = 1;
+              PVID = 1;
+            };
+          }
+          {bridgeVLANConfig.VLAN = 2;}
+        ];
+      };
+    };
   };
 }

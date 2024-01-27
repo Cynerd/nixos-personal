@@ -9,38 +9,39 @@ with lib; {
   config = {
     cynerd = {
       home-assistant = true;
+      switch = {
+        enable = true;
+        lanAddress = "${config.cynerd.hosts.spt.mox}/24";
+        lanGateway = config.cynerd.hosts.spt.omnia;
+      };
       wifiAP.spt = {
         enable = true;
         qca988x = {
           interface = "wls1";
+          bssids = ["04:f0:21:24:24:d2" "08:f0:21:24:24:d2"];
           channel = 7;
         };
       };
     };
 
     networking = {
-      vlans = {
-        "brlan.guest" = {
-          id = 2;
-          interface = "brlan";
-        };
-      };
-      bridges = {
-        brlan.interfaces = ["eth0" "lan1" "lan2" "lan3" "lan4"];
-        brguest.interfaces = ["brlan.guest"];
-      };
-      interfaces.brlan.ipv4.addresses = [
-        {
-          address = config.cynerd.hosts.spt.mox;
-          prefixLength = 24;
-        }
-      ];
-      defaultGateway = config.cynerd.hosts.spt.omnia;
-      nameservers = ["1.1.1.1" "8.8.8.8"];
-      dhcpcd.allowInterfaces = [];
+      useNetworkd = true;
+      useDHCP = false;
     };
-
-    # TODO: ubootTools build is broken!
-    firmware.environment.enable = false;
+    systemd.network.networks = {
+      "lan-brlan" = {
+        matchConfig.Name = "lan* end0";
+        networkConfig.Bridge = "brlan";
+        bridgeVLANs = [
+          {
+            bridgeVLANConfig = {
+              EgressUntagged = 1;
+              PVID = 1;
+            };
+          }
+          {bridgeVLANConfig.VLAN = 2;}
+        ];
+      };
+    };
   };
 }

@@ -13,6 +13,11 @@ with lib; let
       default = null;
       description = "Specify interface for ${card}";
     };
+    bssids = mkOption {
+      type = with types; listOf str;
+      default = [];
+      description = "BSSIDs for networks.";
+    };
     channel = mkOption {
       type = types.ints.positive;
       default = channelDefault;
@@ -41,15 +46,15 @@ in {
           };
           networks = {
             "${cnf.ar9287.interface}" = {
-              bssid = "02:f0:21:23:2b:00";
+              bssid = elemAt cnf.ar9287.bssids 0;
               ssid = "TurrisAdamkovi";
               authentication = {
                 mode = "wpa2-sha256";
                 wpaPasswordFile = "/run/secrets/hostapd-TurrisAdamkovi.pass";
               };
             };
-            "${cnf.ar9287.interface}.nela" = {
-              bssid = "06:f0:21:23:2b:00";
+            "${cnf.ar9287.interface}-nela" = {
+              bssid = elemAt cnf.ar9287.bssids 1;
               ssid = "Nela";
               authentication = {
                 mode = "wpa2-sha256";
@@ -57,7 +62,7 @@ in {
               };
             };
             "${cnf.ar9287.interface}.milan" = {
-              bssid = "0a:f0:21:23:2b:00";
+              bssid = elemAt cnf.ar9287.bssids 2;
               ssid = "MILAN-AC";
               authentication = {
                 mode = "wpa2-sha256";
@@ -80,15 +85,15 @@ in {
           };
           networks = {
             "${cnf.qca988x.interface}" = {
-              bssid = "04:f0:21:24:24:d2";
+              bssid = elemAt cnf.qca988x.bssids 0;
               ssid = "TurrisAdamkovi";
               authentication = {
                 mode = "wpa2-sha256";
                 wpaPasswordFile = "/run/secrets/hostapd-TurrisAdamkovi.pass";
               };
             };
-            "${cnf.qca988x.interface}.nela" = {
-              bssid = "06:f0:21:24:24:d2";
+            "${cnf.qca988x.interface}-nela" = {
+              bssid = elemAt cnf.qca988x.bssids 1;
               ssid = "Nela";
               authentication = {
                 mode = "wpa2-sha256";
@@ -96,7 +101,7 @@ in {
               };
             };
             "${cnf.qca988x.interface}.milan" = {
-              bssid = "0a:f0:21:24:24:d2";
+              bssid = elemAt cnf.qca988x.bssids 2;
               ssid = "MILAN-AC";
               authentication = {
                 mode = "wpa2-sha256";
@@ -111,26 +116,74 @@ in {
       "lan-${cnf.ar9287.interface}" = {
         matchConfig.Name = cnf.ar9287.interface;
         networkConfig.Bridge = "brlan";
+        bridgeVLANs = [
+          {
+            bridgeVLANConfig = {
+              EgressUntagged = 1;
+              PVID = 1;
+            };
+          }
+        ];
       };
-      "lan-${cnf.ar9287.interface}.nela" = {
-        matchConfig.Name = "${cnf.ar9287.interface}.nela";
-        networkConfig.Bridge = "brguest";
+      "lan-${cnf.ar9287.interface}-nela" = {
+        matchConfig.Name = "${cnf.ar9287.interface}-nela";
+        networkConfig.Bridge = "brlan";
+        bridgeVLANs = [
+          {
+            bridgeVLANConfig = {
+              EgressUntagged = 2;
+              PVID = 2;
+            };
+          }
+        ];
       };
       "lan-${cnf.ar9287.interface}.milan" = {
         matchConfig.Name = "${cnf.ar9287.interface}.milan";
-        networkConfig.Bridge = "brguest";
+        networkConfig.Bridge = "brlan";
+        bridgeVLANs = [
+          {
+            bridgeVLANConfig = {
+              EgressUntagged = 2;
+              PVID = 2;
+            };
+          }
+        ];
       };
       "lan-${cnf.qca988x.interface}" = {
         matchConfig.Name = cnf.qca988x.interface;
         networkConfig.Bridge = "brlan";
+        bridgeVLANs = [
+          {
+            bridgeVLANConfig = {
+              EgressUntagged = 1;
+              PVID = 1;
+            };
+          }
+        ];
       };
-      "lan-${cnf.qca988x.interface}.nela" = {
-        matchConfig.Name = "${cnf.qca988x.interface}.nela";
-        networkConfig.Bridge = "brguest";
+      "lan-${cnf.qca988x.interface}-nela" = {
+        matchConfig.Name = "${cnf.qca988x.interface}-nela";
+        networkConfig.Bridge = "brlan";
+        bridgeVLANs = [
+          {
+            bridgeVLANConfig = {
+              EgressUntagged = 2;
+              PVID = 2;
+            };
+          }
+        ];
       };
       "lan-${cnf.qca988x.interface}.milan" = {
         matchConfig.Name = "${cnf.qca988x.interface}.milan";
-        networkConfig.Bridge = "brguest";
+        networkConfig.Bridge = "brlan";
+        bridgeVLANs = [
+          {
+            bridgeVLANConfig = {
+              EgressUntagged = 2;
+              PVID = 2;
+            };
+          }
+        ];
       };
     };
   };

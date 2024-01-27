@@ -28,7 +28,6 @@ in {
       cloc
       openssl
       tio
-      parted
       vim-vint
       nodePackages.vim-language-server
       ctags

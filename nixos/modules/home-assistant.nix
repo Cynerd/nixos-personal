@@ -123,6 +123,7 @@ in {
     };
     systemd.services.telegraf.wants = ["mosquitto.service"];
 
+    #nixpkgs.config.permittedInsecurePackages = ["openssl-1.1.1w"]; # TODO
     services.home-assistant = {
       enable = false;
       openFirewall = true;

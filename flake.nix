@@ -9,7 +9,7 @@
     agenix.url = "github:ryantm/agenix";
     shvspy.url = "git+https://github.com/silicon-heaven/shvspy.git?submodules=1";
     flatline.url = "git+https://gitlab.elektroline.cz/elektroline/flatlineng.git?submodules=1";
-    shvcli.url = "github:silicon-heaven/shvcli/indent-cpon";
+    shvcli.url = "github:silicon-heaven/shvcli";
 
     nixturris.url = "gitlab:cynerd/nixturris";
     nixbigclown.url = "github:cynerd/nixbigclown";

@@ -114,6 +114,7 @@ in
   // beagleboneSystem "gaspode"
   // turrisMoxSystem "dean"
   // turrisOmniaSystem "spt-omnia"
+  // turrisOmniaSystem "spt-omniax"
   // turrisMoxSystem "spt-mox"
   // turrisMoxSystem "spt-mox2"
   // turrisOmniaSystem "adm-omnia"

@@ -63,6 +63,7 @@ in {
         usbutils
         pciutils
         smartmontools
+        parted
 
         # NCurses tools
         htop
@@ -92,6 +93,7 @@ in {
         wakeonlan
         speedtest-cli
         librespeed-cli
+        termshark
 
         lm_sensors
       ]

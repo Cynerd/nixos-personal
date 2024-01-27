@@ -9,7 +9,7 @@ with lib; {
     cynerd = {
       router = {
         enable = true;
-        wan = "end2"; # TODO pppoe-wan
+        wan = "pppoe-wan";
         lanIP = config.cynerd.hosts.adm.omnia;
       };
       wifiAP.adm = {
@@ -21,8 +21,53 @@ with lib; {
       monitoring.speedtest = true;
     };
 
+    networking.useDHCP = false;
+    systemd.network = {
+      networks = {
+        "end2" = {
+          matchConfig.Name = "end2";
+          #networkConfig = {
+          #  DHCP = "ipv6";
+          #  IPv6AcceptRA = "yes";
+          #  DHCPPrefixDelegation = "yes";
+          #};
+          #dhcpPrefixDelegationConfig = {
+          #  UplinkInterface = ":self";
+          #  SubnetId = 0;
+          #  Announce = "no";
+          #};
+          linkConfig.RequiredForOnline = "routable";
+        };
+        "lan-brlan" = {
+          matchConfig.Name = "lan[1-4]";
+          networkConfig.Bridge = "brlan";
+          bridgeVLANs = [
+            {
+              bridgeVLANConfig = {
+                EgressUntagged = 1;
+                PVID = 1;
+              };
+            }
+            {bridgeVLANConfig.VLAN = 2;}
+          ];
+        };
+        "lan0-guest" = {
+          matchConfig.Name = "lan0";
+          networkConfig.Bridge = "brlan";
+          bridgeVLANs = [
+            {
+              bridgeVLANConfig = {
+                EgressUntagged = 2;
+                PVID = 2;
+              };
+            }
+          ];
+        };
+      };
+    };
+
     services.pppd = {
-      enable = false;
+      enable = true;
       peers."wan".config = ''
         plugin pppoe.so end2
         ifname pppoe-wan
@@ -38,23 +83,6 @@ with lib; {
         password 02
       '';
     };
-    #systemd.services."pppd-wan".after = ["sys-subsystem-net-devices-end2.device"];
-
-    environment.systemPackages = [pkgs.tcpdump];
-
-    networking = {
-      useNetworkd = true;
-      useDHCP = false;
-    };
-    systemd.network.networks = {
-      "lan-brlan" = {
-        matchConfig.Name = "lan[1-4]";
-        networkConfig.Bridge = "brlan";
-      };
-      "lan0-brguest" = {
-        matchConfig.Name = "lan0";
-        networkConfig.Bridge = "brguest";
-      };
-    };
+    systemd.services."pppd-wan".after = ["sys-subsystem-net-devices-end2.device"];
   };
 }

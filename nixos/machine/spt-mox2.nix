@@ -7,45 +7,39 @@
 with lib; {
   config = {
     cynerd = {
+      switch = {
+        enable = true;
+        lanAddress = "${config.cynerd.hosts.spt.mox2}/24";
+        lanGateway = config.cynerd.hosts.spt.omnia;
+      };
       wifiAP.spt = {
         enable = true;
         qca988x = {
           interface = "wls1";
-          channel = 7;
+          bssids = ["04:f0:21:45:d3:47" "08:f0:21:45:d3:47"];
+          channel = 1;
         };
       };
     };
-
-    swapDevices = [
-      {
-        device = "/dev/disk/by-partlabel/NixTurrisSwap";
-        priority = 1;
-      }
-    ];
 
     networking = {
-      vlans = {
-        "brlan.guest" = {
-          id = 2;
-          interface = "brlan";
-        };
-      };
-      bridges = {
-        brlan.interfaces = ["eth0"];
-        brguest.interfaces = ["brlan.guest"];
-      };
-      interfaces.brlan.ipv4.addresses = [
-        {
-          address = config.cynerd.hosts.spt.mox2;
-          prefixLength = 24;
-        }
-      ];
-      defaultGateway = config.cynerd.hosts.spt.omnia;
-      nameservers = ["1.1.1.1" "8.8.8.8"];
-      dhcpcd.allowInterfaces = [];
+      useNetworkd = true;
+      useDHCP = false;
     };
-
-    # TODO: ubootTools build is broken!
-    firmware.environment.enable = false;
+    systemd.network.networks = {
+      "lan-brlan" = {
+        matchConfig.Name = "end0";
+        networkConfig.Bridge = "brlan";
+        bridgeVLANs = [
+          {
+            bridgeVLANConfig = {
+              EgressUntagged = 1;
+              PVID = 1;
+            };
+          }
+          {bridgeVLANConfig.VLAN = 2;}
+        ];
+      };
+    };
   };
 }
