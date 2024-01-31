@@ -213,11 +213,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1706200622,
-        "narHash": "sha256-mOB5Awr2w4zzk3sZC8cIRuO3lFPS6zls6YkAVXWqy+k=",
+        "lastModified": 1706695147,
+        "narHash": "sha256-sS7EYbxsfOwFlzAEJld70+YjcZb7+2U2RyQrZH2gXBs=",
         "ref": "refs/heads/master",
-        "rev": "ede7f6273fc193672d80b55638da449821168cf0",
-        "revCount": 3462,
+        "rev": "3ec187fca17553751e7c996eed996ba24d70760d",
+        "revCount": 3478,
         "submodules": true,
         "type": "git",
         "url": "https://gitlab.elektroline.cz/elektroline/flatlineng.git"
@@ -377,11 +377,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1706184243,
-        "narHash": "sha256-osj5MPUOCau0/ASS8SnXZ/fwJOjWfrZp3/0QvG6P0Gk=",
+        "lastModified": 1706672657,
+        "narHash": "sha256-API05c0SDZrmzz1wpqt/K3iCwlaOqDeDfZGp0YGQnek=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "03cd3a6324af183a660a67a14675989934ece970",
+        "rev": "632751bf0ceeefc74af7a9d2335ea923ad9c831a",
         "type": "github"
       },
       "original": {
@@ -481,11 +481,11 @@
     },
     "personal-secret": {
       "locked": {
-        "lastModified": 1705580312,
-        "narHash": "sha256-xUCP+q1bJkkuHBe6v1GGRTB9LtOuo77EZDaiZ4YHkFc=",
+        "lastModified": 1706704967,
+        "narHash": "sha256-21g+CerizfIoMVG9h/idTVh2iqEuIGVy4RqptzCdJcw=",
         "ref": "refs/heads/master",
-        "rev": "d91936caaea514e727e5727bdedd62f2a206dcad",
-        "revCount": 83,
+        "rev": "352af7c71944eb91a54441fdfc00108d4d3415b1",
+        "revCount": 84,
         "type": "git",
         "url": "ssh://git@cynerd.cz/nixos-personal-secret"
       },
@@ -557,11 +557,11 @@
         "pyshv": "pyshv"
       },
       "locked": {
-        "lastModified": 1705605949,
-        "narHash": "sha256-Iew8BK+5wPIRSef2gAgqoETDddP/aLEeTml3aX2OU4o=",
+        "lastModified": 1706541874,
+        "narHash": "sha256-V9YGU0tdo5BLzEZ0AV7Tt5tD3b8noln7Slhd2kocfRM=",
         "owner": "silicon-heaven",
         "repo": "shvcli",
-        "rev": "acfb114fff62138fa99fbb03b2a901541ca05dfb",
+        "rev": "483c31dc70ff5173119b0610dcc26855e89edce9",
         "type": "github"
       },
       "original": {
@@ -576,11 +576,11 @@
         "nixpkgs": "nixpkgs_10"
       },
       "locked": {
-        "lastModified": 1704363088,
-        "narHash": "sha256-PhBgqjNDI9lYNhVu1BsTe691F4NsBuTFH8bjFr6ZYu4=",
+        "lastModified": 1706565712,
+        "narHash": "sha256-Kof2N/GAvFEL64RShROlzCPKGBxGOJyK/omECaJ2Q+A=",
         "ref": "refs/heads/master",
-        "rev": "d9b1dd4695ccb739dcc95953b82f8c09ea2f74bb",
-        "revCount": 423,
+        "rev": "f49cc9881c099044789e208a232e59492e9dc389",
+        "revCount": 428,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/silicon-heaven/shvspy.git"

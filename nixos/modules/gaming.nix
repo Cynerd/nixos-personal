@@ -18,6 +18,8 @@ in {
   config = mkIf cnf {
     cynerd.desktop.enable = true;
 
+    environment.systemPackages = [pkgs.heroic];
+
     programs.steam = {
       enable = true;
       remotePlay.openFirewall = true;

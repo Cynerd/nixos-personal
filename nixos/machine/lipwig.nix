@@ -147,7 +147,7 @@
         dbhost = "/run/postgresql";
         dbtableprefix = "oc_";
       };
-      extraOptions = {
+      settings = {
         #log_type = "systemd";
         default_phone_region = "CZ";
       };

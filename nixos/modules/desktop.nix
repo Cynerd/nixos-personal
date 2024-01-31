@@ -315,7 +315,7 @@ in {
       earlySetup = true;
       useXkbConfig = true;
     };
-    services.xserver.xkbOptions = "grp:alt_shift_toggle,caps:escape";
+    services.xserver.xkb.options = "grp:alt_shift_toggle,caps:escape";
     services.gpm.enable = true;
 
     services.locate.enable = true;

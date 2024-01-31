@@ -8,7 +8,7 @@
   isNative = config.nixpkgs.hostPlatform == config.nixpkgs.buildPlatform;
 in {
   config = {
-    system.stateVersion = "23.11";
+    system.stateVersion = "24.05";
 
     nix = {
       extraOptions = "experimental-features = nix-command flakes";
