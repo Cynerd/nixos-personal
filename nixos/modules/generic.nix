@@ -67,6 +67,7 @@ in {
 
         # NCurses tools
         htop
+        btop
         iotop
         mc
         screen

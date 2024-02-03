@@ -55,6 +55,8 @@ in {
             dunst
             libnotify
 
+            resources
+
             isync
             msmtp
             notmuch
