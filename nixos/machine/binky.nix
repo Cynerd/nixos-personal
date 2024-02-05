@@ -14,7 +14,6 @@ in {
       };
       wifiClient = true;
       develop = true;
-      gaming = true;
       openvpn = {
         oldpersonal = true;
         elektroline = true;
