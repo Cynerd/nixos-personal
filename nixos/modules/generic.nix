@@ -11,7 +11,7 @@ in {
     system.stateVersion = "24.05";
 
     nix = {
-      extraOptions = "experimental-features = nix-command flakes";
+      extraOptions = "experimental-features = nix-command flakes repl-flake";
       settings = {
         auto-optimise-store = true;
         substituters = [
