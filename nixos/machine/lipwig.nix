@@ -182,11 +182,6 @@
           sha256 = "17qkkkmc3gai6pryl3lb4y074pzbjk26swnpgvy6qfvkp64n8bw1";
           license = "agpl3";
         };
-        integration_homeassistant = pkgs.fetchNextcloudApp {
-          url = "https://github.com/poulou0/nextcloud-homeassistant-integration/releases/download/v0.0.3/integration_homeassistant.tar.gz";
-          sha256 = "18ld0yvdffkiciz782p3019c22cjyb463c7ricrd953r5p85xcqs";
-          license = "agpl3";
-        };
         integration_github = pkgs.fetchNextcloudApp {
           url = "https://github.com/nextcloud-releases/integration_github/releases/download/v2.0.6/integration_github-v2.0.6.tar.gz";
           sha256 = "0rjdlsalayb21nmh3j5bl42dcbavxka2r5g9csagz7vc9dl0qrw6";
