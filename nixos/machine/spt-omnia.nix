@@ -47,31 +47,35 @@ with lib; {
         };
         "end2.848" = {
           matchConfig.Name = "end2.848";
+          networkConfig.BindCarrier = "end2";
+        };
+        "pppoe-wan" = {
+          matchConfig.Name = "pppoe-wan";
           networkConfig = {
-            BindCarrier = "end2";
-            #DHCP = "ipv6";
-            #IPv6AcceptRA = "yes";
-            #DHCPPrefixDelegation = "yes";
+            BindCarrier = "end2.848";
+            DHCP = "ipv6";
+            IPv6AcceptRA = "yes";
+            DHCPPrefixDelegation = "yes";
           };
-          #dhcpPrefixDelegationConfig = {
-          #  UplinkInterface = ":self";
-          #  SubnetId = 0;
-          #  Announce = "no";
-          #};
+          dhcpPrefixDelegationConfig = {
+            UplinkInterface = ":self";
+            SubnetId = 0;
+            Announce = "no";
+          };
           linkConfig.RequiredForOnline = "routable";
         };
         "lan-brlan" = {
           matchConfig.Name = "lan*";
           networkConfig.Bridge = "brlan";
-          bridgeVLANs = [
-            {
-              bridgeVLANConfig = {
-                EgressUntagged = 1;
-                PVID = 1;
-              };
-            }
-            {bridgeVLANConfig.VLAN = 2;}
-          ];
+          #bridgeVLANs = [
+          #  {
+          #    bridgeVLANConfig = {
+          #      EgressUntagged = 1;
+          #      PVID = 1;
+          #    };
+          #  }
+          #  {bridgeVLANConfig.VLAN = 2;}
+          #];
         };
       };
     };

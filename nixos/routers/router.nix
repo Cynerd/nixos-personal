@@ -45,24 +45,24 @@ in {
       nftables.enable = true;
       firewall = {
         interfaces = {
-          "lan" = {
+          "brlan" = {
             allowedUDPPorts = [53 67 68];
             allowedTCPPorts = [53];
           };
-          "guest" = {
-            allowedUDPPorts = [53 67 68];
-            allowedTCPPorts = [53];
-          };
+          #"guest" = {
+          #  allowedUDPPorts = [53 67 68];
+          #  allowedTCPPorts = [53];
+          #};
         };
         filterForward = true;
-        extraForwardRules = ''
-          iifname "guest" oifname != "${cnf.wan}" drop comment "prevent guest to access lan"
-        '';
+        #extraForwardRules = ''
+        #  iifname "guest" oifname != "${cnf.wan}" drop comment "prevent guest to access brlan"
+        #'';
       };
       nat = {
         enable = true;
         externalInterface = cnf.wan;
-        internalInterfaces = ["lan" "guest"];
+        internalInterfaces = ["brlan"];
       };
     };
 
@@ -73,38 +73,43 @@ in {
             Kind = "bridge";
             Name = "brlan";
           };
-          extraConfig = ''
-            [Bridge]
-            DefaultPVID=none
-            VLANFiltering=yes
-          '';
+          #extraConfig = ''
+          #  [Bridge]
+          #  DefaultPVID=none
+          #  VLANFiltering=yes
+          #'';
         };
-        "lan" = {
-          netdevConfig = {
-            Kind = "vlan";
-            Name = "lan";
-          };
-          vlanConfig.Id = 1;
-        };
-        "guest" = {
-          netdevConfig = {
-            Kind = "vlan";
-            Name = "guest";
-          };
-          vlanConfig.Id = 2;
-        };
+        #"home" = {
+        #  netdevConfig = {
+        #    Kind = "vlan";
+        #    Name = "home";
+        #  };
+        #  vlanConfig.Id = 1;
+        #};
+        #"guest" = {
+        #  netdevConfig = {
+        #    Kind = "vlan";
+        #    Name = "guest";
+        #  };
+        #  vlanConfig.Id = 2;
+        #};
       };
       networks = {
         "brlan" = {
           matchConfig.Name = "brlan";
-          networkConfig.VLAN = ["lan" "guest"];
-          bridgeVLANs = [
-            {bridgeVLANConfig.VLAN = 1;}
-            {bridgeVLANConfig.VLAN = 2;}
-          ];
-        };
-        "lan" = {
-          matchConfig.Name = "lan";
+          #networkConfig.VLAN = ["home"];
+          #bridgeVLANs = [
+          #  {
+          #    bridgeVLANConfig = {
+          #      EgressUntagged = 1;
+          #      PVID = 1;
+          #    };
+          #  }
+          #  {bridgeVLANConfig.VLAN = 2;}
+          #];
+        #};
+        #"home" = {
+          #matchConfig.Name = "home";
           networkConfig = {
             Address = "${cnf.lanIP}/${toString cnf.lanPrefix}";
             IPForward = "yes";
@@ -126,29 +131,29 @@ in {
             Announce = "yes";
           };
         };
-        "guest" = {
-          matchConfig.Name = "guest";
-          networkConfig = {
-            Address = "192.168.1.1/24";
-            IPForward = "yes";
-            DHCPServer = "yes";
-            DHCPPrefixDelegation = "yes";
-            IPv6SendRA = "yes";
-            IPv6AcceptRA = "no";
-          };
-          dhcpServerConfig = {
-            UplinkInterface = cnf.wan;
-            PoolOffset = cnf.dynIPStart;
-            PoolSize = cnf.dynIPCount;
-            EmitDNS = "yes";
-            DNS = "1.1.1.1";
-          };
-          dhcpPrefixDelegationConfig = {
-            UplinkInterface = cnf.wan;
-            SubnetId = 2;
-            Announce = "yes";
-          };
-        };
+        #"guest" = {
+        #  matchConfig.Name = "guest";
+        #  networkConfig = {
+        #    Address = "192.168.1.1/24";
+        #    IPForward = "yes";
+        #    DHCPServer = "yes";
+        #    DHCPPrefixDelegation = "yes";
+        #    IPv6SendRA = "yes";
+        #    IPv6AcceptRA = "no";
+        #  };
+        #  dhcpServerConfig = {
+        #    UplinkInterface = cnf.wan;
+        #    PoolOffset = cnf.dynIPStart;
+        #    PoolSize = cnf.dynIPCount;
+        #    EmitDNS = "yes";
+        #    DNS = "1.1.1.1";
+        #  };
+        #  dhcpPrefixDelegationConfig = {
+        #    UplinkInterface = cnf.wan;
+        #    SubnetId = 2;
+        #    Announce = "yes";
+        #  };
+        #};
       };
       wait-online.anyInterface = true;
     };
