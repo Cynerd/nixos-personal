@@ -164,7 +164,6 @@ in {
       }
     ];
     networking.dhcpcd.extraConfig = "controlgroup wheel";
-    environment.etc."dhcpcd.conf".text = "controlgroup wheel";
 
     services.openssh.enable = true;
 

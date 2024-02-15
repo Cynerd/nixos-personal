@@ -193,7 +193,7 @@ in {
 
     programs.usbkey = {
       enable = true;
-      devicesUUID = [];
+      devicesUUID = ["de269652-2070-46b2-84f8-409dc9dd50ee" "16a089d0-a663-4047-bd88-3885dd7fdee2"];
     };
 
     programs.gnupg.agent = {
@@ -254,8 +254,10 @@ in {
     services.udev.extraRules = ''
       ACTION=="add|change", KERNEL=="sd*[!0-9]", ATTR{queue/scheduler}="bfq"
     '';
-    hardware.opengl.driSupport = true;
-    hardware.opengl.driSupport32Bit = true;
+    hardware.opengl = {
+      driSupport = true;
+      driSupport32Bit = true;
+    };
 
     hardware.bluetooth.enable = mkIf cnf.laptop true;
 

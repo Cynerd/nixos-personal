@@ -20,4 +20,9 @@ final: prev: {
   lorem-text = final.callPackage ./lorem-text {};
 
   bigclown-leds = final.callPackage ./bigclown-leds {};
+
+  # nixpkgs patches
+  #zigbee2mqtt = prev.zigbee2mqtt.overrideAttrs (oldAttrs: {
+  #  npmInstallFlags = ["--no-optional"]; # Fix cross build
+  #});
 }
