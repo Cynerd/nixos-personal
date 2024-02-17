@@ -90,7 +90,6 @@ in {
 
       # Network
       iperf3
-      wireshark
       inetutils
 
       # Gtk
@@ -116,7 +115,7 @@ in {
       # Images
       imagemagick
     ];
-    programs.wireshark.enable = true;
+    programs.wireshark.package = pkgs.wireshark;
 
     documentation = {
       dev.enable = true;
@@ -152,7 +151,6 @@ in {
       "lxd"
       "develop"
       "libvirtd"
-      "wireshark"
     ];
   };
 }

@@ -13,7 +13,6 @@
     "errol"
     "lipwig"
     "ridcully"
-    "susan"
     "spt-omnia"
   ];
   mediaDevices = [

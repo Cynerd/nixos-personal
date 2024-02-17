@@ -121,7 +121,7 @@ in {
         };
         cynerd = {
           group = "cynerd";
-          extraGroups = ["users" "wheel" "dialout" "kvm" "uucp"];
+          extraGroups = ["users" "wheel" "dialout" "kvm" "uucp" "wireshark"];
           uid = 1000;
           subUidRanges = [
             {
@@ -155,6 +155,8 @@ in {
       };
       shellrc = true;
       vim.defaultEditor = mkDefault true;
+
+      wireshark.enable = true;
     };
 
     security.sudo.extraRules = [

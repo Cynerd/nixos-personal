@@ -3,14 +3,19 @@
   lib,
   pkgs,
   ...
-}:
-with lib; {
+}: let
+  hosts = config.cynerd.hosts.spt;
+in {
   config = {
     cynerd = {
       router = {
         enable = true;
         wan = "pppoe-wan";
-        lanIP = config.cynerd.hosts.spt.omnia;
+        lanIP = hosts.omnia;
+        staticLeases = {
+          "a8:a1:59:10:32:c4" = hosts.errol;
+          "4c:d5:77:0d:85:d9" = hosts.binky;
+        };
       };
       wifiAP.spt = {
         enable = true;
@@ -25,7 +30,7 @@ with lib; {
           channel = 36;
         };
       };
-      openvpn.oldpersonal = true;
+      #openvpn.oldpersonal = true;
       monitoring.speedtest = true;
     };
 
@@ -54,7 +59,7 @@ with lib; {
           networkConfig = {
             BindCarrier = "end2.848";
             DHCP = "ipv6";
-            IPv6AcceptRA = "yes";
+            IPv6AcceptRA = "no";
             DHCPPrefixDelegation = "yes";
           };
           dhcpPrefixDelegationConfig = {
@@ -67,15 +72,15 @@ with lib; {
         "lan-brlan" = {
           matchConfig.Name = "lan*";
           networkConfig.Bridge = "brlan";
-          #bridgeVLANs = [
-          #  {
-          #    bridgeVLANConfig = {
-          #      EgressUntagged = 1;
-          #      PVID = 1;
-          #    };
-          #  }
-          #  {bridgeVLANConfig.VLAN = 2;}
-          #];
+          bridgeVLANs = [
+            {
+              bridgeVLANConfig = {
+                EgressUntagged = 1;
+                PVID = 1;
+              };
+            }
+            {bridgeVLANConfig.VLAN = 2;}
+          ];
         };
       };
     };
@@ -88,7 +93,6 @@ with lib; {
         lcp-echo-interval 1
         lcp-echo-failure 5
         lcp-echo-adaptive
-        +ipv6
         defaultroute
         defaultroute6
         usepeerdns
@@ -98,6 +102,9 @@ with lib; {
       '';
     };
     systemd.services."pppd-wan".after = ["sys-subsystem-net-devices-end2.848.device"];
+    networking.firewall.extraForwardRules = ''
+      tcp flags syn tcp option maxseg size set rt mtu
+    '';
 
     services.syncthing = {
       enable = true;

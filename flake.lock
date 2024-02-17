@@ -308,11 +308,11 @@
     },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1707842204,
-        "narHash": "sha256-M+HAq1qWQBi/gywaMZwX0odU+Qb/XeqVeANGKRBDOwU=",
+        "lastModified": 1708091350,
+        "narHash": "sha256-o28BJYi68qqvHipT7V2jkWxDiMS1LF9nxUsou+eFUPQ=",
         "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "f1b2f71c86a5b1941d20608db0b1e88a07d31303",
+        "rev": "106d3fec43bcea19cb2e061ca02531d54b542ce3",
         "type": "github"
       },
       "original": {
@@ -426,11 +426,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1707877513,
-        "narHash": "sha256-sp0w2apswd3wv0sAEF7StOGHkns3XUQaO5erhWFZWXk=",
+        "lastModified": 1708057191,
+        "narHash": "sha256-O3M5EGAeKZdEzfFIjqah0d8M44A4QCSVwvkbz4cbC2s=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "89653a03e0915e4a872788d10680e7eec92f8600",
+        "rev": "5e55f0bb65124b05d0a52e164514c03596023634",
         "type": "github"
       },
       "original": {
@@ -440,11 +440,11 @@
     },
     "nixpkgs_5": {
       "locked": {
-        "lastModified": 1707885413,
-        "narHash": "sha256-7Syfxjpmh8xBoxvLiGvKF5gNa8+U+5AeGD6/9vIRUno=",
+        "lastModified": 1708103068,
+        "narHash": "sha256-A3Itq2swJOJ9+RzcmHEA8Tpd8opWAVin3GchouNR8uk=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "4e91cd1c6859a363a34c837a50d97a9fb682fafa",
+        "rev": "607312f76ac46232b6f690748ff0383a2249af05",
         "type": "github"
       },
       "original": {
@@ -530,11 +530,11 @@
     },
     "personal-secret": {
       "locked": {
-        "lastModified": 1707942813,
-        "narHash": "sha256-P4yJViu9SAKrO0htZoBoY7G3+G6QKS3hXPYn80TesmI=",
+        "lastModified": 1708111656,
+        "narHash": "sha256-GXPsF79NePyUy4VoQIzU4gQNNcIqpvsimjV+4Mzqq+I=",
         "ref": "refs/heads/master",
-        "rev": "f07ae9c8bd6d9186b7cd10ad4f5bb5657128603d",
-        "revCount": 87,
+        "rev": "37ce5a6415fd787fb272f52f30b4cb6a2976f096",
+        "revCount": 88,
         "type": "git",
         "url": "ssh://git@cynerd.cz/nixos-personal-secret"
       },
@@ -812,11 +812,11 @@
     },
     "vpsadminos": {
       "locked": {
-        "lastModified": 1706035822,
-        "narHash": "sha256-nGpoHvn/w24VjJtRdsRvxKOSEowUXEqGxsqaFmMgl/s=",
+        "lastModified": 1708015534,
+        "narHash": "sha256-IB+aVK43i5/+F3vAlR8UcasviCz1xSUaBC5JNXBD5RM=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "b2db597146d9c7717da874712290cf9559086157",
+        "rev": "4f2f74ded6a6b1b9de6d45918dbe53073b9561c2",
         "type": "github"
       },
       "original": {
