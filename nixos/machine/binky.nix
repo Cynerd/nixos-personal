@@ -51,6 +51,10 @@ in {
         fsType = "vfat";
       };
     };
+    services.btrfs.autoScrub = {
+      enable = true;
+      fileSystems = ["/"];
+    };
 
     services.syncthing = {
       enable = true;

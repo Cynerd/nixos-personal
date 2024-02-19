@@ -48,6 +48,10 @@ in {
         options = ["compress=lzo" "subvol=@home"];
       };
     };
+    services.btrfs.autoScrub = {
+      enable = true;
+      fileSystems = ["/" "/home2"];
+    };
 
     #networking.vlans."enp6s0.adm" = {
     #id = 2;

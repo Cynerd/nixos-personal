@@ -24,6 +24,11 @@ with lib; {
       };
     };
 
+    services.btrfs.autoScrub = {
+      enable = true;
+      fileSystems = ["/"];
+    };
+
     networking = {
       useNetworkd = true;
       useDHCP = false;

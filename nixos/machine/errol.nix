@@ -49,6 +49,10 @@ in {
         options = ["compress=lzo" "subvol=@home"];
       };
     };
+    services.btrfs.autoScrub = {
+      enable = true;
+      fileSystems = ["/" "/home2"];
+    };
 
     services.syncthing = {
       enable = true;
