@@ -1,7 +1,6 @@
-self:
-with builtins;
-with self.inputs.nixpkgs.lib; let
+self: let
   inherit (self.inputs) nixpkgs nixos-hardware nixturris vpsadminos;
+  inherit (nixpkgs.lib) optional hasAttr composeManyExtensions;
 
   modules = hostname:
     [
@@ -15,23 +14,19 @@ with self.inputs.nixpkgs.lib; let
     ]
     ++ (optional (hasAttr "machine-${hostname}" self.nixosModules) self.nixosModules."machine-${hostname}");
   specialArgs = {
-    lib = nixpkgs.lib.extend (prev: final: import ../lib prev);
+    lib = nixpkgs.lib.extend (composeManyExtensions [
+      nixturris.overlays.lib
+      (prev: final: import ../lib prev)
+    ]);
   };
 
   genericSystem = {
-    system ? "x86_64-linux",
+    platform ? {system = "x86_64-linux";},
     extra_modules ? [],
   }: hostname: {
     ${hostname} = nixturris.lib.addBuildPlatform (nixpkgs.lib.nixosSystem {
-      inherit system specialArgs;
-      modules =
-        (modules hostname)
-        ++ extra_modules
-        ++ [
-          {
-            nixpkgs.hostPlatform.system = system;
-          }
-        ];
+      inherit specialArgs;
+      modules = (modules hostname) ++ extra_modules ++ [{nixpkgs.hostPlatform = platform;}];
     });
   };
   amd64System = genericSystem {};
@@ -42,7 +37,7 @@ with self.inputs.nixpkgs.lib; let
     ];
   };
   raspi2System = genericSystem {
-    system = "armv7l-linux";
+    platform.system = "armv7l-linux";
     extra_modules = [
       nixos-hardware.nixosModules.raspberry-pi-2
       ({pkgs, ...}: {
@@ -52,7 +47,7 @@ with self.inputs.nixpkgs.lib; let
     ];
   };
   raspi3System = genericSystem {
-    system = "aarch64-linux";
+    platform.system = "aarch64-linux";
     extra_modules = [
       ({pkgs, ...}: {
         boot = {
@@ -68,7 +63,7 @@ with self.inputs.nixpkgs.lib; let
     ];
   };
   beagleboneSystem = genericSystem {
-    system = "armv7l-linux";
+    platform.system = "armv7l-linux";
     extra_modules = [
       {
         boot.loader = {
@@ -82,10 +77,9 @@ with self.inputs.nixpkgs.lib; let
 
   vmSystem = system: hostSystem:
     genericSystem {
-      inherit system;
+      platform.system = system;
       extra_modules = [
         {
-          nixpkgs.hostPlatform.system = system;
           boot.loader.systemd-boot.enable = false;
           virtualisation.qemu.package = self.nixosConfigurations."${hostSystem}".pkgs.qemu;
         }
@@ -95,12 +89,14 @@ with self.inputs.nixpkgs.lib; let
   armv7lvmSystem = vmSystem "armv7l-linux";
   aarch64vmSystem = vmSystem "aarch64-linux";
 
-  turrisSystem = board: hostname: {
-    ${hostname} = nixturris.lib.nixturrisSystem {
-      inherit nixpkgs board specialArgs;
-      modules = [self.nixosModules.defaultRouters] ++ modules hostname;
+  turrisSystem = board:
+    genericSystem {
+      platform = nixturris.lib.boardPlatform.${board};
+      extra_modules = [
+        nixturris.nixosModules.default
+        {turris.board = board;}
+      ];
     };
-  };
   turrisMoxSystem = turrisSystem "mox";
   turrisOmniaSystem = turrisSystem "omnia";
 in
