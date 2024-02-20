@@ -3,8 +3,8 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
+}: let
+  inherit (lib) mkOption mkEnableOption types mkIf mkMerge hostapd elemAt;
   cnf = config.cynerd.wifiAP.spt;
 
   wOptions = card: channelDefault: {
@@ -34,13 +34,17 @@ in {
   };
 
   config = mkIf cnf.enable {
+    # TODO regdom doesn't work for some reason
+    boot.extraModprobeConfig = ''
+      options cfg80211 ieee80211_regdom="CZ"
+    '';
     services.hostapd = {
       enable = true;
-      radios =
-        mkIf (cnf.ar9287.interface != null) {
+      radios = mkMerge [
+        (mkIf (cnf.ar9287.interface != null) {
           "${cnf.ar9287.interface}" = {
-            countryCode = "CZ";
             inherit (cnf.ar9287) channel;
+            countryCode = "CZ";
             wifi4 = {
               enable = true;
               inherit (hostapd.qualcomAtherosAR9287.wifi4) capabilities;
@@ -64,13 +68,13 @@ in {
               #};
             };
           };
-        }
-        // mkIf (cnf.qca988x.interface != null) {
+        })
+        (mkIf (cnf.qca988x.interface != null) {
           "${cnf.qca988x.interface}" = let
             is2g = cnf.qca988x.channel <= 14;
           in {
-            countryCode = "CZ";
             inherit (cnf.qca988x) channel;
+            countryCode = "CZ";
             band =
               if is2g
               then "2g"
@@ -106,21 +110,22 @@ in {
               #};
             };
           };
-        };
+        })
+      ];
     };
-    systemd.network.networks =
-      mkIf (cnf.ar9287.interface != null) {
+    systemd.network.networks = mkMerge [
+      (mkIf (cnf.ar9287.interface != null) {
         "lan-${cnf.ar9287.interface}" = {
           matchConfig.Name = cnf.ar9287.interface;
           networkConfig.Bridge = "brlan";
-          #bridgeVLANs = [
-          #  {
-          #    bridgeVLANConfig = {
-          #      EgressUntagged = 1;
-          #      PVID = 1;
-          #    };
-          #  }
-          #];
+          bridgeVLANs = [
+            {
+              bridgeVLANConfig = {
+                EgressUntagged = 1;
+                PVID = 1;
+              };
+            }
+          ];
         };
         #"lan-${cnf.ar9287.interface}-guest" = {
         #  matchConfig.Name = "${cnf.ar9287.interface}.guest";
@@ -134,19 +139,19 @@ in {
         #    }
         #  ];
         #};
-      }
-      // mkIf (cnf.qca988x.interface != null) {
+      })
+      (mkIf (cnf.qca988x.interface != null) {
         "lan-${cnf.qca988x.interface}" = {
           matchConfig.Name = cnf.qca988x.interface;
           networkConfig.Bridge = "brlan";
-          #bridgeVLANs = [
-          #  {
-          #    bridgeVLANConfig = {
-          #      EgressUntagged = 1;
-          #      PVID = 1;
-          #    };
-          #  }
-          #];
+          bridgeVLANs = [
+            {
+              bridgeVLANConfig = {
+                EgressUntagged = 1;
+                PVID = 1;
+              };
+            }
+          ];
         };
         #"lan-${cnf.qca988x.interface}-guest" = {
         #  matchConfig.Name = "${cnf.qca988x.interface}.guest";
@@ -160,6 +165,7 @@ in {
         #    }
         #  ];
         #};
-      };
+      })
+    ];
   };
 }

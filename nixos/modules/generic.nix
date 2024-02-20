@@ -167,7 +167,13 @@ in {
     ];
     networking.dhcpcd.extraConfig = "controlgroup wheel";
 
-    services.openssh.enable = true;
+    services.openssh = {
+      enable = true;
+      settings = {
+        PasswordAuthentication = false;
+        PermitRootLogin = "no";
+      };
+    };
 
     time.timeZone = "Europe/Prague";
     i18n.defaultLocale = "en_US.UTF-8";

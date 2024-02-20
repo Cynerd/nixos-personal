@@ -59,9 +59,6 @@ in {
         };
         rejectPackets = true;
         filterForward = true;
-        extraForwardRules = ''
-          iifname "guest" oifname != "${cnf.wan}" drop comment "prevent guest to access other networks"
-        '';
       };
       nat = {
         enable = true;

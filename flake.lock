@@ -230,11 +230,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1707918957,
-        "narHash": "sha256-6Ll9RRKKkR2UHReehRcM2kzhO6Rq9kOrRBwwSKgNIfY=",
+        "lastModified": 1708425420,
+        "narHash": "sha256-VCRZDSqxCHrbs46+OEu6MiCcPGpT/JTBvGAb6BjaqcU=",
         "ref": "refs/heads/master",
-        "rev": "710a24d16bde5f45a1c767ae870d534f5ddc774a",
-        "revCount": 3501,
+        "rev": "2082ee48503c3ebe376a9b4d23eb6bc33a54b6a6",
+        "revCount": 3512,
         "submodules": true,
         "type": "git",
         "url": "https://gitlab.elektroline.cz/elektroline/flatlineng.git"
@@ -426,11 +426,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1708057191,
-        "narHash": "sha256-O3M5EGAeKZdEzfFIjqah0d8M44A4QCSVwvkbz4cbC2s=",
+        "lastModified": 1708407374,
+        "narHash": "sha256-EECzarm+uqnNDCwaGg/ppXCO11qibZ1iigORShkkDf0=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "5e55f0bb65124b05d0a52e164514c03596023634",
+        "rev": "f33dd27a47ebdf11dc8a5eb05e7c8fbdaf89e73f",
         "type": "github"
       },
       "original": {
@@ -440,11 +440,11 @@
     },
     "nixpkgs_5": {
       "locked": {
-        "lastModified": 1708103068,
-        "narHash": "sha256-A3Itq2swJOJ9+RzcmHEA8Tpd8opWAVin3GchouNR8uk=",
+        "lastModified": 1708405701,
+        "narHash": "sha256-E78TXiZiR9irWdYAVltRxZPJ+pMxXPU5PjHwqq6XLtI=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "607312f76ac46232b6f690748ff0383a2249af05",
+        "rev": "fa15b53dbea5028db38d6e09b4cef6eba42aeebb",
         "type": "github"
       },
       "original": {
@@ -515,11 +515,11 @@
         "nixpkgs": "nixpkgs_6"
       },
       "locked": {
-        "lastModified": 1707903116,
-        "narHash": "sha256-GXCQCsOP8D6mpPDUDJCyhyfUFFq/SfFxDS0ZS5Qg+0k=",
+        "lastModified": 1708186608,
+        "narHash": "sha256-yDIbHSKSyXRWOknzpwZ/dLAa9PjSk5CibwN0nrJEFFk=",
         "owner": "cynerd",
         "repo": "nixturris",
-        "rev": "8551fe9cd3bbf60c0ae8a6835291e3e1bc07280c",
+        "rev": "a446cb11256ae77161384af2451875eb63c19d4d",
         "type": "gitlab"
       },
       "original": {
@@ -530,11 +530,11 @@
     },
     "personal-secret": {
       "locked": {
-        "lastModified": 1708111656,
-        "narHash": "sha256-GXPsF79NePyUy4VoQIzU4gQNNcIqpvsimjV+4Mzqq+I=",
+        "lastModified": 1708459156,
+        "narHash": "sha256-NrEpPIdAceJVeQHKSF2blD++e8FfxPBzWILXsoW8qoc=",
         "ref": "refs/heads/master",
-        "rev": "37ce5a6415fd787fb272f52f30b4cb6a2976f096",
-        "revCount": 88,
+        "rev": "24d085ef420ab7f3186f969f58f70f62c4bd743b",
+        "revCount": 93,
         "type": "git",
         "url": "ssh://git@cynerd.cz/nixos-personal-secret"
       },
@@ -626,11 +626,11 @@
         "nixpkgs": "nixpkgs_11"
       },
       "locked": {
-        "lastModified": 1706904066,
-        "narHash": "sha256-w0rCOahhT991M+QWdEfhwb88B/juXTr66iauNu2w48s=",
+        "lastModified": 1708357912,
+        "narHash": "sha256-+eDr/7AdOiwA63hSVkFgWx37kc+bqg+YVajLYxJC7ro=",
         "ref": "refs/heads/master",
-        "rev": "fa91bbe409a899c8db86de565bf8d7cbba3dba9c",
-        "revCount": 432,
+        "rev": "76601ce0137feeb6bd69432963cb36b12e42f407",
+        "revCount": 434,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/silicon-heaven/shvspy.git"
@@ -812,11 +812,11 @@
     },
     "vpsadminos": {
       "locked": {
-        "lastModified": 1708015534,
-        "narHash": "sha256-IB+aVK43i5/+F3vAlR8UcasviCz1xSUaBC5JNXBD5RM=",
+        "lastModified": 1708364097,
+        "narHash": "sha256-7VYZ9Y7lEtiDQPritENiiIzGTWk4GDrAOqqJFZjwZPg=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "4f2f74ded6a6b1b9de6d45918dbe53073b9561c2",
+        "rev": "b9956bd62059d06114d4368dedd24777fa75f126",
         "type": "github"
       },
       "original": {
