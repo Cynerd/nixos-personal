@@ -39,7 +39,8 @@ in {
       kernelParams = ["boot.shell_on_fail"];
     };
     hardware.enableAllFirmware = true;
-    services.fwupd.enable = mkIf (pkgs.system == "x86_64-linux") true;
+    services.fwupd.enable = mkDefault (pkgs.system == "x86_64-linux");
+    systemd.oomd.enable = false;
 
     nixpkgs.config.allowUnfree = true;
     environment.systemPackages = with pkgs;
@@ -59,7 +60,6 @@ in {
         exfat
         exfatprogs
         ntfs3g
-        nix-index
         usbutils
         pciutils
         smartmontools
