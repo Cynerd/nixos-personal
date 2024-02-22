@@ -30,6 +30,9 @@ in {
         extraPkgs = pkgs:
           with pkgs; [
             ncurses
+            xorg.libXpm
+            flac1_3
+            libopus
           ];
       };
     };
