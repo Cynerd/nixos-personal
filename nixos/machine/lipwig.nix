@@ -5,6 +5,11 @@
   ...
 }: {
   config = {
+    deploy = {
+      enable = true;
+      ssh.host = "cynerd.cz";
+    };
+
     cynerd = {
       syncthing = {
         enable = false;

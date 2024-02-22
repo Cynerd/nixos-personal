@@ -7,6 +7,11 @@
   hosts = config.cynerd.hosts.spt;
 in {
   config = {
+    deploy = {
+      enable = true;
+      ssh.host = "omnia.spt";
+    };
+
     cynerd = {
       router = {
         enable = true;

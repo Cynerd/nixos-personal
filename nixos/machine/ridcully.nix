@@ -7,6 +7,8 @@
   inherit (lib) mkDefault;
 in {
   config = {
+    deploy.enable = true;
+
     cynerd = {
       desktop.enable = true;
       develop = true;

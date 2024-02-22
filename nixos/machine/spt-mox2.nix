@@ -6,6 +6,11 @@
 }:
 with lib; {
   config = {
+    deploy = {
+      enable = true;
+      ssh.host = "mox2.spt";
+    };
+
     cynerd = {
       switch = {
         enable = true;

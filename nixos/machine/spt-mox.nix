@@ -7,6 +7,11 @@
 with builtins;
 with lib; {
   config = {
+    deploy = {
+      enable = true;
+      ssh.host = "mox.spt";
+    };
+
     cynerd = {
       home-assistant = true;
       switch = {

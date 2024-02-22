@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable-small";
     nixos-hardware.url = "nixos-hardware";
+    nixdeploy.url = "gitlab:cynerd/nixdeploy";
     personal-secret.url = "git+ssh://git@cynerd.cz/nixos-personal-secret";
 
     agenix.url = "github:ryantm/agenix";
@@ -27,40 +28,45 @@
     shvspy,
     flatline,
     shvcli,
+    nixdeploy,
     shellrc,
     usbkey,
     ...
-  }:
-    with flake-utils.lib;
-      {
-        lib = import ./lib nixpkgs.lib;
-        overlays = {
-          noInherit = final: prev: import ./pkgs final prev;
-          default = nixpkgs.lib.composeManyExtensions [
-            agenix.overlays.default
-            shvspy.overlays.default
-            flatline.overlays.default
-            shvcli.overlays.default
-            shellrc.overlays.default
-            usbkey.overlays.default
-            self.overlays.noInherit
-          ];
-        };
-        nixosModules = import ./nixos self;
-        nixosConfigurations = import ./nixos/configurations.nix self;
-      }
-      // eachDefaultSystem (system: let
-        pkgs = nixpkgs.legacyPackages."${system}".extend self.overlays.default;
-      in {
-        packages = with nixpkgs.lib;
-          mapAttrs' (n: v:
-            nameValuePair
-            "tarball-${n}"
-            v.buildPlatform.${system}.config.system.build.tarball) (filterAttrs
-            (n: v: v.config.system.build ? tarball)
-            self.nixosConfigurations);
-        legacyPackages = pkgs;
-        devShells = filterPackages system (import ./devShells pkgs);
-        formatter = pkgs.alejandra;
-      });
+  }: let
+    inherit (flake-utils.lib) eachDefaultSystem filterPackages;
+    inherit (nixpkgs.lib) mapAttrs' nameValuePair filterAttrs;
+  in
+    {
+      lib = import ./lib nixpkgs.lib;
+      overlays = {
+        noInherit = final: prev: import ./pkgs final prev;
+        default = nixpkgs.lib.composeManyExtensions [
+          agenix.overlays.default
+          shvspy.overlays.default
+          flatline.overlays.default
+          shvcli.overlays.default
+          nixdeploy.overlays.default
+          shellrc.overlays.default
+          usbkey.overlays.default
+          self.overlays.noInherit
+        ];
+      };
+      nixosModules = import ./nixos self;
+      nixosConfigurations = import ./nixos/configurations.nix self;
+    }
+    // eachDefaultSystem (system: let
+      pkgs = nixpkgs.legacyPackages."${system}".extend self.overlays.default;
+    in {
+      packages = {
+        default = pkgs.nixdeploy;
+      } // mapAttrs' (n: v:
+        nameValuePair
+        "tarball-${n}"
+        v.buildPlatform.${system}.config.system.build.tarball) (filterAttrs
+        (n: v: v.config.system.build ? tarball)
+        self.nixosConfigurations);
+      legacyPackages = pkgs;
+      devShells = filterPackages system (import ./devShells pkgs);
+      formatter = pkgs.alejandra;
+    });
 }

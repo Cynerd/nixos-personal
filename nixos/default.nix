@@ -8,7 +8,7 @@ in
     default = {
       imports = with self.inputs;
         [
-          nixosdeploy.nixosModules.default
+          nixdeploy.nixosModules.default
           shellrc.nixosModules.default
           usbkey.nixosModules.default
           nixbigclown.nixosModules.default
