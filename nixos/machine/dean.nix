@@ -1,46 +1,38 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-with lib; {
-  config = {
-    cynerd = {
-      openvpn = {
-        oldpersonal = true;
-      };
-      monitoring.speedtest = true;
+{pkgs, ...}: {
+  cynerd = {
+    openvpn = {
+      oldpersonal = true;
     };
-
-    networking = {
-      bridges = {
-        brlan = {
-          interfaces = [
-            "eth0"
-            "lan1"
-            "lan2"
-            "lan3"
-            "lan4"
-          ];
-        };
-      };
-      dhcpcd.allowInterfaces = ["brlan"];
-    };
-
-    swapDevices = [
-      {
-        device = "/var/swap";
-        priority = 1;
-      }
-    ];
-
-    environment.systemPackages = with pkgs; [
-      #openocd
-      tio
-    ];
-
-    # TODO: ubootTools build is broken!
-    firmware.environment.enable = false;
+    monitoring.speedtest = true;
   };
+
+  networking = {
+    bridges = {
+      brlan = {
+        interfaces = [
+          "eth0"
+          "lan1"
+          "lan2"
+          "lan3"
+          "lan4"
+        ];
+      };
+    };
+    dhcpcd.allowInterfaces = ["brlan"];
+  };
+
+  swapDevices = [
+    {
+      device = "/var/swap";
+      priority = 1;
+    }
+  ];
+
+  environment.systemPackages = with pkgs; [
+    #openocd
+    tio
+  ];
+
+  # TODO: ubootTools build is broken!
+  firmware.environment.enable = false;
 }

@@ -2,8 +2,8 @@
   config,
   lib,
   ...
-}:
-with lib; let
+}: let
+  inherit (lib) mkEnableOption mkOption types mkIf;
   cnf = config.cynerd.switch;
 in {
   options = {

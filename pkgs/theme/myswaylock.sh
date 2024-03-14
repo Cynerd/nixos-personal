@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-
-# Switch to the US keyboard (to make sure that we have the correct one)
-swaymsg input type:keyboard xkb_layout us
-
 resolution="$(swaymsg -t get_outputs \
 	| jq -r '.[0].rect | [.width,.height] | join("x")')"
 case "$resolution" in

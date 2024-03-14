@@ -66,7 +66,7 @@ in {
             #khal
             #khard
             gnupg
-            pinentry-gnome
+            pinentry-gnome3
             pinentry-curses
             (pass.withExtensions (exts: [
               exts.pass-otp
@@ -166,7 +166,6 @@ in {
             acpi
           ]);
       };
-      vim.package = pkgs.vimHugeX;
       firefox = {
         enable = true;
         languagePacks = ["en-US" "cs"];
@@ -210,12 +209,10 @@ in {
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
+      extraConfig.pipewire."10-zeroconf" = {
+        "context.modules" = [{name = "libpipewire-module-zeroconf-discover";}];
+      };
     };
-    environment.etc."pipewire/pipewire.conf.d/zeroconf.conf".text = ''
-      context.modules = [
-        { name = libpipewire-module-zeroconf-discover }
-      ]
-    '';
     security.rtkit.enable = true;
 
     services.printing = {
@@ -236,6 +233,7 @@ in {
     networking.firewall.allowedUDPPorts = [3702];
 
     fonts.packages = with pkgs; [
+      nerdfonts
       arkpandora_ttf
       corefonts
       dejavu_fonts
@@ -323,6 +321,8 @@ in {
     services.gpm.enable = true;
 
     services.locate.enable = true;
+
+    services.davfs2.enable = true;
 
     # Support running app images
     boot.binfmt.registrations.appimage = {

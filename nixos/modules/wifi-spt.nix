@@ -1,10 +1,9 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }: let
-  inherit (lib) mkOption mkEnableOption types mkIf mkMerge hostapd elemAt;
+  inherit (lib) mkOption mkEnableOption types mkIf mkForce mkMerge hostapd elemAt;
   cnf = config.cynerd.wifiAP.spt;
 
   wOptions = card: channelDefault: {
@@ -57,6 +56,10 @@ in {
                   mode = "wpa2-sha256";
                   wpaPasswordFile = "/run/secrets/hostapd-TurrisRules.pass";
                 };
+                settings = {
+                  ieee80211w = 0;
+                  wpa_key_mgmt = mkForce "WPA-PSK"; # force use without sha256
+                };
               };
               #"${cnf.ar9287.interface}.guest" = {
               #  bssid = elemAt cnf.ar9287.bssids 1;
@@ -98,6 +101,10 @@ in {
                 authentication = {
                   mode = "wpa2-sha256";
                   wpaPasswordFile = "/run/secrets/hostapd-TurrisRules.pass";
+                };
+                settings = {
+                  ieee80211w = 0;
+                  wpa_key_mgmt = mkForce "WPA-PSK"; # force use without sha256
                 };
               };
               #"${cnf.qca988x.interface}.guest" = {

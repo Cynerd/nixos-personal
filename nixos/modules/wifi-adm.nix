@@ -1,10 +1,9 @@
 {
   config,
   lib,
-  pkgs,
   ...
-}:
-with lib; let
+}: let
+  inherit (lib) mkOption mkEnableOption types mkIf hostapd elemAt;
   cnf = config.cynerd.wifiAP.adm;
 
   wOptions = card: channelDefault: {

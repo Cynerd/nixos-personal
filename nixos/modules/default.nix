@@ -3,7 +3,7 @@ self: let
   inherit (self.inputs.nixpkgs.lib) filterAttrs nameValuePair mapAttrs' hasSuffix removeSuffix;
 in
   mapAttrs'
-  (n: v: nameValuePair "cynerd-${removeSuffix ".nix" n}" (import (./. + "/${n}")))
+  (n: v: nameValuePair "cynerd-${removeSuffix ".nix" n}" (./. + "/${n}"))
   (filterAttrs
     (n: v: v == "regular" && hasSuffix ".nix" n && n != "default.nix")
     (readDir ./.))

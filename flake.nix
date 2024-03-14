@@ -57,14 +57,14 @@
     // eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages."${system}".extend self.overlays.default;
     in {
-      packages = {
-        default = pkgs.nixdeploy;
-      } // mapAttrs' (n: v:
-        nameValuePair
-        "tarball-${n}"
-        v.buildPlatform.${system}.config.system.build.tarball) (filterAttrs
-        (n: v: v.config.system.build ? tarball)
-        self.nixosConfigurations);
+      packages =
+        {default = pkgs.nixdeploy;}
+        // mapAttrs' (n: v:
+          nameValuePair
+          "tarball-${n}"
+          v.buildPlatform.${system}.config.system.build.tarball) (filterAttrs
+          (n: v: v.config.system.build ? tarball)
+          self.nixosConfigurations);
       legacyPackages = pkgs;
       devShells = filterPackages system (import ./devShells pkgs);
       formatter = pkgs.alejandra;

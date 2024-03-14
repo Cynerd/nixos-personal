@@ -30,15 +30,19 @@ in {
       tio
       vim-vint
       nodePackages.vim-language-server
-      ctags
+      vale
+
+      # Required for neovim plugins
+      editorconfig-checker
+      go
+      gcc
 
       # Nix
       dev
       cachix
       nurl
       nix-universal-prefetch
-      rnix-lsp
-      nixd
+      nil
       alejandra
       statix
       deadnix
@@ -49,9 +53,13 @@ in {
       bats
       shellcheck
       shfmt
+      nodePackages.bash-language-server
       jq
       yq
       fq
+
+      # C
+      clang-tools
 
       # Python
       (python3.withPackages (pypkgs:
@@ -73,8 +81,13 @@ in {
           python-gitlab
           PyGithub
         ]))
+      ruff
       geckodriver
       chromedriver
+
+      # Lua
+      selene
+      stylua
 
       # Julia
       julia
@@ -99,7 +112,7 @@ in {
       barcode
 
       # D-Bus
-      dfeet
+      d-spy
 
       # Documentation
       man-pages
@@ -152,5 +165,11 @@ in {
       "develop"
       "libvirtd"
     ];
+
+    # Allow using latest git version from registry
+    nixpkgs.flake = {
+      setNixPath = false;
+      setFlakeRegistry = false;
+    };
   };
 }

@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }: let
   inherit (lib) filterAttrs mkOption types mkIf any mkDefault recursiveUpdate genAttrs;

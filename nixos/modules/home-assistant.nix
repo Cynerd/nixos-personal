@@ -152,14 +152,14 @@ in {
             securetar
             pyipp
           ];
-        packageOverrides = self: super: {
+        packageOverrides = _: super: {
           scapy = super.scapy.override {
             withPlottingSupport = false;
           };
-          s3transfer = super.s3transfer.overridePythonAttrs (oldAttrs: {
+          s3transfer = super.s3transfer.overridePythonAttrs {
             dontUsePytestCheck = true;
             dontUseSetuptoolsCheck = true;
-          });
+          };
         };
       };
     };

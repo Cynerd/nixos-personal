@@ -25,4 +25,12 @@ final: prev: {
   #zigbee2mqtt = prev.zigbee2mqtt.overrideAttrs (oldAttrs: {
   #  npmInstallFlags = ["--no-optional"]; # Fix cross build
   #});
+  flac1_3 = prev.flac.overrideAttrs {
+    version = "1.3.4";
+    src = final.fetchurl {
+      url = "http://downloads.xiph.org/releases/flac/flac-1.3.4.tar.xz";
+      hash = "sha256-j/BgfnWjIt181uxI9PIlRxQEricw0OqUUSexNVFV5zc=";
+    };
+    outputs = ["out"];
+  };
 }

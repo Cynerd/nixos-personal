@@ -1,13 +1,12 @@
 {
   lib,
-  stdenv,
   stdenvNoCC,
   fetchFromGitHub,
   gtk3,
   gnome-icon-theme,
   hicolor-icon-theme,
 }:
-stdenv.mkDerivation rec {
+stdenvNoCC.mkDerivation rec {
   pname = "delft-icon-theme";
   version = "1.15";
 

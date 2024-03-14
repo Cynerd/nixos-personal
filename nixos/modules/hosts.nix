@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }: let
   inherit (lib) mkOption types mkIf;
@@ -20,6 +19,7 @@ in {
         description = "Use my personal static hosts";
       };
       vpn = staticZoneOption;
+      wg = staticZoneOption;
       spt = staticZoneOption;
       adm = staticZoneOption;
     };
@@ -37,6 +37,17 @@ in {
         # Endpoints
         "spt-omnia" = "10.8.0.50";
         "adm-omnia" = "10.8.0.51";
+      };
+      wg = {
+        "lipwig" = "10.8.1.1";
+        # Portable
+        "binky" = "10.8.1.10";
+        "android" = "10.8.1.30";
+        # Endpoints
+        "spt-omnia" = "10.8.1.50";
+        "adm-omnia" = "10.8.1.51";
+        # Endpoints without routing
+        "dean" = "10.8.1.59";
       };
       spt = {
         # Network
@@ -74,6 +85,13 @@ in {
       "${cnf.vpn.binky}" = ["binky.vpn"];
       "${cnf.vpn.spt-omnia}" = ["spt.vpn"];
       "${cnf.vpn.adm-omnia}" = ["adm.vpn"];
+      # Wireguard
+      "${cnf.wg.lipwig}" = ["lipwig.wg"];
+      "${cnf.wg.binky}" = ["binky.wg"];
+      "${cnf.wg.android}" = ["android.wg"];
+      "${cnf.wg.spt-omnia}" = ["spt.wg"];
+      "${cnf.wg.adm-omnia}" = ["adm.wg"];
+      "${cnf.wg.dean}" = ["dean.wg"];
       # Spt
       "${cnf.spt.omnia}" = ["omnia.spt"];
       "${cnf.spt.mox}" = ["mox.spt"];

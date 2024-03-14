@@ -1,5 +1,4 @@
 {
-  lib,
   stdenv,
   makeBinaryWrapper,
   stardict,
@@ -36,9 +35,9 @@ with stardict; let
     '';
 
     passthru.withDictionaries = dicts:
-      drv.overrideAttrs (oldAttrs: {
+      drv.overrideAttrs {
         dictionaries = dicts;
-      });
+      };
   };
 in
   drv

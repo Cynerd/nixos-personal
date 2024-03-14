@@ -4,8 +4,9 @@
   pkgs,
   ...
 }: let
-  inherit (lib) mkOverride mkDefault mkIf optionals;
+  inherit (lib) mkOverride mkDefault optionals;
   isNative = config.nixpkgs.hostPlatform == config.nixpkgs.buildPlatform;
+  isArm = config.nixpkgs.hostPlatform.isAarch;
 in {
   config = {
     system.stateVersion = "24.05";
@@ -154,7 +155,12 @@ in {
         syntaxHighlighting.enable = isNative;
       };
       shellrc = true;
-      vim.defaultEditor = mkDefault true;
+      vim.defaultEditor = isArm;
+      neovim = {
+        enable = !isArm;
+        defaultEditor = true;
+        withNodeJs = true;
+      };
 
       wireshark.enable = true;
     };
