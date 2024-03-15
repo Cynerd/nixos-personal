@@ -232,7 +232,7 @@ in {
     networking.firewall.allowedUDPPorts = [3702];
 
     fonts.packages = with pkgs; [
-      nerdfonts
+      (nerdfonts.override {fonts = ["Hack"];})
       arkpandora_ttf
       corefonts
       dejavu_fonts
