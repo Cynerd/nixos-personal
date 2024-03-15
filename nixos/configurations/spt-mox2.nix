@@ -1,32 +1,28 @@
 {config, ...}: {
+  turris.board = "mox";
   deploy = {
     enable = true;
-    ssh.host = "omnia2.adm";
+    ssh.host = "mox2.spt";
   };
 
   cynerd = {
     switch = {
       enable = true;
-      lanAddress = "${config.cynerd.hosts.adm.omnia2}/24";
-      lanGateway = config.cynerd.hosts.adm.omnia;
+      lanAddress = "${config.cynerd.hosts.spt.mox2}/24";
+      lanGateway = config.cynerd.hosts.spt.omnia;
     };
-    wifiAP.adm = {
+    wifiAP.spt = {
       enable = true;
-      ar9287 = {
-        interface = "wlp1s0";
-        bssids = ["12:f0:21:23:2b:00" "12:f0:21:23:2b:01" "12:f0:21:23:2b:02"];
-        channel = 11;
-      };
       qca988x = {
-        interface = "wlp2s0";
-        bssids = ["12:f0:21:23:2b:03" "12:f0:21:23:2b:04" "12:f0:21:23:2b:05"];
-        channel = 36;
+        interface = "wls1";
+        bssids = ["04:f0:21:45:d3:47" "08:f0:21:45:d3:47"];
+        channel = 1;
       };
     };
   };
 
   services.journald.extraConfig = ''
-    SystemMaxUse=8G
+    SystemMaxUse=512M
   '';
 
   services.btrfs.autoScrub = {
@@ -40,7 +36,7 @@
   };
   systemd.network.networks = {
     "lan-brlan" = {
-      matchConfig.Name = "lan* end2";
+      matchConfig.Name = "end0";
       networkConfig.Bridge = "brlan";
       bridgeVLANs = [
         {

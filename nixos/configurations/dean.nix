@@ -1,4 +1,6 @@
 {pkgs, ...}: {
+  nixpkgs.hostPlatform.system = "aarch64-linux";
+
   cynerd = {
     openvpn = {
       oldpersonal = true;

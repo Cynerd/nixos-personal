@@ -1,9 +1,10 @@
-self: let
+{lib}: let
   inherit (builtins) readDir;
-  inherit (self.inputs.nixpkgs.lib) filterAttrs nameValuePair mapAttrs' hasSuffix removeSuffix;
+  inherit (lib) filterAttrs hasSuffix mapAttrs' nameValuePair removeSuffix;
 in
   mapAttrs'
-  (n: v: nameValuePair "cynerd-${removeSuffix ".nix" n}" (./. + "/${n}"))
-  (filterAttrs
-    (n: v: v == "regular" && hasSuffix ".nix" n && n != "default.nix")
-    (readDir ./.))
+  (fname: _: nameValuePair (removeSuffix ".nix" fname) (./. + ("/" + fname)))
+  (filterAttrs (
+    n: v:
+      v == "regular" && n != "default.nix" && hasSuffix ".nix" n
+  ) (readDir ./.))

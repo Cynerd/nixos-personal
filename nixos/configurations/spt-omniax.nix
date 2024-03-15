@@ -1,4 +1,6 @@
 {
+  turris.board = "omnia";
+
   cynerd = {
     router = {
       enable = true;

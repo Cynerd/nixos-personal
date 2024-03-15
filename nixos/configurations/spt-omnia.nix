@@ -5,6 +5,7 @@
 }: let
   hosts = config.cynerd.hosts.spt;
 in {
+  turris.board = "omnia";
   deploy = {
     enable = true;
     ssh.host = "omnia.spt";

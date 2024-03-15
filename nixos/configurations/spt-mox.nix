@@ -1,4 +1,5 @@
 {config, ...}: {
+  turris.board = "mox";
   deploy = {
     enable = true;
     ssh.host = "mox.spt";

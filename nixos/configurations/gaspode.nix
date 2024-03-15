@@ -1,4 +1,6 @@
 {
+  nixpkgs.hostPlatform.system = "armv7l-linux";
+
   fileSystems = {
     "/" = {
       device = "/dev/mmcblk0p2";

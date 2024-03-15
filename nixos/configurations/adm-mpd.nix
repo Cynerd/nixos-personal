@@ -5,6 +5,8 @@
 }: let
   inherit (lib) filterAttrs;
 in {
+  nixpkgs.hostPlatform.system = "aarch64-linux";
+
   fileSystems = {
     "/" = {
       device = "/dev/mmcblk0p2";

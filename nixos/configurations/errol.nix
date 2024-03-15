@@ -6,6 +6,7 @@
 }: let
   inherit (lib) mkDefault;
 in {
+  nixpkgs.hostPlatform.system = "x86_64-linux";
   deploy.enable = true;
 
   cynerd = {
