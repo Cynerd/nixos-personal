@@ -5,7 +5,7 @@ self: let
   modules = hostname:
     [
       self.nixosModules.default
-      (self.inputs.personal-secret.lib.personalSecrets hostname)
+      self.inputs.personal-secret.nixosModules.default
       {
         networking.hostName = hostname;
         nixpkgs.overlays = [self.overlays.default];
