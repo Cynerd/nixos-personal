@@ -143,7 +143,6 @@ in {
             gst_all_1.gst-plugins-viperfx
 
             # Writing
-            texlive.combined.scheme-full
             typst
             typst-fmt
             typst-live

@@ -70,9 +70,6 @@ in {
           pytest-html
           pytest-tap
           coverage
-          python-lsp-black
-          pylint
-          pydocstyle
           mypy
 
           pygraphviz
@@ -80,10 +77,34 @@ in {
 
           python-gitlab
           PyGithub
+
+          schema
+          jinja2
+          ruamel-yaml
+          msgpack
+          urllib3
+
+          influxdb-client
+          psycopg
+          paho-mqtt
+
+          humanize
+          rich
+
+          pygobject3
+
+          pyserial
+          pylibftdi
+          pylxd
+          selenium
         ]))
       ruff
       geckodriver
       chromedriver
+      # Libraries to be used by python packages
+      gobject-introspection
+      gtk3
+      gtk4
 
       # Lua
       selene
