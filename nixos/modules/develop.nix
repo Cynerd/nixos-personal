@@ -122,7 +122,6 @@ in {
 
       # SHV
       shvspy
-      flatline
       shvcli
 
       # Images

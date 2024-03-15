@@ -9,7 +9,6 @@
 
     agenix.url = "github:ryantm/agenix";
     shvspy.url = "git+https://github.com/silicon-heaven/shvspy.git?submodules=1";
-    flatline.url = "git+https://gitlab.elektroline.cz/elektroline/flatlineng.git?submodules=1";
     shvcli.url = "github:silicon-heaven/shvcli";
 
     nixturris.url = "gitlab:cynerd/nixturris";
@@ -26,7 +25,6 @@
     flake-utils,
     agenix,
     shvspy,
-    flatline,
     shvcli,
     nixdeploy,
     shellrc,
@@ -43,7 +41,6 @@
         default = nixpkgs.lib.composeManyExtensions [
           agenix.overlays.default
           shvspy.overlays.default
-          flatline.overlays.default
           shvcli.overlays.default
           nixdeploy.overlays.default
           shellrc.overlays.default
