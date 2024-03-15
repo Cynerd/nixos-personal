@@ -25,7 +25,7 @@ in
         ];
         specialArgs = {
           inputModules =
-            mapAttrs (v: v.nixosModules) self.inputs
+            mapAttrs (n: v: v.nixosModules) (filterAttrs (n: v: v ? nixosModules) self.inputs)
             // {
               vpsadminos = self.inputs.vpsadminos.nixosConfigurations.container;
             };
