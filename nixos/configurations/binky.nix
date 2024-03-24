@@ -14,10 +14,8 @@ in {
     };
     wifiClient = true;
     develop = true;
-    openvpn = {
-      oldpersonal = true;
-      elektroline = true;
-    };
+    wireguard = true;
+    openvpn.elektroline = true;
   };
 
   boot = {
@@ -54,6 +52,24 @@ in {
   services.btrfs.autoScrub = {
     enable = true;
     fileSystems = ["/"];
+  };
+
+  networking = {
+    useNetworkd = true;
+    useDHCP = false;
+  };
+  systemd.network = {
+    networks = {
+      "dhcp" = {
+        matchConfig.Name = "enp2s0f0 enp5s0f3u1u1 wlp3s0";
+        networkConfig = {
+          DHCP = "yes";
+          IPv6AcceptRA = "yes";
+        };
+        linkConfig.RequiredForOnline = "routable";
+      };
+    };
+    wait-online.enable = false;
   };
 
   services.syncthing = {

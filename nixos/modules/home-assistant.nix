@@ -5,13 +5,12 @@
   ...
 }: let
   inherit (lib) mkIf mkEnableOption;
-  cnf = config.cynerd.home-assistant;
 in {
   options = {
     cynerd.home-assistant = mkEnableOption "Enable Home Assistant and Bigclown";
   };
 
-  config = mkIf cnf {
+  config = mkIf config.cynerd.home-assistant {
     services.mosquitto = {
       enable = true;
       listeners = [
@@ -52,16 +51,13 @@ in {
       1883 # Mosquitto
     ];
 
-    services.bigclown = {
-      gateway = {
-        enable = true;
-        device = "/dev/ttyUSB0";
-        environmentFile = "/run/secrets/bigclown.env";
-        baseTopicPrefix = "bigclown/";
-        mqtt = {
-          username = "bigclown";
-          password = "@PASS_MQTT@";
-        };
+    services.bcg = {
+      enable = true;
+      device = "/dev/ttyUSB0";
+      baseTopicPrefix = "bigclown/";
+      mqtt = {
+        username = "bigclown";
+        keyfile = "/run/secrets/mqtt-bigclown.pass";
       };
     };
 

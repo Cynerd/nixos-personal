@@ -19,6 +19,7 @@
         enable = false;
         baseDir = "/nas";
       };
+      wireguard = true;
       openvpn.oldpersonal = true;
     };
 
@@ -29,10 +30,21 @@
       fsType = "nfs";
     };
 
-    networking.firewall = {
-      allowedTCPPorts = [80 443];
-      allowedUDPPorts = [1194];
+    networking = {
+      useNetworkd = true;
+      useDHCP = false;
+      nftables.enable = true;
+      firewall = {
+        allowedTCPPorts = [80 443];
+        allowedUDPPorts = [1194];
+        filterForward = true;
+        extraForwardRules = ''
+          iifname {"wg", "personalvpn"} oifname {"wg", "personalvpn"} accept
+        '';
+      };
     };
+    systemd.network.wait-online.enable = false;
+    systemd.services.networking-setup.wantedBy = ["network-online.target"];
 
     # Web ######################################################################
     services.nginx = {

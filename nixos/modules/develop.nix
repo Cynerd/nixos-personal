@@ -65,6 +65,7 @@ in {
       (python3.withPackages (pypkgs:
         with pypkgs; [
           ipython
+          python-lsp-server
 
           pytest
           pytest-html
@@ -151,6 +152,10 @@ in {
     programs.wireshark.package = pkgs.wireshark;
 
     documentation = {
+      nixos = {
+        enable = true;
+        includeAllModules = true;
+      };
       dev.enable = true;
       doc.enable = true;
     };
@@ -185,11 +190,5 @@ in {
       "develop"
       "libvirtd"
     ];
-
-    # Allow using latest git version from registry
-    nixpkgs.flake = {
-      setNixPath = false;
-      setFlakeRegistry = false;
-    };
   };
 }

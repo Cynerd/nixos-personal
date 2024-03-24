@@ -54,10 +54,9 @@ in {
       firewall = {
         logRefusedConnections = false;
         interfaces = {
-          "home" = {allowedUDPPorts = [67 68];};
-          "guest" = {allowedUDPPorts = [67 68];};
+          "home" = {allowedUDPPorts = [53 67 68];};
+          "guest" = {allowedUDPPorts = [53 67 68];};
         };
-        rejectPackets = true;
         filterForward = true;
       };
       nat = {
@@ -119,7 +118,7 @@ in {
             PoolOffset = cnf.dynIPStart;
             PoolSize = cnf.dynIPCount;
             EmitDNS = "yes";
-            DNS = "1.1.1.1";
+            DNS = "${cnf.lanIP}";
           };
           dhcpServerStaticLeases =
             mapAttrsToList (n: v: {
@@ -150,7 +149,7 @@ in {
             PoolOffset = cnf.dynIPStart;
             PoolSize = cnf.dynIPCount;
             EmitDNS = "yes";
-            DNS = "1.1.1.1";
+            DNS = "192.168.1.1";
           };
           dhcpPrefixDelegationConfig = {
             UplinkInterface = cnf.wan;
@@ -166,6 +165,10 @@ in {
       enable = true;
       dnssec = "true";
       fallbackDns = ["1.1.1.1" "8.8.8.8"];
+      extraConfig = ''
+        DNSStubListenerExtra=${cnf.lanIP}
+        DNSStubListenerExtra=192.168.1.1
+      '';
     };
   };
 }

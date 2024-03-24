@@ -43,7 +43,13 @@ in {
     services.fwupd.enable = mkDefault (pkgs.system == "x86_64-linux");
     systemd.oomd.enable = false;
 
-    nixpkgs.config.allowUnfree = true;
+    nixpkgs = {
+      config.allowUnfree = true;
+      flake = {
+        setNixPath = false;
+        setFlakeRegistry = false;
+      };
+    };
     environment.systemPackages = with pkgs;
       [
         git # We need git for this repository to even work
@@ -201,5 +207,11 @@ in {
     '';
 
     programs.fuse.userAllowOther = true;
+
+    documentation = {
+      enable = mkDefault false;
+      doc.enable = mkDefault false;
+      nixos.enable = mkDefault false;
+    };
   };
 }

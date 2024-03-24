@@ -37,12 +37,13 @@ in {
         channel = 36;
       };
     };
+    wireguard = true;
     openvpn.oldpersonal = true;
     monitoring.speedtest = true;
   };
 
   services.journald.extraConfig = ''
-    SystemMaxUse=512M
+    SystemMaxUse=8G
   '';
 
   environment = {
@@ -136,6 +137,7 @@ in {
           IPv6AcceptRA = "no";
           DHCPPrefixDelegation = "yes";
         };
+        dhcpV6Config.PrefixDelegationHint = "::/56";
         dhcpPrefixDelegationConfig = {
           UplinkInterface = ":self";
           SubnetId = 0;
@@ -179,7 +181,7 @@ in {
   # TODO limit NSS clamping to just pppoe-wan
   networking.firewall.extraForwardRules = ''
     tcp flags syn tcp option maxseg size set rt mtu comment "Needed for PPPoE to fix IPv4"
-    iifname {"home", "personalvpn"} oifname {"home", "personalvpn"} accept
+    iifname {"home", "personalvpn", "wg"} oifname {"home", "personalvpn", "wg"} accept
   '';
 
   services.syncthing = {

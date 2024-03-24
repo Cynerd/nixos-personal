@@ -9,6 +9,7 @@
   staticZoneOption = mkOption {
     type = types.attrsOf types.str;
     readOnly = true;
+    description = "The mapping of zone hosts to their IP";
   };
 in {
   options = {
@@ -29,7 +30,6 @@ in {
     cynerd.hosts = {
       vpn = {
         "lipwig" = "10.8.0.1";
-        "dean" = "10.8.0.4";
         # Portable
         "binky" = "10.8.0.2";
         "albert" = "10.8.0.3";
@@ -81,7 +81,6 @@ in {
       "${cnf.vpn.lipwig}" = ["lipwig.vpn"];
       "${cnf.vpn.android}" = ["android.vpn"];
       "${cnf.vpn.albert}" = ["albert.vpn"];
-      "${cnf.vpn.dean}" = ["dean" "dean.vpn"];
       "${cnf.vpn.binky}" = ["binky.vpn"];
       "${cnf.vpn.spt-omnia}" = ["spt.vpn"];
       "${cnf.vpn.adm-omnia}" = ["adm.vpn"];
@@ -91,7 +90,7 @@ in {
       "${cnf.wg.android}" = ["android.wg"];
       "${cnf.wg.spt-omnia}" = ["spt.wg"];
       "${cnf.wg.adm-omnia}" = ["adm.wg"];
-      "${cnf.wg.dean}" = ["dean.wg"];
+      "${cnf.wg.dean}" = ["dean" "dean.wg"];
       # Spt
       "${cnf.spt.omnia}" = ["omnia.spt"];
       "${cnf.spt.mox}" = ["mox.spt"];

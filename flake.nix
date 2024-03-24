@@ -15,7 +15,6 @@
     usbkey.url = "gitlab:cynerd/usbkey";
 
     nixturris.url = "gitlab:cynerd/nixturris";
-    nixbigclown.url = "github:cynerd/nixbigclown";
     vpsadminos.url = "github:vpsfreecz/vpsadminos";
   };
 
@@ -31,11 +30,10 @@
     shvcli,
     usbkey,
     nixturris,
-    nixbigclown,
     ...
   }: let
     inherit (flake-utils.lib) eachDefaultSystem filterPackages;
-    inherit (nixpkgs.lib) attrValues;
+    inherit (nixpkgs.lib) attrValues mapAttrs' nameValuePair filterAttrs;
     revision = self.shortRev or self.dirtyShortRev or "unknown";
   in
     {
@@ -62,7 +60,6 @@
             imports =
               attrValues modules
               ++ [
-                nixbigclown.nixosModules.default
                 nixdeploy.nixosModules.default
                 nixturris.nixosModules.default
                 personal-secret.nixosModules.default
@@ -82,7 +79,16 @@
     // eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages."${system}".extend self.overlays.default;
     in {
-      packages.default = pkgs.nixdeploy;
+      packages =
+        {default = pkgs.nixdeploy;}
+        // mapAttrs' (n: v: let
+          os =
+            if v.config.nixpkgs.hostPlatform.system == system
+            then v
+            else (v.extendModules {modules = [{nixpkgs.buildPlatform.system = system;}];});
+        in
+          nameValuePair "tarball-${n}" os.config.system.build.tarball)
+        (filterAttrs (_: v: v.config.system.build ? tarball) self.nixosConfigurations);
       legacyPackages = pkgs;
       devShells = filterPackages system (import ./devShells pkgs);
       formatter = pkgs.alejandra;

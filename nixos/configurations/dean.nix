@@ -1,34 +1,37 @@
 {pkgs, ...}: {
-  nixpkgs.hostPlatform.system = "aarch64-linux";
+  turris.board = "mox";
+  deploy.enable = true;
 
   cynerd = {
-    openvpn = {
-      oldpersonal = true;
-    };
+    wireguard = true;
     monitoring.speedtest = true;
   };
 
   networking = {
-    bridges = {
-      brlan = {
-        interfaces = [
-          "eth0"
-          "lan1"
-          "lan2"
-          "lan3"
-          "lan4"
-        ];
+    useNetworkd = true;
+    useDHCP = false;
+  };
+  systemd.network = {
+    netdevs."brlab".netdevConfig = {
+      Kind = "bridge";
+      Name = "brlan";
+    };
+    networks = {
+      "brlan" = {
+        matchConfig.Name = "brlan";
+        networkConfig = {
+          DHCP = "yes";
+          IPv6AcceptRA = "yes";
+        };
+      };
+      "lan-brlan" = {
+        matchConfig.Name = "lan* end0";
+        networkConfig.Bridge = "brlan";
       };
     };
-    dhcpcd.allowInterfaces = ["brlan"];
+    # TODO investigate why it doesn't work
+    wait-online.enable = false;
   };
-
-  swapDevices = [
-    {
-      device = "/var/swap";
-      priority = 1;
-    }
-  ];
 
   environment.systemPackages = with pkgs; [
     #openocd
