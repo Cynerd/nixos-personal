@@ -33,7 +33,6 @@
     networking = {
       useNetworkd = true;
       useDHCP = false;
-      nftables.enable = true;
       firewall = {
         allowedTCPPorts = [80 443];
         allowedUDPPorts = [1194];
@@ -206,17 +205,17 @@
         passwords = pkgs.fetchNextcloudApp {
           url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2024.2.0/passwords.tar.gz";
           sha256 = "0s5z6pxkcwmhlbzy9s2g0s05n1iqjmxr2jqxz7ayklin9kcgr3h7";
-          license = "agpl3";
+          license = "gpl3";
         };
         integration_github = pkgs.fetchNextcloudApp {
           url = "https://github.com/nextcloud-releases/integration_github/releases/download/v2.0.6/integration_github-v2.0.6.tar.gz";
           sha256 = "0rjdlsalayb21nmh3j5bl42dcbavxka2r5g9csagz7vc9dl0qrw6";
-          license = "agpl3";
+          license = "gpl3";
         };
         integration_gitlab = pkgs.fetchNextcloudApp {
           url = "https://github.com/nextcloud-releases/integration_gitlab/releases/download/v1.0.18/integration_gitlab-v1.0.18.tar.gz";
           sha256 = "13vlbr7sigqrh480a9zp7zl9nbzb4pk8m1zzlqv9lkzj3zywp7mi";
-          license = "agpl3";
+          license = "gpl3";
         };
       };
     };

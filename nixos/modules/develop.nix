@@ -73,8 +73,13 @@ in {
           coverage
           mypy
 
+          scipy
+          sympy
+
           pygraphviz
           matplotlib
+          plotly
+          pygal
 
           python-gitlab
           PyGithub

@@ -55,9 +55,10 @@ in {
       enable = true;
       device = "/dev/ttyUSB0";
       baseTopicPrefix = "bigclown/";
+      environmentFiles = ["/run/secrets/bigclown.env"];
       mqtt = {
         username = "bigclown";
-        keyfile = "/run/secrets/mqtt-bigclown.pass";
+        password = "\${MQTT_PASSWORD}";
       };
     };
 

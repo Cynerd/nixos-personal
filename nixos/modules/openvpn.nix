@@ -8,11 +8,6 @@
 in {
   options = {
     cynerd.openvpn = {
-      personal = mkOption {
-        type = types.bool;
-        default = false;
-        description = "My personal OpenVPN";
-      };
       oldpersonal = mkOption {
         type = types.bool;
         default = false;
@@ -28,9 +23,6 @@ in {
 
   config = {
     services.openvpn.servers = {
-      personal = mkIf cnf.personal {
-        config = "config /run/secrets/personal.ovpn";
-      };
       oldpersonal = mkIf cnf.oldpersonal {
         config = "config /run/secrets/old.ovpn";
       };

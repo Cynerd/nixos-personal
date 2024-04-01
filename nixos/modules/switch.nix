@@ -21,10 +21,7 @@ in {
   };
 
   config = mkIf cnf.enable {
-    networking = {
-      useNetworkd = true;
-      nftables.enable = true;
-    };
+    networking.useNetworkd = true;
 
     systemd.network = {
       netdevs = {

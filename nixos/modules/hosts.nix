@@ -30,12 +30,6 @@ in {
     cynerd.hosts = {
       vpn = {
         "lipwig" = "10.8.0.1";
-        # Portable
-        "binky" = "10.8.0.2";
-        "albert" = "10.8.0.3";
-        "android" = "10.8.0.6";
-        # Endpoints
-        "spt-omnia" = "10.8.0.50";
         "adm-omnia" = "10.8.0.51";
       };
       wg = {
@@ -79,10 +73,6 @@ in {
     networking.hosts = mkIf cnf.enable {
       # VPN
       "${cnf.vpn.lipwig}" = ["lipwig.vpn"];
-      "${cnf.vpn.android}" = ["android.vpn"];
-      "${cnf.vpn.albert}" = ["albert.vpn"];
-      "${cnf.vpn.binky}" = ["binky.vpn"];
-      "${cnf.vpn.spt-omnia}" = ["spt.vpn"];
       "${cnf.vpn.adm-omnia}" = ["adm.vpn"];
       # Wireguard
       "${cnf.wg.lipwig}" = ["lipwig.wg"];

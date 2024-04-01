@@ -38,7 +38,6 @@ in {
       };
     };
     wireguard = true;
-    openvpn.oldpersonal = true;
     monitoring.speedtest = true;
   };
 

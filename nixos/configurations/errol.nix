@@ -13,9 +13,7 @@ in {
     desktop.enable = true;
     develop = true;
     gaming = true;
-    openvpn = {
-      elektroline = true;
-    };
+    openvpn.elektroline = true;
   };
 
   boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "usb_storage"];
@@ -34,6 +32,11 @@ in {
       device = "/dev/mapper/encroot";
       fsType = "btrfs";
       options = ["compress=lzo" "subvol=@nix"];
+    };
+    "/nix" = {
+      device = "/dev/mapper/encroot";
+      fsType = "btrfs";
+      options = ["compress=lzo" "subvol=@nix-store"];
     };
     "/home" = {
       device = "/dev/mapper/encroot";

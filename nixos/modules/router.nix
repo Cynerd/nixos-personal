@@ -50,7 +50,6 @@ in {
   config = mkIf cnf.enable {
     networking = {
       useNetworkd = true;
-      nftables.enable = true;
       firewall = {
         logRefusedConnections = false;
         interfaces = {

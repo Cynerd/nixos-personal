@@ -1,4 +1,10 @@
-{pkgs, ...}: {
+{
+  lib,
+  pkgs,
+  ...
+}: let
+  inherit (lib) mkForce;
+in {
   turris.board = "mox";
   deploy.enable = true;
 
@@ -10,6 +16,11 @@
   networking = {
     useNetworkd = true;
     useDHCP = false;
+    nat = {
+      enable = true;
+      externalInterface = "brlan";
+      internalInterfaces = ["wg"];
+    };
   };
   systemd.network = {
     netdevs."brlab".netdevConfig = {
@@ -28,6 +39,7 @@
         matchConfig.Name = "lan* end0";
         networkConfig.Bridge = "brlan";
       };
+      "wg".networkConfig.IPForward = mkForce "yes";
     };
     # TODO investigate why it doesn't work
     wait-online.enable = false;
@@ -37,7 +49,4 @@
     #openocd
     tio
   ];
-
-  # TODO: ubootTools build is broken!
-  firmware.environment.enable = false;
 }

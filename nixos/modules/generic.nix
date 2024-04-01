@@ -177,7 +177,10 @@ in {
         commands = ["ALL"];
       }
     ];
-    networking.dhcpcd.extraConfig = "controlgroup wheel";
+    networking = {
+      nftables.enable = true;
+      dhcpcd.extraConfig = "controlgroup wheel";
+    };
 
     services.openssh = {
       enable = true;
