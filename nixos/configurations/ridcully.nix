@@ -1,4 +1,8 @@
-{lib, ...}: let
+{
+  lib,
+  pkgs,
+  ...
+}: let
   inherit (lib) mkDefault;
 in {
   nixpkgs.hostPlatform.system = "x86_64-linux";
@@ -54,6 +58,10 @@ in {
   #id = 2;
   #interface = "enp6s0";
   #};
+
+  environment.systemPackages = [
+    pkgs.nvtopPackages.amd
+  ];
 
   services.syncthing = {
     enable = true;

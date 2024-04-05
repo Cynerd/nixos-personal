@@ -25,9 +25,16 @@
 
     boot.loader.systemd-boot.enable = false;
 
-    fileSystems."/nas" = {
-      device = "172.16.128.63:/nas/2682";
-      fsType = "nfs";
+    fileSystems = {
+      "/nas" = {
+        device = "172.16.128.63:/nas/2682";
+        fsType = "nfs";
+      };
+      "/nas/nextcloud-sync" = {
+        device = "/nas/sync";
+        fsType = "fuse.bindfs";
+        options = ["map=syncthing/nextcloud:@syncthing/@nextcloud"];
+      };
     };
 
     networking = {
@@ -44,6 +51,15 @@
     };
     systemd.network.wait-online.enable = false;
     systemd.services.networking-setup.wantedBy = ["network-online.target"];
+
+    environment.systemPackages = with pkgs; [
+      # fileSystems
+      bindfs
+      # Nextcloud
+      exiftool
+      ffmpeg-headless
+      nodejs
+    ];
 
     # Web ######################################################################
     services.nginx = {
@@ -219,7 +235,6 @@
         };
       };
     };
-    environment.systemPackages = with pkgs; [exiftool ffmpeg-headless nodejs];
 
     # Postgresql ###############################################################
     services.postgresql = {

@@ -20,7 +20,11 @@ in
       nameValuePair name (nixosSystem {
         modules = [
           (./. + ("/" + fname))
-          {networking.hostName = name;}
+          {
+            networking.hostName = name;
+            nixpkgs.overlays = [self.overlays.default];
+            system.configurationRevision = self.shortRev or self.dirtyShortRev or "unknown";
+          }
           self.nixosModules.default
         ];
         specialArgs = {

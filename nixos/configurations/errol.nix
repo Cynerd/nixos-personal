@@ -71,6 +71,10 @@ in {
   #  };
   #};
 
+  environment.systemPackages = [
+    pkgs.nvtopPackages.amd
+  ];
+
   services.syncthing = {
     enable = true;
     user = mkDefault "cynerd";

@@ -15,7 +15,7 @@
     wifiAP.spt = {
       enable = true;
       qca988x = {
-        interface = "wls1";
+        interface = "wlp1s0";
         bssids = ["04:f0:21:24:24:d2" "08:f0:21:24:24:d2"];
         channel = 7;
       };

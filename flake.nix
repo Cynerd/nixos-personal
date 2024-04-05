@@ -33,8 +33,7 @@
     ...
   }: let
     inherit (flake-utils.lib) eachDefaultSystem filterPackages;
-    inherit (nixpkgs.lib) attrValues mapAttrs' nameValuePair filterAttrs;
-    revision = self.shortRev or self.dirtyShortRev or "unknown";
+    inherit (nixpkgs.lib) mapAttrs' nameValuePair filterAttrs;
   in
     {
       overlays = {
@@ -51,27 +50,16 @@
         ];
       };
 
-      nixosModules = let
-        modules = import ./nixos/modules {inherit (nixpkgs) lib;};
-      in
-        modules
-        // {
-          default = {
-            imports =
-              attrValues modules
-              ++ [
-                nixdeploy.nixosModules.default
-                nixturris.nixosModules.default
-                personal-secret.nixosModules.default
-                shellrc.nixosModules.default
-                usbkey.nixosModules.default
-              ];
-            config = {
-              nixpkgs.overlays = [self.overlays.default];
-              system.configurationRevision = revision;
-            };
-          };
-        };
+      nixosModules = import ./nixos/modules {
+        inherit (nixpkgs) lib;
+        default_modules = [
+          nixdeploy.nixosModules.default
+          nixturris.nixosModules.default
+          personal-secret.nixosModules.default
+          shellrc.nixosModules.default
+          usbkey.nixosModules.default
+        ];
+      };
 
       nixosConfigurations = import ./nixos/configurations self;
       lib = import ./lib nixpkgs.lib;

@@ -33,4 +33,7 @@ final: prev: {
     };
     outputs = ["out"];
   };
+  gnupg = prev.gnupg.overrideAttrs (oldAttrs: {
+    nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [prev.libgpg-error];
+  });
 }

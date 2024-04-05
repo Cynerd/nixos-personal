@@ -102,7 +102,7 @@ in {
                   mode = "wpa2-sha256";
                   wpaPasswordFile = "/run/secrets/hostapd-TurrisRules.pass";
                 };
-                settings = {
+                settings = mkIf is2g {
                   ieee80211w = 0;
                   wpa_key_mgmt = mkForce "WPA-PSK"; # force use without sha256
                 };
@@ -123,7 +123,10 @@ in {
     systemd.network.networks = mkMerge [
       (mkIf (cnf.ar9287.interface != null) {
         "lan-${cnf.ar9287.interface}" = {
-          matchConfig.Name = cnf.ar9287.interface;
+          matchConfig = {
+            Name = cnf.ar9287.interface;
+            WLANInterfaceType = "ap";
+          };
           networkConfig.Bridge = "brlan";
           bridgeVLANs = [
             {
@@ -149,7 +152,10 @@ in {
       })
       (mkIf (cnf.qca988x.interface != null) {
         "lan-${cnf.qca988x.interface}" = {
-          matchConfig.Name = cnf.qca988x.interface;
+          matchConfig = {
+            Name = cnf.qca988x.interface;
+            WLANInterfaceType = "ap";
+          };
           networkConfig.Bridge = "brlan";
           bridgeVLANs = [
             {

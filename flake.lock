@@ -8,11 +8,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1707830867,
-        "narHash": "sha256-PAdwm5QqdlwIqGrfzzvzZubM+FXtilekQ/FA0cI49/o=",
+        "lastModified": 1712079060,
+        "narHash": "sha256-/JdiT9t+zzjChc5qQiF+jhrVhRt8figYH29rZO7pFe4=",
         "owner": "ryantm",
         "repo": "agenix",
-        "rev": "8cb01a0e717311680e0cbca06a76cbceba6f3ed6",
+        "rev": "1381a759b205dff7a6818733118d02253340fd5e",
         "type": "github"
       },
       "original": {
@@ -314,17 +314,18 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1711939449,
-        "narHash": "sha256-k8HBuawAk2hWNzNkCiGebbStq3opqnyV1RdHXXojxNg=",
-        "owner": "NixOS",
+        "lastModified": 1712152126,
+        "narHash": "sha256-EPSuQvOHJ3KeuOj/Q1rnXtsh+I7RYMXnG7mr/kHIE1w=",
+        "owner": "cynerd",
         "repo": "nixpkgs",
-        "rev": "292a4d8fa11907f90eb2e9730b8cf2414f03bf58",
+        "rev": "b61a1a8c48358a010a341db02ae2777645ab8751",
         "type": "github"
       },
       "original": {
-        "id": "nixpkgs",
-        "ref": "nixos-unstable-small",
-        "type": "indirect"
+        "owner": "cynerd",
+        "ref": "bcg-fix-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
       }
     },
     "nixpkgs_4": {
@@ -417,11 +418,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1710528104,
-        "narHash": "sha256-fseLCm3s9PCNzdSNlNjgh3gS/BfeCOIAac/xyUEN0yo=",
+        "lastModified": 1711995409,
+        "narHash": "sha256-bA7nACBn5EQvt1kBHmguLeXMpOoiUv8O/8GneL1bBrc=",
         "owner": "cynerd",
         "repo": "nixturris",
-        "rev": "8c8595ac5fda5d1ab8ae6416938544298e317640",
+        "rev": "4f049cddb61655f416c841d93deba524ed0cb2bb",
         "type": "gitlab"
       },
       "original": {
@@ -526,11 +527,11 @@
         "nixpkgs": "nixpkgs_9"
       },
       "locked": {
-        "lastModified": 1709892386,
-        "narHash": "sha256-TuCeepBnNgHiBp7ykvL9f4VomndWr6iipxz9tudu0rI=",
+        "lastModified": 1712139264,
+        "narHash": "sha256-3kGqScmYMNCXZG1T4ATpfkcRY7d1nHETutAM0tB5R/4=",
         "ref": "refs/heads/master",
-        "rev": "0b8659543bba43d6298693fe84e00a0ae27dcf2e",
-        "revCount": 440,
+        "rev": "1edd3b9e7b3e0e5b62a4207553f0f2d15da49ae7",
+        "revCount": 442,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/silicon-heaven/shvspy.git"

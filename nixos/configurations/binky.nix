@@ -5,6 +5,7 @@ in {
   deploy = {
     enable = true;
     default = false;
+    ssh.host = "binky.spt";
   };
 
   cynerd = {
@@ -61,11 +62,20 @@ in {
   systemd.network = {
     networks = {
       "dhcp" = {
-        matchConfig.Name = "enp2s0f0 enp5s0f3u1u1 wlp3s0";
+        matchConfig.Name = "enp2s0f0 enp5s0f3u1u1";
         networkConfig = {
           DHCP = "yes";
           IPv6AcceptRA = "yes";
         };
+        linkConfig.RequiredForOnline = "routable";
+      };
+      "dhcp-wlan" = {
+        matchConfig.Name = "wlp3s0";
+        networkConfig = {
+          DHCP = "yes";
+          IPv6AcceptRA = "yes";
+        };
+        routes = [{routeConfig.Metric = 1088;}];
         linkConfig.RequiredForOnline = "routable";
       };
     };
