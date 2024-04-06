@@ -4,14 +4,10 @@
   pkgs,
   ...
 }: let
-  inherit (lib) mkEnableOption mkIf mapAttrsToList optional optionals optionalAttrs filterAttrs;
+  inherit (lib) any all mkEnableOption mkIf mapAttrsToList optional optionals optionalAttrs filterAttrs;
   inherit (config.networking) hostName;
-  endpoints = {
-    "lipwig" = "cynerd.cz";
-    "spt-omnia" = "spt.cynerd.cz";
-    "adm-omnia" = "adm.cynerd.cz";
-  };
-  is_endpoint = endpoints ? "${hostName}";
+  endpoints = ["lipwig" "spt-omnia" "adm-omnia" "dean"];
+  is_endpoint = any (v: v == hostName) endpoints;
 in {
   options = {
     cynerd.wireguard = mkEnableOption "Enable Wireguard";
@@ -36,7 +32,7 @@ in {
             {
               wireguardPeerConfig =
                 {
-                  Endpoint = "${endpoints.lipwig}:51820";
+                  Endpoint = "cynerd.cz:51820";
                   AllowedIPs = ["0.0.0.0/0"];
                   PublicKey = config.secrets.wireguardPubs.lipwig;
                 }
@@ -45,7 +41,7 @@ in {
             {
               wireguardPeerConfig =
                 {
-                  Endpoint = "${endpoints.spt-omnia}:51820";
+                  Endpoint = "spt.cynerd.cz:51820";
                   AllowedIPs = [
                     "${config.cynerd.hosts.wg.spt-omnia}/32"
                     "10.8.2.0/24"
@@ -57,7 +53,7 @@ in {
             #{
             #  wireguardPeerConfig =
             #    {
-            #      Endpoint = "${endpoints.adm-omnia}:51820";
+            #      Endpoint = "adm.cynerd.cz:51820";
             #      AllowedIPs = [
             #        "${config.cynerd.hosts.wg.adm-omnia}/32"
             #        "10.8.3.0/24"
@@ -66,13 +62,25 @@ in {
             #    }
             #    // (optionalAttrs (!is_endpoint) {PersistentKeepalive = 25;});
             #}
+            {
+              wireguardPeerConfig =
+                {
+                  AllowedIPs = [
+                    "${config.cynerd.hosts.wg.dean}/32"
+                    "10.0.0.0/22"
+                    "10.0.20.0/24"
+                  ];
+                  PublicKey = config.secrets.wireguardPubs.dean;
+                }
+                // (optionalAttrs (!is_endpoint) {PersistentKeepalive = 25;});
+            }
           ]
           ++ (optionals is_endpoint (mapAttrsToList (n: v: {
             wireguardPeerConfig = {
               AllowedIPs = "${config.cynerd.hosts.wg."${n}"}/32";
               PublicKey = v;
             };
-          }) (filterAttrs (n: _: ! endpoints ? "${n}") config.secrets.wireguardPubs)));
+          }) (filterAttrs (n: _: all (v: v != n) endpoints) config.secrets.wireguardPubs)));
       };
       networks."wg" = {
         matchConfig.Name = "wg";
@@ -80,6 +88,7 @@ in {
           Address = "${config.cynerd.hosts.wg."${hostName}"}/24";
           IPForward = is_endpoint;
           DNS = mkIf (hostName != "dean") ["10.0.20.30" "10.0.20.31"];
+          DNSSEC = false;
           Domains = mkIf (hostName != "dean") "~elektroline.cz";
         };
         routes =
