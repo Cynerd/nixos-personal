@@ -6,7 +6,7 @@
 }: let
   inherit (lib) any all mkEnableOption mkIf mapAttrsToList optional optionals optionalAttrs filterAttrs;
   inherit (config.networking) hostName;
-  endpoints = ["lipwig" "spt-omnia" "adm-omnia" "dean"];
+  endpoints = ["lipwig" "spt-omnia" "adm-omnia"];
   is_endpoint = any (v: v == hostName) endpoints;
 in {
   options = {
@@ -62,18 +62,6 @@ in {
             #    }
             #    // (optionalAttrs (!is_endpoint) {PersistentKeepalive = 25;});
             #}
-            {
-              wireguardPeerConfig =
-                {
-                  AllowedIPs = [
-                    "${config.cynerd.hosts.wg.dean}/32"
-                    "10.0.0.0/22"
-                    "10.0.20.0/24"
-                  ];
-                  PublicKey = config.secrets.wireguardPubs.dean;
-                }
-                // (optionalAttrs (!is_endpoint) {PersistentKeepalive = 25;});
-            }
           ]
           ++ (optionals is_endpoint (mapAttrsToList (n: v: {
             wireguardPeerConfig = {
@@ -87,9 +75,9 @@ in {
         networkConfig = {
           Address = "${config.cynerd.hosts.wg."${hostName}"}/24";
           IPForward = is_endpoint;
-          DNS = mkIf (hostName != "dean") ["10.0.20.30" "10.0.20.31"];
-          DNSSEC = false;
-          Domains = mkIf (hostName != "dean") "~elektroline.cz";
+          #DNS = mkIf (hostName != "dean") ["10.0.20.30" "10.0.20.31"];
+          #DNSSEC = false;
+          #Domains = mkIf (hostName != "dean") "~elektroline.cz";
         };
         routes =
           (optional (hostName != "lipwig") {
@@ -115,24 +103,7 @@ in {
               Destination = "10.8.3.0/24";
               Metric = 2048;
             };
-          })
-          ++ (optionals (hostName != "dean") [
-            # Elektroline
-            {
-              routeConfig = {
-                Gateway = config.cynerd.hosts.wg.dean;
-                Destination = "10.0.0.0/22";
-                Metric = 2048;
-              };
-            }
-            {
-              routeConfig = {
-                Gateway = config.cynerd.hosts.wg.dean;
-                Destination = "10.0.20.0/24";
-                Metric = 2048;
-              };
-            }
-          ]);
+          });
       };
     };
     networking.firewall.allowedUDPPorts = [51820];

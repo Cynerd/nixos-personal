@@ -16,11 +16,6 @@ in {
   networking = {
     useNetworkd = true;
     useDHCP = false;
-    nat = {
-      enable = true;
-      externalInterface = "brlan";
-      internalInterfaces = ["wg"];
-    };
   };
   systemd.network = {
     netdevs."brlab".netdevConfig = {
@@ -39,7 +34,6 @@ in {
         matchConfig.Name = "lan* end0";
         networkConfig.Bridge = "brlan";
       };
-      "wg".networkConfig.IPForward = mkForce "yes";
     };
     # TODO investigate why it doesn't work
     wait-online.enable = false;
