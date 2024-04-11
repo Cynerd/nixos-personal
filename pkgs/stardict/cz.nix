@@ -3,13 +3,13 @@
   stdenvNoCC,
   fetchurl,
 }:
-stdenvNoCC.mkDerivation rec {
+stdenvNoCC.mkDerivation (attrs: {
   pname = "stardict-cz";
   version = "20171101";
 
   src = fetchurl {
-    url = "https://dl.cihar.com/slovnik/stable/stardict-czech-${version}.tar.gz";
-    sha256 = "14kch0cms3d77js2kyx7risadlzk3waig22gch59qp9y86b9w0zz";
+    url = "https://dl.cihar.com/slovnik/stable/stardict-czech-${attrs.version}.tar.gz";
+    hash = "sha256-/wOelkE+XZwKZE+IFxUf89OmdMyn+ym0PKcNXRmAbJI=";
   };
 
   installPhase = ''
@@ -22,4 +22,4 @@ stdenvNoCC.mkDerivation rec {
     homepage = "http://slovnik.zcu.cz/";
     license = licenses.gpl3;
   };
-}
+})

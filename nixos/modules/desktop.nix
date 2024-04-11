@@ -41,6 +41,7 @@ in {
             myswaylock
 
             alacritty
+            gnome.nautilus
 
             kanshi
             wdisplays
@@ -100,10 +101,12 @@ in {
             spotify
 
             nordic
-            delft-icon-theme
+            nordzy-cursor-theme
+            nordzy-icon-theme
             gnome.adwaita-icon-theme
             vanilla-dmz
             sound-theme-freedesktop
+            gnome.gnome-characters
             gucharmap
 
             (sdcv.withDictionaries [stardict-en-cz stardict-de-cz stardict-cz])

@@ -1,10 +1,12 @@
-final: prev: {
+final: prev: let
+  inherit (final.lib) optional;
+  is_cross = final.buildPlatform != final.targetPlatform;
+in {
   luks-hw-password = final.callPackage ./luks-hw-password {};
   dev = final.callPackage ./dev {
     devShells = import ../devShells final;
   };
 
-  delft-icon-theme = final.callPackage ./theme/delft-icon-theme.nix {};
   background-lnxpcs = final.callPackage ./theme/background-lnxpcs.nix {};
   swaybackground = final.callPackage ./theme/swaybackground.nix {};
   myswaylock = final.callPackage ./theme/myswaylock.nix {};
@@ -34,6 +36,8 @@ final: prev: {
     outputs = ["out"];
   };
   gnupg = prev.gnupg.overrideAttrs (oldAttrs: {
-    nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [prev.libgpg-error];
+    nativeBuildInputs =
+      oldAttrs.nativeBuildInputs
+      ++ (optional is_cross prev.libgpg-error);
   });
 }

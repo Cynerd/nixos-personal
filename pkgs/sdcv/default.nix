@@ -10,15 +10,15 @@
   pcre,
   readline,
 }:
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (attrs: {
   pname = "sdcv";
-  version = "0.5.3";
+  version = "0.5.5";
 
   src = fetchFromGitHub {
     owner = "Dushistov";
-    repo = pname;
-    rev = "d054adb37c635ececabc31b147c968a480d1891a";
-    hash = "sha256-mJ9LrQ/l0SRmueg+IfGnS0NcNheGdOZ2Gl7KMFiK6is=";
+    repo = attrs.pname;
+    rev = "v${attrs.version}";
+    hash = "sha256-EyvljVXhOsdxIYOGTzD+T16nvW7/RNx3DuQ2OdhjXJ4=";
   };
 
   nativeBuildInputs = [cmake pkg-config gettext];
@@ -30,4 +30,4 @@ stdenv.mkDerivation rec {
     homepage = "https://dushistov.github.io/sdcv/";
     license = licenses.gpl2;
   };
-}
+})
