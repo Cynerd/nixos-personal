@@ -71,6 +71,14 @@ in {
   #  };
   #};
 
+  networking = {
+    useNetworkd = true;
+    useDHCP = true;
+  };
+  systemd.network = {
+    wait-online.enable = false;
+  };
+
   environment.systemPackages = [
     pkgs.nvtopPackages.amd
   ];
