@@ -70,7 +70,7 @@ in {
             pinentry-curses
             (pass.withExtensions (exts: [
               exts.pass-otp
-              exts.pass-audit
+              #exts.pass-audit
             ]))
             nextcloud-client
 

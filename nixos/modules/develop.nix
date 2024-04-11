@@ -148,7 +148,6 @@ in {
       stdmanpages
 
       # SHV
-      shvspy
       shvcli
 
       # Images

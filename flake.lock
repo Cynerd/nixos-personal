@@ -60,23 +60,6 @@
         "type": "indirect"
       }
     },
-    "flake-utils_10": {
-      "inputs": {
-        "systems": "systems_10"
-      },
-      "locked": {
-        "lastModified": 1705309234,
-        "narHash": "sha256-uNRRNRKmJyCRC/8y1RqBkqWBLM034y4qN7EprSdmgyA=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "1ef2e671c3b0c19053962c07dbda38332dcebf26",
-        "type": "github"
-      },
-      "original": {
-        "id": "flake-utils",
-        "type": "indirect"
-      }
-    },
     "flake-utils_2": {
       "inputs": {
         "systems": "systems_3"
@@ -198,11 +181,11 @@
         "systems": "systems_9"
       },
       "locked": {
-        "lastModified": 1681202837,
-        "narHash": "sha256-H+Rh19JDwRtpVPAWp64F+rlEtxUWBAQW28eAi3SRSzg=",
+        "lastModified": 1705309234,
+        "narHash": "sha256-uNRRNRKmJyCRC/8y1RqBkqWBLM034y4qN7EprSdmgyA=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "cfacdce06f30d2b68473a46042957675eebb3401",
+        "rev": "1ef2e671c3b0c19053962c07dbda38332dcebf26",
         "type": "github"
       },
       "original": {
@@ -291,11 +274,11 @@
     },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1712324865,
-        "narHash": "sha256-+BatEWd4HlMeK7Ora+gYIkarjxFVCg9oKrIeybHIIX4=",
+        "lastModified": 1712566108,
+        "narHash": "sha256-c9nT2ZODGqobISP41kUwCQ84Srwg7a/1TmPFQuol2/8=",
         "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "f3b959627bca46a9f7052b8fbc464b8323e68c2c",
+        "rev": "1e3b3a35b7083f4152f5a516798cf9b21e686465",
         "type": "github"
       },
       "original": {
@@ -320,20 +303,6 @@
       }
     },
     "nixpkgs_10": {
-      "locked": {
-        "lastModified": 1682109806,
-        "narHash": "sha256-d9g7RKNShMLboTWwukM+RObDWWpHKaqTYXB48clBWXI=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "2362848adf8def2866fabbffc50462e929d7fffb",
-        "type": "github"
-      },
-      "original": {
-        "id": "nixpkgs",
-        "type": "indirect"
-      }
-    },
-    "nixpkgs_11": {
       "locked": {
         "lastModified": 1707877513,
         "narHash": "sha256-sp0w2apswd3wv0sAEF7StOGHkns3XUQaO5erhWFZWXk=",
@@ -526,7 +495,6 @@
         "personal-secret": "personal-secret",
         "shellrc": "shellrc",
         "shvcli": "shvcli",
-        "shvspy": "shvspy",
         "usbkey": "usbkey",
         "vpsadminos": "vpsadminos"
       }
@@ -570,43 +538,7 @@
         "type": "github"
       }
     },
-    "shvspy": {
-      "inputs": {
-        "flake-utils": "flake-utils_9",
-        "nixpkgs": "nixpkgs_10"
-      },
-      "locked": {
-        "lastModified": 1712139264,
-        "narHash": "sha256-3kGqScmYMNCXZG1T4ATpfkcRY7d1nHETutAM0tB5R/4=",
-        "ref": "refs/heads/master",
-        "rev": "1edd3b9e7b3e0e5b62a4207553f0f2d15da49ae7",
-        "revCount": 442,
-        "submodules": true,
-        "type": "git",
-        "url": "https://github.com/silicon-heaven/shvspy.git"
-      },
-      "original": {
-        "submodules": true,
-        "type": "git",
-        "url": "https://github.com/silicon-heaven/shvspy.git"
-      }
-    },
     "systems": {
-      "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default",
-        "type": "github"
-      }
-    },
-    "systems_10": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
@@ -743,8 +675,8 @@
     },
     "usbkey": {
       "inputs": {
-        "flake-utils": "flake-utils_10",
-        "nixpkgs": "nixpkgs_11"
+        "flake-utils": "flake-utils_9",
+        "nixpkgs": "nixpkgs_10"
       },
       "locked": {
         "lastModified": 1707940956,
@@ -762,11 +694,11 @@
     },
     "vpsadminos": {
       "locked": {
-        "lastModified": 1712417990,
-        "narHash": "sha256-/5OLzJChXDwVbE95slgngbYoT0TsOZgOq+wWuYppsBE=",
+        "lastModified": 1712585342,
+        "narHash": "sha256-sFZw5Ksqd/3kVAl5EiQaRf3hQEoiOW5g+SUqzBGdynY=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "300142a781b920466949e349857258501e700e2d",
+        "rev": "92229aa2581bfb4a5239230a81a42f7ed4b4fbb8",
         "type": "github"
       },
       "original": {

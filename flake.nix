@@ -9,7 +9,6 @@
     shellrc.url = "git+https://git.cynerd.cz/shellrc";
 
     agenix.url = "github:ryantm/agenix";
-    shvspy.url = "git+https://github.com/silicon-heaven/shvspy.git?submodules=1";
     shvcli.url = "github:silicon-heaven/shvcli";
 
     usbkey.url = "gitlab:cynerd/usbkey";
@@ -26,7 +25,6 @@
     personal-secret,
     shellrc,
     agenix,
-    shvspy,
     shvcli,
     usbkey,
     nixturris,
@@ -45,7 +43,6 @@
           self.overlays.pkgs
           shellrc.overlays.default
           shvcli.overlays.default
-          shvspy.overlays.default
           usbkey.overlays.default
         ];
       };
