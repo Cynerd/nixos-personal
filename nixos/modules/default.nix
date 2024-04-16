@@ -13,4 +13,10 @@
         v == "regular" && n != "default.nix" && hasSuffix ".nix" n
     ) (readDir ./.));
 in
-  modules // {default.imports = attrValues modules ++ default_modules;}
+  modules
+  // {
+    default = {
+      imports = attrValues modules ++ default_modules;
+      disabledModules = [ "services/misc/bcg.nix" ];
+    };
+  }

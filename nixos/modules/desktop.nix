@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  inherit (lib) mkOption mkIf types optionals;
+  inherit (lib) mkOption mkIf mkDefault types optionals;
   cnf = config.cynerd.desktop;
 in {
   options = {
@@ -32,11 +32,11 @@ in {
             gnome.dconf-editor
             glib
             gsettings-desktop-schemas
-            i3blocks
             sysstat
             wofi
             rofimoji
             wev
+            waybar
             swaybackground
             myswaylock
 
@@ -225,6 +225,8 @@ in {
         cnijfilter2
       ];
     };
+
+    services.upower.enable = mkDefault cnf.laptop;
 
     services.avahi.enable = true;
     services.samba-wsdd = {
