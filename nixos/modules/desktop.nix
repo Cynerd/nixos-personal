@@ -23,6 +23,14 @@ in {
   };
 
   config = mkIf cnf.enable {
+    hardware = {
+      opengl = {
+        driSupport = true;
+        driSupport32Bit = true;
+      };
+      bluetooth.enable = mkIf cnf.laptop true;
+    };
+
     programs = {
       sway = {
         enable = true;
@@ -168,73 +176,123 @@ in {
             acpi
           ]);
       };
+
       firefox = {
         enable = true;
         languagePacks = ["en-US" "cs"];
         nativeMessagingHosts.packages = with pkgs; [browserpass];
       };
+
       light.enable = mkIf cnf.laptop true;
+
       nix-ld = {
         enable = true;
         libraries = with pkgs; [xorg.libXpm];
       };
-    };
-    xdg.portal = {
-      enable = true;
-      wlr.enable = true;
-      extraPortals = with pkgs; [xdg-desktop-portal-gtk];
-    };
-    xdg.mime.defaultApplications = {
-      "text/html" = ["firefox.desktop"];
-      "application/pdf" = ["org.pwmt.zathura.desktop"];
-      "image/jpeg" = ["feh.desktop"];
-      "image/png" = ["feh.desktop"];
-      "image/svg" = ["feh.desktop"];
-    };
 
-    programs.usbkey = {
-      enable = true;
-      devicesUUID = ["de269652-2070-46b2-84f8-409dc9dd50ee" "16a089d0-a663-4047-bd88-3885dd7fdee2"];
-    };
+      usbkey = {
+        enable = true;
+        devicesUUID = [
+          "de269652-2070-46b2-84f8-409dc9dd50ee"
+          "16a089d0-a663-4047-bd88-3885dd7fdee2"
+        ];
+      };
 
-    programs.gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-      enableBrowserSocket = true;
-    };
-    services.dbus.packages = [pkgs.gcr];
-
-    programs.kdeconnect.enable = true;
-
-    services.pipewire = {
-      enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
-      extraConfig.pipewire."10-zeroconf" = {
-        "context.modules" = [{name = "libpipewire-module-zeroconf-discover";}];
+      gnupg.agent = {
+        enable = true;
+        enableSSHSupport = true;
+        enableBrowserSocket = true;
       };
     };
+
+    xdg = {
+      portal = {
+        enable = true;
+        wlr.enable = true;
+        extraPortals = with pkgs; [xdg-desktop-portal-gtk];
+      };
+      mime.defaultApplications = {
+        "text/html" = ["firefox.desktop"];
+        "application/pdf" = ["org.pwmt.zathura.desktop"];
+        "image/jpeg" = ["feh.desktop"];
+        "image/png" = ["feh.desktop"];
+        "image/svg" = ["feh.desktop"];
+      };
+    };
+
+    services = {
+      # Autologin on the first TTY
+      getty = {
+        extraArgs = ["--skip-login"];
+        loginProgram = "${pkgs.bash}/bin/sh";
+        loginOptions = toString (pkgs.writeText "login-program.sh" ''
+          if [[ "$(tty)" == '/dev/tty1' ]]; then
+            ${pkgs.shadow}/bin/login -f cynerd;
+          else
+            ${pkgs.shadow}/bin/login;
+          fi
+        '');
+      };
+
+      gpm.enable = true; # mouse in buffer
+      udev.extraRules = ''
+        ACTION=="add|change", KERNEL=="sd*[!0-9]", ATTR{queue/scheduler}="bfq"
+      '';
+      xserver.xkb.options = "grp:alt_shift_toggle,caps:escape";
+
+      # Gnome crypto services (GnuPG)
+      dbus.packages = [pkgs.gcr];
+
+      pipewire = {
+        enable = true;
+        alsa.enable = true;
+        alsa.support32Bit = true;
+        pulse.enable = true;
+        extraConfig.pipewire."10-zeroconf" = {
+          "context.modules" = [{name = "libpipewire-module-zeroconf-discover";}];
+        };
+      };
+
+      upower.enable = true;
+      hardware.openrgb = {
+        enable = true;
+        package = pkgs.openrgb-with-all-plugins;
+      };
+
+      printing = {
+        enable = true;
+        drivers = with pkgs; [
+          gutenprint
+          gutenprintBin
+          cnijfilter2
+        ];
+      };
+      avahi.enable = true;
+      samba-wsdd = {
+        enable = true;
+        discovery = true;
+      };
+      davfs2.enable = true;
+
+      locate.enable = true;
+      snapper.configs = {
+        home = {
+          SUBVOLUME = "/home";
+          ALLOW_GROUPS = ["users"];
+          TIMELINE_CREATE = true;
+          TIMELINE_CLEANUP = true;
+        };
+      };
+    };
+
+    # Beneficial for Pipewire
     security.rtkit.enable = true;
 
-    services.printing = {
-      enable = true;
-      drivers = with pkgs; [
-        gutenprint
-        gutenprintBin
-        cnijfilter2
-      ];
+    # Local share (avahi, samba)
+    networking.firewall = {
+      allowedTCPPorts = [5357];
+      allowedUDPPorts = [3702];
     };
-
-    services.upower.enable = mkDefault cnf.laptop;
-
-    services.avahi.enable = true;
-    services.samba-wsdd = {
-      enable = true;
-      discovery = true;
-    };
-    networking.firewall.allowedTCPPorts = [5357];
-    networking.firewall.allowedUDPPorts = [3702];
 
     fonts.packages = with pkgs; [
       (nerdfonts.override {fonts = ["Hack"];})
@@ -253,51 +311,11 @@ in {
       unifont
     ];
 
-    services.udev.extraRules = ''
-      ACTION=="add|change", KERNEL=="sd*[!0-9]", ATTR{queue/scheduler}="bfq"
-    '';
-    hardware.opengl = {
-      driSupport = true;
-      driSupport32Bit = true;
-    };
-
-    hardware.bluetooth.enable = mkIf cnf.laptop true;
-
-    services.hardware.openrgb = {
-      enable = true;
-      package = pkgs.openrgb-with-all-plugins;
-    };
-
     documentation = {
       enable = true;
       man.enable = true;
       info.enable = true;
     };
-
-    services.snapper.configs = {
-      home = {
-        SUBVOLUME = "/home";
-        ALLOW_GROUPS = ["users"];
-        TIMELINE_CREATE = true;
-        TIMELINE_CLEANUP = true;
-      };
-    };
-
-    # Autologin on the first TTY
-    services.getty = {
-      extraArgs = ["--skip-login"];
-      loginProgram = "${pkgs.bash}/bin/sh";
-      loginOptions = toString (pkgs.writeText "login-program.sh" ''
-        if [[ "$(tty)" == '/dev/tty1' ]]; then
-          ${pkgs.shadow}/bin/login -f cynerd;
-        else
-          ${pkgs.shadow}/bin/login;
-        fi
-      '');
-    };
-
-    # Leds group is required for light
-    users.users.cynerd.extraGroups = ["leds"];
 
     # VTI settings
     console = {
@@ -322,12 +340,6 @@ in {
       earlySetup = true;
       useXkbConfig = true;
     };
-    services.xserver.xkb.options = "grp:alt_shift_toggle,caps:escape";
-    services.gpm.enable = true;
-
-    services.locate.enable = true;
-
-    services.davfs2.enable = true;
 
     # Support running app images
     boot.binfmt.registrations.appimage = {

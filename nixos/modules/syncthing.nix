@@ -26,7 +26,7 @@
     "ridcully"
     "spt-omnia"
   ];
-  filterDevice = filterAttrs (n: v: any (d: d == hostName) v.devices);
+  filterDevice = filterAttrs (_: v: any (d: d == hostName) v.devices);
 in {
   options = {
     cynerd.syncthing = {

@@ -1,10 +1,4 @@
-{
-  lib,
-  pkgs,
-  ...
-}: let
-  inherit (lib) mkForce;
-in {
+{pkgs, ...}: {
   turris.board = "mox";
   deploy.enable = true;
 

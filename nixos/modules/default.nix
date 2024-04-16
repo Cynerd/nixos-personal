@@ -17,6 +17,6 @@ in
   // {
     default = {
       imports = attrValues modules ++ default_modules;
-      disabledModules = [ "services/misc/bcg.nix" ];
+      disabledModules = ["services/misc/bcg.nix"];
     };
   }

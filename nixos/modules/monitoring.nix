@@ -119,22 +119,24 @@ in {
 
     (mkIf (config.networking.hostName == "lipwig") {
       # InfluxDB
-      services.influxdb2.enable = true;
-      services.telegraf.extraConfig.inputs.prometheus = {
-        urls = ["http://localhost:8086/metrics"];
-      };
-      # Grafana
-      services.grafana = {
-        enable = true;
-        settings = {
-          users.allow_sign_up = false;
-          security = {
-            admin_user = "cynerd";
-            admin_password = "$__file{/run/secrets/grafana.admin.pass}";
-          };
-          server = {
-            http_addr = "";
-            http_port = 3000;
+      services = {
+        influxdb2.enable = true;
+        telegraf.extraConfig.inputs.prometheus = {
+          urls = ["http://localhost:8086/metrics"];
+        };
+        # Grafana
+        grafana = {
+          enable = true;
+          settings = {
+            users.allow_sign_up = false;
+            security = {
+              admin_user = "cynerd";
+              admin_password = "$__file{/run/secrets/grafana.admin.pass}";
+            };
+            server = {
+              http_addr = "";
+              http_port = 3000;
+            };
           };
         };
       };

@@ -7,7 +7,7 @@ nixpkgslib: let
     pow = base: e:
       if e == 0
       then 1
-      else foldl (a: b: a * base) 1 (genList id (e - 1));
+      else foldl (x: _: x * base) 1 (genList id (e - 1));
     # Power of 2
     pow2 = pow 2;
 
