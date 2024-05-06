@@ -88,7 +88,10 @@ in {
     users = {
       nas = {
         group = "nas";
-        openssh.authorizedKeys.keyFiles = [(config.personal-secrets + "/unencrypted/nas.pub")];
+        openssh.authorizedKeys.keyFiles = [
+          (config.personal-secrets + "/unencrypted/nas.pub")
+          (config.personal-secrets + "/unencrypted/nas-spt.pub")
+        ];
         isNormalUser = true;
         home = "/data/nas";
         homeMode = "770";
