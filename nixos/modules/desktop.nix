@@ -275,14 +275,6 @@ in {
       davfs2.enable = true;
 
       locate.enable = true;
-      snapper.configs = {
-        home = {
-          SUBVOLUME = "/home";
-          ALLOW_GROUPS = ["users"];
-          TIMELINE_CREATE = true;
-          TIMELINE_CLEANUP = true;
-        };
-      };
     };
 
     # Beneficial for Pipewire

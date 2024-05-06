@@ -15,7 +15,7 @@ in {
       };
       cynerd = {
         group = "cynerd";
-        extraGroups = ["users" "wheel" "dialout" "kvm" "uucp" "wireshark" "leds"];
+        extraGroups = ["users" "wheel" "video" "dialout" "kvm" "uucp" "wireshark" "leds"];
         uid = 1000;
         subUidRanges = [
           {

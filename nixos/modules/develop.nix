@@ -22,8 +22,8 @@ in {
       gitlint
       tig
       gource
-      hub
-      github-cli # Git
+      glab
+      github-cli
       wlc # Weblate
       cloc
       openssl
@@ -47,6 +47,7 @@ in {
       statix
       deadnix
       agenix
+      nix-tree
 
       # Shell
       dash # Posix shell

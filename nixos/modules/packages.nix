@@ -80,7 +80,5 @@ in {
     ++ optionals isNative [
       ncdu
       moreutils
-      glances
-      mlocate
     ];
 }
