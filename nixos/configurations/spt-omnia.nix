@@ -138,8 +138,12 @@ in {
           DHCP = "ipv6";
           IPv6AcceptRA = "no";
           DHCPPrefixDelegation = "yes";
+          DNS = "1.1.1.1";
         };
-        dhcpV6Config.PrefixDelegationHint = "::/56";
+        dhcpV6Config = {
+          PrefixDelegationHint = "::/56";
+          UseDNS = "no";
+        };
         dhcpPrefixDelegationConfig = {
           UplinkInterface = ":self";
           SubnetId = 0;
@@ -173,7 +177,7 @@ in {
       lcp-echo-adaptive
       defaultroute
       defaultroute6
-      usepeerdns
+      #usepeerdns
       maxfail 1
       user metronet
       password metronet
