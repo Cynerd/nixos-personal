@@ -12,7 +12,7 @@ with lib; let
     )
     devShells);
 in
-  stdenvNoCC.mkDerivation rec {
+  stdenvNoCC.mkDerivation {
     name = "personal-devshells";
     src = ./.;
 
@@ -22,4 +22,6 @@ in
         --prefix PATH : ${lib.makeBinPath [bash nix]} \
         --set DEV_SHELLS "${shells}"
     '';
+
+    meta.mainProgram = "dev";
   }
