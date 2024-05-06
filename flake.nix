@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
     nixos-hardware.url = "nixos-hardware";
-    nixdeploy.url = "gitlab:cynerd/nixdeploy";
+    nixdeploy.url = "gitlab:cynerd/nixosdeploy";
     personal-secret.url = "git+ssh://git@cynerd.cz/nixos-personal-secret";
     shellrc.url = "git+https://git.cynerd.cz/shellrc";
 
@@ -35,7 +35,7 @@
   in
     {
       overlays = {
-        lib = final: prev: import ./lib prev;
+        lib = _: prev: import ./lib prev;
         pkgs = final: prev: import ./pkgs final prev;
         default = nixpkgs.lib.composeManyExtensions [
           agenix.overlays.default

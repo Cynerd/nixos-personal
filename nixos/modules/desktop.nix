@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  inherit (lib) mkOption mkIf mkDefault types optionals;
+  inherit (lib) mkOption mkIf types optionals;
   cnf = config.cynerd.desktop;
 in {
   options = {

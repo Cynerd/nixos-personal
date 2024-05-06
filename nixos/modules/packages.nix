@@ -69,7 +69,6 @@ in {
 
       lm_sensors
 
-      ncdu
     ]
     ++ optionals (system == "x86_64-linux") [
       nmap
@@ -79,6 +78,7 @@ in {
       ncdu_1
     ]
     ++ optionals isNative [
+      ncdu
       moreutils
       glances
       mlocate
