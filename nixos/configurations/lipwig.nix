@@ -104,8 +104,8 @@
           root = "${pkgs.cgit}/cgit";
           locations."/".tryFiles = "$uri @cgit";
           locations."@cgit".extraConfig = ''
-            fastcgi_param SCRIPT_FILENAME ${pkgs.cgit}/cgit/cgit.cgi;
             fastcgi_pass unix:${config.services.fcgiwrap.socketAddress};
+            fastcgi_param SCRIPT_FILENAME ${pkgs.cgit}/cgit/cgit.cgi;
             fastcgi_param PATH_INFO    $uri;
             fastcgi_param QUERY_STRING $args;
             fastcgi_param HTTP_HOST    $server_name;
