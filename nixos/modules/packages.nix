@@ -68,7 +68,6 @@ in {
       termshark
 
       lm_sensors
-
     ]
     ++ optionals (system == "x86_64-linux") [
       nmap

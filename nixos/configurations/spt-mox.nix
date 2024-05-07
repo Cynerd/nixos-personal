@@ -7,6 +7,7 @@
 
   cynerd = {
     home-assistant = true;
+    monitoring.drives = false;
     switch = {
       enable = true;
       lanAddress = "${config.cynerd.hosts.spt.mox}/24";

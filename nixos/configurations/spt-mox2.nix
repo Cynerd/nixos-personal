@@ -6,6 +6,7 @@
   };
 
   cynerd = {
+    monitoring.drives = false;
     switch = {
       enable = true;
       lanAddress = "${config.cynerd.hosts.spt.mox2}/24";

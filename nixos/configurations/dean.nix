@@ -4,7 +4,10 @@
 
   cynerd = {
     wireguard = true;
-    monitoring.speedtest = true;
+    monitoring = {
+      speedtest = true;
+      drives = false;
+    };
   };
 
   networking = {

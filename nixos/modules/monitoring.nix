@@ -18,6 +18,11 @@ in {
       default = true;
       description = "If hardware should be reported";
     };
+    drives = mkOption {
+      type = types.bool;
+      default = true;
+      description = "If S.M.A.R.T. should be enabled";
+    };
     speedtest = mkOption {
       type = types.bool;
       default = false;
@@ -30,6 +35,9 @@ in {
       # Telegraf configuration
       services.telegraf = {
         enable = true;
+        package = pkgs.writeShellScriptBin "telegraf" ''
+          exec /run/wrappers/bin/telegraf "$@"
+        '';
         environmentFiles = ["/run/secrets/telegraf.env"];
         extraConfig = {
           agent = {};
@@ -66,20 +74,23 @@ in {
                 }
               ];
               diskio = [{}];
-              net = [{}];
+              net = [{ignore_protocol_stats = false;}];
+              nstat = [{}];
               system = [{}];
               processes = [{}];
               systemd_units = [{}];
               wireguard = [{}];
             }
-            // (optionalAttrs cnf.hw {
-              sensors = [{}];
+            // (optionalAttrs cnf.drives {
               smart = [
                 {
                   path_smartctl = "${pkgs.smartmontools}/bin/smartctl";
                   use_sudo = true;
                 }
               ];
+            })
+            // (optionalAttrs cnf.hw {
+              sensors = [{}];
               wireless = [{}];
             })
             // (optionalAttrs cnf.speedtest {
@@ -115,6 +126,13 @@ in {
           ];
         }
       ];
+
+      security.wrappers.telegraf = {
+        owner = "root";
+        group = "root";
+        capabilities = "CAP_NET_ADMIN+epi";
+        source = "${pkgs.telegraf}/bin/telegraf";
+      };
     })
 
     (mkIf (config.networking.hostName == "lipwig") {

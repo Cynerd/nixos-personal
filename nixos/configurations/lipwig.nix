@@ -15,6 +15,10 @@
     };
 
     cynerd = {
+      monitoring = {
+        hw = false;
+        drives = false;
+      };
       syncthing = {
         enable = false;
         baseDir = "/nas";
