@@ -124,6 +124,14 @@
             proxyWebsockets = true;
           };
         };
+        "searx.cynerd.cz" = {
+          forceSSL = true;
+          useACMEHost = "cynerd.cz";
+          locations."/".extraConfig = ''
+            uwsgi_pass "unix:///run/searx/searx.sock";
+            include ${config.services.nginx.package}/conf/uwsgi_params;
+          '';
+        };
       };
     };
     services.fcgiwrap = {
@@ -134,9 +142,10 @@
       acceptTerms = true;
       defaults.email = "cynerd+acme@email.cz";
       certs."cynerd.cz".extraDomainNames = [
-        "git.cynerd.cz"
         "cloud.cynerd.cz"
+        "git.cynerd.cz"
         "grafana.cynerd.cz"
+        "searx.cynerd.cz"
       ];
     };
 
@@ -266,6 +275,82 @@
       ];
       ensureDatabases = ["nextcloud"];
     };
+
+    # SearX ####################################################################
+    services.searx = {
+      enable = true;
+      environmentFile = "/run/secrets/searx.env";
+      settings = {
+        server.secret_key = "@SEARX_SECRET_KEY@";
+        search = {
+          autocomplete = "google";
+          autocomplete_min = 2;
+        };
+        ui = {
+          query_in_title = true;
+          infinite_scroll = true;
+          center_alignment = true;
+          hotkeys = "vim";
+        };
+        engines = [
+          {
+            name = "seznam";
+            disabled = false;
+          }
+          {
+            name = "material icons";
+            disabled = false;
+          }
+          {
+            name = "svgrepo";
+            disabled = false;
+          }
+          {
+            name = "peertube";
+            disabled = false;
+          }
+          {
+            name = "lib.rs";
+            disabled = false;
+          }
+          {
+            name = "gitlab";
+            disabled = false;
+          }
+          {
+            name = "sourcehut";
+            disabled = false;
+          }
+          {
+            name = "free software directory";
+            disabled = false;
+          }
+          {
+            name = "cppreference";
+            disabled = false;
+          }
+          {
+            name = "searchcode code";
+            disabled = false;
+          }
+          {
+            name = "imdb";
+            disabled = false;
+          }
+          {
+            name = "tmdb";
+            disabled = false;
+          }
+        ];
+      };
+      runInUwsgi = true;
+      uwsgiConfig = {
+        socket = "/run/searx/searx.sock";
+        chmod-socket = "660";
+      };
+      redisCreateLocally = true;
+    };
+    users.groups.searx.members = ["nginx"];
 
     # Old Syncthing ############################################################
     services.syncthing = {
