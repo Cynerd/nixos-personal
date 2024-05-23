@@ -81,7 +81,6 @@ in {
               exts.pass-otp
               #exts.pass-audit
             ]))
-            nextcloud-client
 
             chromium
             ferdium

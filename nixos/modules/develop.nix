@@ -61,6 +61,8 @@ in {
 
       # C
       clang-tools
+      massif-visualizer
+      qcachegrind
 
       # Python
       (python3.withPackages (pypkgs:
