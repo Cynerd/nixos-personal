@@ -75,7 +75,7 @@ in {
           DHCP = "yes";
           IPv6AcceptRA = "yes";
         };
-        routes = [{routeConfig.Metric = 1088;}];
+        routes = [{Metric = 1088;}];
         linkConfig.RequiredForOnline = "routable";
       };
     };

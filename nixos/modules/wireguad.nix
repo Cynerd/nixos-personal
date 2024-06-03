@@ -29,27 +29,21 @@ in {
         };
         wireguardPeers =
           [
-            {
-              wireguardPeerConfig =
-                {
-                  Endpoint = "cynerd.cz:51820";
-                  AllowedIPs = ["0.0.0.0/0"];
-                  PublicKey = config.secrets.wireguardPubs.lipwig;
-                }
-                // (optionalAttrs (!is_endpoint) {PersistentKeepalive = 25;});
-            }
-            {
-              wireguardPeerConfig =
-                {
-                  Endpoint = "spt.cynerd.cz:51820";
-                  AllowedIPs = [
-                    "${config.cynerd.hosts.wg.spt-omnia}/32"
-                    "10.8.2.0/24"
-                  ];
-                  PublicKey = config.secrets.wireguardPubs.spt-omnia;
-                }
-                // (optionalAttrs (!is_endpoint) {PersistentKeepalive = 25;});
-            }
+            ({
+                Endpoint = "cynerd.cz:51820";
+                AllowedIPs = ["0.0.0.0/0"];
+                PublicKey = config.secrets.wireguardPubs.lipwig;
+              }
+              // (optionalAttrs (!is_endpoint) {PersistentKeepalive = 25;}))
+            ({
+                Endpoint = "spt.cynerd.cz:51820";
+                AllowedIPs = [
+                  "${config.cynerd.hosts.wg.spt-omnia}/32"
+                  "10.8.2.0/24"
+                ];
+                PublicKey = config.secrets.wireguardPubs.spt-omnia;
+              }
+              // (optionalAttrs (!is_endpoint) {PersistentKeepalive = 25;}))
             #{
             #  wireguardPeerConfig =
             #    {
@@ -64,10 +58,8 @@ in {
             #}
           ]
           ++ (optionals is_endpoint (mapAttrsToList (n: v: {
-            wireguardPeerConfig = {
-              AllowedIPs = "${config.cynerd.hosts.wg."${n}"}/32";
-              PublicKey = v;
-            };
+            AllowedIPs = "${config.cynerd.hosts.wg."${n}"}/32";
+            PublicKey = v;
           }) (filterAttrs (n: _: all (v: v != n) endpoints) config.secrets.wireguardPubs)));
       };
       networks."wg" = {
@@ -82,27 +74,21 @@ in {
         routes =
           (optional (hostName != "lipwig") {
             # OpenVPN network
-            routeConfig = {
-              Gateway = config.cynerd.hosts.wg.lipwig;
-              Destination = "10.8.0.0/24";
-              Metric = 2048;
-            };
+            Gateway = config.cynerd.hosts.wg.lipwig;
+            Destination = "10.8.0.0/24";
+            Metric = 2048;
           })
           ++ (optional (hostName != "spt-omnia") {
             # SPT network
-            routeConfig = {
-              Gateway = config.cynerd.hosts.wg.spt-omnia;
-              Destination = "10.8.2.0/24";
-              Metric = 2048;
-            };
+            Gateway = config.cynerd.hosts.wg.spt-omnia;
+            Destination = "10.8.2.0/24";
+            Metric = 2048;
           })
           ++ (optional (hostName != "adm-omnia" && hostName != "lipwig") {
             # Adamkovi network
-            routeConfig = {
-              Gateway = config.cynerd.hosts.wg.adm-omnia;
-              Destination = "10.8.3.0/24";
-              Metric = 2048;
-            };
+            Gateway = config.cynerd.hosts.wg.adm-omnia;
+            Destination = "10.8.3.0/24";
+            Metric = 2048;
           });
       };
     };
