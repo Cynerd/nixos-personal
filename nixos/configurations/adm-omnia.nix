@@ -37,12 +37,10 @@
         networkConfig.Bridge = "brlan";
         bridgeVLANs = [
           {
-            bridgeVLANConfig = {
-              EgressUntagged = 1;
-              PVID = 1;
-            };
+            EgressUntagged = 1;
+            PVID = 1;
           }
-          {bridgeVLANConfig.VLAN = 2;}
+          {VLAN = 2;}
         ];
       };
       "lan0-guest" = {
@@ -50,10 +48,8 @@
         networkConfig.Bridge = "brlan";
         bridgeVLANs = [
           {
-            bridgeVLANConfig = {
-              EgressUntagged = 2;
-              PVID = 2;
-            };
+            EgressUntagged = 2;
+            PVID = 2;
           }
         ];
       };

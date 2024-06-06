@@ -117,10 +117,8 @@ in {
         networkConfig.Bridge = "brlan";
         bridgeVLANs = [
           {
-            bridgeVLANConfig = {
-              EgressUntagged = 1;
-              PVID = 1;
-            };
+            EgressUntagged = 1;
+            PVID = 1;
           }
         ];
       };
@@ -129,10 +127,8 @@ in {
         networkConfig.Bridge = "brlan";
         bridgeVLANs = [
           {
-            bridgeVLANConfig = {
-              EgressUntagged = 2;
-              PVID = 2;
-            };
+            EgressUntagged = 2;
+            PVID = 2;
           }
         ];
       };
@@ -141,10 +137,8 @@ in {
         networkConfig.Bridge = "brlan";
         bridgeVLANs = [
           {
-            bridgeVLANConfig = {
-              EgressUntagged = 2;
-              PVID = 2;
-            };
+            EgressUntagged = 2;
+            PVID = 2;
           }
         ];
       };
@@ -153,10 +147,8 @@ in {
         networkConfig.Bridge = "brlan";
         bridgeVLANs = [
           {
-            bridgeVLANConfig = {
-              EgressUntagged = 1;
-              PVID = 1;
-            };
+            EgressUntagged = 1;
+            PVID = 1;
           }
         ];
       };
@@ -165,10 +157,8 @@ in {
         networkConfig.Bridge = "brlan";
         bridgeVLANs = [
           {
-            bridgeVLANConfig = {
-              EgressUntagged = 2;
-              PVID = 2;
-            };
+            EgressUntagged = 2;
+            PVID = 2;
           }
         ];
       };
@@ -177,10 +167,8 @@ in {
         networkConfig.Bridge = "brlan";
         bridgeVLANs = [
           {
-            bridgeVLANConfig = {
-              EgressUntagged = 2;
-              PVID = 2;
-            };
+            EgressUntagged = 2;
+            PVID = 2;
           }
         ];
       };

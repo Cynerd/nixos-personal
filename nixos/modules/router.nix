@@ -98,8 +98,8 @@ in {
           matchConfig.Name = "brlan";
           networkConfig.VLAN = ["home" "guest"];
           bridgeVLANs = [
-            {bridgeVLANConfig.VLAN = 1;}
-            {bridgeVLANConfig.VLAN = 2;}
+            {VLAN = 1;}
+            {VLAN = 2;}
           ];
         };
         "home" = {
@@ -121,10 +121,8 @@ in {
           };
           dhcpServerStaticLeases =
             mapAttrsToList (n: v: {
-              dhcpServerStaticLeaseConfig = {
-                MACAddress = n;
-                Address = v;
-              };
+              MACAddress = n;
+              Address = v;
             })
             cnf.staticLeases;
           dhcpPrefixDelegationConfig = {

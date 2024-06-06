@@ -42,10 +42,8 @@ in {
           matchConfig.Name = "brlan";
           bridgeVLANs = [
             {
-              bridgeVLANConfig = {
-                PVID = 1;
-                EgressUntagged = 1;
-              };
+              PVID = 1;
+              EgressUntagged = 1;
             }
           ];
           networkConfig = {
