@@ -40,13 +40,4 @@ in {
       oldAttrs.nativeBuildInputs
       ++ (optional is_cross prev.libgpg-error);
   });
-  mastroid = prev.astroid.overrideAttrs (oldAttrs: {
-    src = final.fetchFromGitHub {
-      owner = "astroidmail";
-      repo = "astroid";
-      rev = "c1e5cdbd662e2bcfef2fe5dc72dbc444a692a0e8";
-      sha256 = "sha256-aLxVA9gW4dzRMqgaPsP5slfYl8fz/lKHRzl+NnkH60s=";
-    };
-    patches = [];
-  });
 }

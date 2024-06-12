@@ -69,7 +69,7 @@ in {
             isync
             msmtp
             notmuch
-            mastroid
+            astroid
             taskwarrior
             vdirsyncer
             #khal
