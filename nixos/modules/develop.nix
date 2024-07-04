@@ -41,7 +41,6 @@ in {
       dev
       cachix
       nurl
-      nix-universal-prefetch
       nil
       alejandra
       statix
@@ -54,7 +53,7 @@ in {
       bats
       shellcheck
       shfmt
-      nodePackages.bash-language-server
+      bash-language-server
       jq
       yq
       fq

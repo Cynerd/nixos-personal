@@ -24,9 +24,9 @@ in {
 
   config = mkIf cnf.enable {
     hardware = {
-      opengl = {
-        driSupport = true;
-        driSupport32Bit = true;
+      graphics = {
+        enable = true;
+        enable32Bit = true;
       };
       bluetooth.enable = mkIf cnf.laptop true;
     };
@@ -37,7 +37,7 @@ in {
         wrapperFeatures.gtk = true;
         extraPackages = with pkgs;
           [
-            gnome.dconf-editor
+            dconf-editor
             glib
             gsettings-desktop-schemas
             sysstat
@@ -49,7 +49,7 @@ in {
             myswaylock
 
             alacritty
-            gnome.nautilus
+            nautilus
 
             kanshi
             wdisplays
@@ -110,7 +110,7 @@ in {
             nordic
             nordzy-cursor-theme
             nordzy-icon-theme
-            gnome.adwaita-icon-theme
+            adwaita-icon-theme
             vanilla-dmz
             sound-theme-freedesktop
             gnome.gnome-characters
