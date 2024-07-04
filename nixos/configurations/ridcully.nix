@@ -54,6 +54,13 @@ in {
     fileSystems = ["/" "/home2"];
   };
 
+  networking = {
+    useNetworkd = true;
+    useDHCP = true;
+  };
+  systemd.network = {
+    wait-online.enable = false;
+  };
   #networking.vlans."enp6s0.adm" = {
   #id = 2;
   #interface = "enp6s0";
