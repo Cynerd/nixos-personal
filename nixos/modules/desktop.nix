@@ -72,8 +72,8 @@ in {
             astroid
             taskwarrior
             vdirsyncer
-            #khal
-            #khard
+            khal
+            khard
             gnupg
             pinentry-gnome3
             pinentry-curses
@@ -104,7 +104,7 @@ in {
             id3lib
             vlc
             mpv
-            youtube-dl
+            yt-dlp
             spotify
 
             nordic
@@ -125,6 +125,7 @@ in {
             freerdp
             plasma5Packages.kdeconnect-kde
 
+            gnome-firmware
             hdparm
             ethtool
             multipath-tools
@@ -158,10 +159,6 @@ in {
             typst-live
             typst-lsp
             vale
-
-            # Gnome utils
-            gnome-firmware
-            #gaphor
 
             # CAD
             freecad

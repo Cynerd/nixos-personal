@@ -107,7 +107,7 @@
           root = "${pkgs.cgit}/cgit";
           locations."/".tryFiles = "$uri @cgit";
           locations."@cgit".extraConfig = ''
-            fastcgi_pass unix:${config.services.fcgiwrap.nginx.socket.address};
+            fastcgi_pass unix:${config.services.fcgiwrap.cgit.socket.address};
             fastcgi_param SCRIPT_FILENAME ${pkgs.cgit}/cgit/cgit.cgi;
             fastcgi_param PATH_INFO    $uri;
             fastcgi_param QUERY_STRING $args;
@@ -137,8 +137,9 @@
         };
       };
     };
-    services.fcgiwrap.nginx = {
-      socket.group = config.services.nginx.group;
+    services.fcgiwrap.cgit = {
+      process.user = "git";
+      socket.user = config.services.nginx.group;
     };
     security.acme = {
       acceptTerms = true;
