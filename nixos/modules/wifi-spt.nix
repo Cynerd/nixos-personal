@@ -61,14 +61,14 @@ in {
                   wpa_key_mgmt = mkForce "WPA-PSK"; # force use without sha256
                 };
               };
-              #"${cnf.ar9287.interface}.guest" = {
-              #  bssid = elemAt cnf.ar9287.bssids 1;
-              #  ssid = "Kocovi";
-              #  authentication = {
-              #    mode = "wpa2-sha256";
-              #    wpaPasswordFile = "/run/secrets/hostapd-Kocovi.pass";
-              #  };
-              #};
+              "${cnf.ar9287.interface}.guest" = {
+                bssid = elemAt cnf.ar9287.bssids 1;
+                ssid = "Kocovi";
+                authentication = {
+                  mode = "wpa2-sha256";
+                  wpaPasswordFile = "/run/secrets/hostapd-Kocovi.pass";
+                };
+              };
             };
           };
         })
@@ -107,14 +107,14 @@ in {
                   wpa_key_mgmt = mkForce "WPA-PSK"; # force use without sha256
                 };
               };
-              #"${cnf.qca988x.interface}.guest" = {
-              #  bssid = elemAt cnf.qca988x.bssids 1;
-              #  ssid = "Kocovi";
-              #  authentication = {
-              #    mode = "wpa2-sha256";
-              #    wpaPasswordFile = "/run/secrets/hostapd-Kocovi.pass";
-              #  };
-              #};
+              "${cnf.qca988x.interface}.guest" = {
+                bssid = elemAt cnf.qca988x.bssids 1;
+                ssid = "Kocovi";
+                authentication = {
+                  mode = "wpa2-sha256";
+                  wpaPasswordFile = "/run/secrets/hostapd-Kocovi.pass";
+                };
+              };
             };
           };
         })
@@ -135,16 +135,16 @@ in {
             }
           ];
         };
-        #"lan-${cnf.ar9287.interface}-guest" = {
-        #  matchConfig.Name = "${cnf.ar9287.interface}.guest";
-        #  networkConfig.Bridge = "brlan";
-        #  bridgeVLANs = [
-        #    {
-        #        EgressUntagged = 2;
-        #        PVID = 2;
-        #    }
-        #  ];
-        #};
+        "lan-${cnf.ar9287.interface}-guest" = {
+          matchConfig.Name = "${cnf.ar9287.interface}.guest";
+          networkConfig.Bridge = "brlan";
+          bridgeVLANs = [
+            {
+                EgressUntagged = 2;
+                PVID = 2;
+            }
+          ];
+        };
       })
       (mkIf (cnf.qca988x.interface != null) {
         "lan-${cnf.qca988x.interface}" = {
@@ -160,16 +160,16 @@ in {
             }
           ];
         };
-        #"lan-${cnf.qca988x.interface}-guest" = {
-        #  matchConfig.Name = "${cnf.qca988x.interface}.guest";
-        #  networkConfig.Bridge = "brlan";
-        #  bridgeVLANs = [
-        #    {
-        #        EgressUntagged = 2;
-        #        PVID = 2;
-        #    }
-        #  ];
-        #};
+        "lan-${cnf.qca988x.interface}-guest" = {
+          matchConfig.Name = "${cnf.qca988x.interface}.guest";
+          networkConfig.Bridge = "brlan";
+          bridgeVLANs = [
+            {
+                EgressUntagged = 2;
+                PVID = 2;
+            }
+          ];
+        };
       })
     ];
   };

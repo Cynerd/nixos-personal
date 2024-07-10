@@ -14,12 +14,12 @@
     wifiAP.adm = {
       enable = true;
       ar9287 = {
-        interface = "wlp1s0";
+        interface = "wlp2s0";
         bssids = ["12:f0:21:23:2b:00" "12:f0:21:23:2b:01" "12:f0:21:23:2b:02"];
         channel = 11;
       };
       qca988x = {
-        interface = "wlp2s0";
+        interface = "wlp1s0";
         bssids = ["12:f0:21:23:2b:03" "12:f0:21:23:2b:04" "12:f0:21:23:2b:05"];
         channel = 36;
       };
