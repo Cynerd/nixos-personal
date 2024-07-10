@@ -26,7 +26,6 @@
     };
   };
 
-  boot.kernelPackages = pkgs.linuxPackagesFor pkgs.linux_6_1_turris_mox;
   services.journald.extraConfig = ''
     SystemMaxUse=512M
   '';
