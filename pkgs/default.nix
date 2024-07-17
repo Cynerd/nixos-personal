@@ -39,6 +39,28 @@ in {
   nodejs-slim_20 = callPackageNodejs (prev.path + "/pkgs/development/web/nodejs/v20.nix") {enableNpm = false;};
   nodejs_22 = callPackageNodejs (prev.path + "/pkgs/development/web/nodejs/v22.nix") {};
   nodejs-slim_22 = callPackageNodejs (prev.path + "/pkgs/development/web/nodejs/v22.nix") {enableNpm = false;};
+  pythonPackagesExtensions =
+    prev.pythonPackagesExtensions
+    ++ [
+      (
+        pyfinal: pyprev: {
+          bcg = pyprev.bcg.overrideAttrs {
+            patches =
+              pyprev.bcg.patches
+              ++ [
+                (final.fetchpatch2 {
+                  name = "bcg-fix-import-with-Python-3.12.patch";
+                  url = "https://github.com/cynerd/bch-gateway/commit/1314c892992d8914802b6c42602c39f6a1418fca.patch";
+                  hash = "sha256-+vmkqnnkf81umjesTIFgh0mMh2fCCn/yFyQl6ENP9Cc=";
+                })
+              ];
+            propagatedBuildInputs =
+              pyprev.bcg.propagatedBuildInputs
+              ++ [pyfinal.looseversion];
+          };
+        }
+      )
+    ];
 
   # Older version of packages
   flac1_3 = prev.flac.overrideAttrs {
