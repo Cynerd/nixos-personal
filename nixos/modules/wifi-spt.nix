@@ -140,8 +140,8 @@ in {
           networkConfig.Bridge = "brlan";
           bridgeVLANs = [
             {
-                EgressUntagged = 2;
-                PVID = 2;
+              EgressUntagged = 2;
+              PVID = 2;
             }
           ];
         };
@@ -165,8 +165,8 @@ in {
           networkConfig.Bridge = "brlan";
           bridgeVLANs = [
             {
-                EgressUntagged = 2;
-                PVID = 2;
+              EgressUntagged = 2;
+              PVID = 2;
             }
           ];
         };

@@ -44,6 +44,14 @@ in {
         '';
         description = "Mapping of MAC address to IP address";
       };
+      guestStaticLeases = mkOption {
+        type = with types; attrsOf str;
+        default = {};
+        example = ''
+          {"xx:xx:xx:xx:xx:xx" = "10.8.1.30";}
+        '';
+        description = "Mapping of MAC address to IP address";
+      };
     };
   };
 
@@ -148,6 +156,12 @@ in {
             EmitDNS = "yes";
             DNS = "192.168.1.1";
           };
+          dhcpServerStaticLeases =
+            mapAttrsToList (n: v: {
+              MACAddress = n;
+              Address = v;
+            })
+            cnf.guestStaticLeases;
           dhcpPrefixDelegationConfig = {
             UplinkInterface = cnf.wan;
             SubnetId = 2;
