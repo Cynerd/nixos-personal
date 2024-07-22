@@ -78,7 +78,7 @@ in {
               nstat = [{}];
               system = [{}];
               processes = [{}];
-              systemd_units = [{}];
+              systemd_units = [{details = true;}];
               wireguard = [{}];
             }
             // (optionalAttrs cnf.drives {
@@ -152,6 +152,8 @@ in {
               admin_password = "$__file{/run/secrets/grafana.admin.pass}";
             };
             server = {
+              domain = "grafana.cynerd.cz";
+              root_url = "https://%(domain)s/";
               http_addr = "";
               http_port = 3000;
             };
