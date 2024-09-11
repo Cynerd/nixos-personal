@@ -43,20 +43,6 @@
         fsType = "fuse.bindfs";
         options = ["map=syncthing/nextcloud:@syncthing/@nextcloud"];
       };
-      "/nas/spt" = {
-        device = "nas@omnia.spt:/data/nas";
-        fsType = "fuse.sshfs";
-        options = [
-          "allow_other"
-          "_netdev"
-          "x-systemd.automount"
-          "reconnect"
-          "identityfile=/run/secrets/nas.ssh.priv"
-          "idmap=user"
-          "uid=nextcloud"
-          "gid=nextcloud"
-        ];
-      };
     };
 
     networking = {

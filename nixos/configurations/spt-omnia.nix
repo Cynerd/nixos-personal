@@ -45,71 +45,15 @@ in {
     SystemMaxUse=8G
   '';
 
-  environment = {
-    etc.crypttab.text = ''
-      nas UUID=3472bef9-cbae-48bd-873e-fd4858a0b72f /run/secrets/luks-spt-omnia-nas.key luks
-      nassec UUID=016e9e75-bbc8-4b24-8bb7-c800c8f6a500 /run/secrets/luks-spt-omnia-nas.key luks
-    '';
-    systemPackages = with pkgs; [
-      cryptsetup
-    ];
-  };
-  fileSystems = {
-    "/data" = {
-      device = "/dev/mapper/nas";
-      fsType = "btrfs";
-      options = ["compress=lzo" "subvol=@data" "nofail"];
-    };
-    "/srv" = {
-      device = "/dev/mapper/nas";
-      fsType = "btrfs";
-      options = ["compress=lzo" "subvol=@srv" "nofail"];
-      depends = ["/data"];
-    };
-  };
   services.btrfs.autoScrub = {
     enable = true;
-    fileSystems = ["/" "/data"];
+    fileSystems = ["/"];
   };
-  services.udev.packages = [
-    (pkgs.writeTextFile rec {
-      name = "queue_depth_sata.rules";
-      destination = "/etc/udev/rules.d/50-${name}";
-      text = ''
-        SUBSYSTEMS=="pci", DRIVER=="ahci", ATTR{device}!="0x0612", GOTO="turris_pci_end"
-        ACTION=="add|change", SUBSYSTEM=="scsi", ATTR{vendor}=="ATA", ATTR{queue_depth}="1"
-        LABEL="turris_pci_end"
-      '';
-    })
-  ];
 
-  users = {
-    groups.nas = {};
-    users = {
-      nas = {
-        group = "nas";
-        openssh.authorizedKeys.keyFiles = [
-          (config.personal-secrets + "/unencrypted/nas.pub")
-          (config.personal-secrets + "/unencrypted/nas-spt.pub")
-        ];
-        isNormalUser = true;
-        home = "/data/nas";
-        homeMode = "770";
-      };
-      cynerd.extraGroups = ["nas"];
-    };
+  services.fail2ban = {
+    enable = true;
+    ignoreIP = ["10.8.1.0/24" "10.8.2.0/24"];
   };
-  services.openssh = {
-    settings.Macs = ["hmac-sha2-256"]; # Allow sha2-256 for Nexcloud access
-    extraConfig = ''
-      Match User nas
-        X11Forwarding no
-        AllowTcpForwarding no
-        AllowAgentForwarding no
-        ForceCommand internal-sftp -d /data/nas
-    '';
-  };
-  services.fail2ban.enable = true;
 
   networking.useDHCP = false;
   systemd.network = {
@@ -187,14 +131,4 @@ in {
     tcp flags syn tcp option maxseg size set rt mtu comment "Needed for PPPoE to fix IPv4"
     iifname {"home", "personalvpn", "wg"} oifname {"home", "personalvpn", "wg"} accept
   '';
-
-  services.syncthing = {
-    enable = false;
-    openDefaultPorts = true;
-
-    overrideDevices = false;
-    overrideFolders = false;
-
-    dataDir = "/data"; # TODO this can't be the location
-  };
 }
