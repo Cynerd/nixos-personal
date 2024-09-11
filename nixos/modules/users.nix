@@ -64,10 +64,13 @@ in {
       syntaxHighlighting.enable = isNative;
     };
     shellrc = true;
-    vim.defaultEditor = isArm;
+    vim = {
+      enable = isArm;
+      defaultEditor = isArm;
+    };
     neovim = {
       enable = !isArm;
-      defaultEditor = true;
+      defaultEditor = !isArm;
       withNodeJs = true;
     };
 

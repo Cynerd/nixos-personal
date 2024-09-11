@@ -56,6 +56,8 @@ in {
   };
 
   config = mkIf cnf.enable {
+    boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = 1;
+
     networking = {
       useNetworkd = true;
       firewall = {
@@ -114,9 +116,10 @@ in {
           matchConfig.Name = "home";
           networkConfig = {
             Address = "${cnf.lanIP}/${toString cnf.lanPrefix}";
-            IPForward = "yes";
+            IPv4Forwarding = "yes";
             DHCPServer = "yes";
             DHCPPrefixDelegation = "yes";
+            IPv6Forwarding = "yes";
             IPv6SendRA = "yes";
             IPv6AcceptRA = "no";
           };
@@ -143,9 +146,10 @@ in {
           matchConfig.Name = "guest";
           networkConfig = {
             Address = "192.168.1.1/24";
-            IPForward = "yes";
+            IPv4Forwarding = "yes";
             DHCPServer = "yes";
             DHCPPrefixDelegation = "yes";
+            IPv6Forwarding = "yes";
             IPv6SendRA = "yes";
             IPv6AcceptRA = "no";
           };

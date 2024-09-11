@@ -70,7 +70,7 @@ in {
             msmtp
             notmuch
             astroid
-            taskwarrior
+            taskwarrior3
             vdirsyncer
             khal
             khard
@@ -79,7 +79,7 @@ in {
             pinentry-curses
             (pass.withExtensions (exts: [
               exts.pass-otp
-              #exts.pass-audit
+              exts.pass-audit
             ]))
 
             chromium
@@ -113,7 +113,7 @@ in {
             adwaita-icon-theme
             vanilla-dmz
             sound-theme-freedesktop
-            gnome.gnome-characters
+            gnome-characters
             gucharmap
 
             (sdcv.withDictionaries [stardict-en-cz stardict-de-cz stardict-cz])

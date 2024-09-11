@@ -107,7 +107,7 @@
           root = "${pkgs.cgit}/cgit";
           locations."/".tryFiles = "$uri @cgit";
           locations."@cgit".extraConfig = ''
-            fastcgi_pass unix:${config.services.fcgiwrap.cgit.socket.address};
+            fastcgi_pass unix:${config.services.fcgiwrap.instances.cgit.socket.address};
             fastcgi_param SCRIPT_FILENAME ${pkgs.cgit}/cgit/cgit.cgi;
             fastcgi_param PATH_INFO    $uri;
             fastcgi_param QUERY_STRING $args;
@@ -137,9 +137,9 @@
         };
       };
     };
-    services.fcgiwrap.cgit = {
+    services.fcgiwrap.instances.cgit = {
       process.user = "git";
-      socket.user = config.services.nginx.group;
+      socket = {inherit (config.services.nginx) user group;};
     };
     security.acme = {
       acceptTerms = true;
@@ -250,19 +250,19 @@
         # Additional modules can be fetched with:
         # NEXTCLOUD_VERSIONS=28 nix run nixpkgs#nc4nix -- -apps "passwords,integration_homeassistant,integration_github,integration_gitlab"
         passwords = pkgs.fetchNextcloudApp {
-          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2024.2.0/passwords.tar.gz";
-          sha256 = "0s5z6pxkcwmhlbzy9s2g0s05n1iqjmxr2jqxz7ayklin9kcgr3h7";
-          license = "gpl3";
+          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2024.7.0/passwords.tar.gz";
+          sha256 = "1RwLOE2aUwISMF/WcYmL8sKs+KXBlYv0OHw8PizrGCY=";
+          license = "agpl3Plus";
         };
         integration_github = pkgs.fetchNextcloudApp {
-          url = "https://github.com/nextcloud-releases/integration_github/releases/download/v2.0.6/integration_github-v2.0.6.tar.gz";
-          sha256 = "0rjdlsalayb21nmh3j5bl42dcbavxka2r5g9csagz7vc9dl0qrw6";
-          license = "gpl3";
+          url = "https://github.com/nextcloud-releases/integration_github/releases/download/v2.0.7/integration_github-v2.0.7.tar.gz";
+          sha256 = "x4BrBdrvmbdwZcZL6FLAY27B5OpkXIsw92XsD076Aqg=";
+          license = "agpl3Plus";
         };
         integration_gitlab = pkgs.fetchNextcloudApp {
-          url = "https://github.com/nextcloud-releases/integration_gitlab/releases/download/v1.0.18/integration_gitlab-v1.0.18.tar.gz";
-          sha256 = "13vlbr7sigqrh480a9zp7zl9nbzb4pk8m1zzlqv9lkzj3zywp7mi";
-          license = "gpl3";
+          url = "https://github.com/nextcloud-releases/integration_gitlab/releases/download/v3.0.1/integration_gitlab-v3.0.1.tar.gz";
+          sha256 = "FAF5CHwAVm55QS9NO8B5zsvJ0BWa7Mwfw6kYr2js0Es=";
+          license = "agpl3Plus";
         };
       };
     };
@@ -271,12 +271,14 @@
     services.postgresql = {
       enable = true;
       ensureUsers = [
+        {name = "cynerd";}
         {
           name = "nextcloud";
           ensureDBOwnership = true;
         }
       ];
       ensureDatabases = ["nextcloud"];
+      extraPlugins = ps: with ps; [timescaledb];
     };
 
     # SearX ####################################################################

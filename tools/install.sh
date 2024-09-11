@@ -25,6 +25,7 @@ fi
 if [ ! -s "$root/.personal-secrets.key" ]; then
 	echo "Please paste the personal secret key (terminate using ^D)" >&2
 	sudo tee "$root/.personal-secrets.key" >/dev/null
+	chown 600 "$root/.personal-secrets.key"
 fi
 
 if [ -f "$src/flake.nix" ]; then

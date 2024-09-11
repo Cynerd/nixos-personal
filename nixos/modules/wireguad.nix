@@ -66,10 +66,7 @@ in {
         matchConfig.Name = "wg";
         networkConfig = {
           Address = "${config.cynerd.hosts.wg."${hostName}"}/24";
-          IPForward = is_endpoint;
-          #DNS = mkIf (hostName != "dean") ["10.0.20.30" "10.0.20.31"];
-          #DNSSEC = false;
-          #Domains = mkIf (hostName != "dean") "~elektroline.cz";
+          IPv4Forwarding = "yes";
         };
         routes =
           (optional (hostName != "lipwig") {

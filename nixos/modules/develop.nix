@@ -21,6 +21,7 @@ in {
       # Tools
       gitlint
       tig
+      gitg
       gource
       glab
       github-cli

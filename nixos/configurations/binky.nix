@@ -1,4 +1,8 @@
-{lib, ...}: let
+{
+  lib,
+  pkgs,
+  ...
+}: let
   inherit (lib) mkDefault;
 in {
   nixpkgs.hostPlatform.system = "x86_64-linux";
@@ -94,4 +98,6 @@ in {
     dataDir = "/home/cynerd";
     configDir = "/home/cynerd/.config/syncthing";
   };
+
+  environment.systemPackages = [pkgs.heroic];
 }
