@@ -269,7 +269,7 @@
         }
       ];
       ensureDatabases = ["nextcloud"];
-      extraPlugins = ps: with ps; [timescaledb];
+      #extraPlugins = ps: with ps; [timescaledb];
     };
 
     # SearX ####################################################################

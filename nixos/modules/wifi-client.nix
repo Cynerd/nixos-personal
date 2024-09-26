@@ -21,7 +21,7 @@ in {
     networking.wireless = {
       enable = true;
       networks = config.secrets.wifiNetworks;
-      environmentFile = "/run/secrets/wifi.env";
+      secretsFile = "/run/secrets/wifi.secrets";
       userControlled.enable = true;
     };
   };
