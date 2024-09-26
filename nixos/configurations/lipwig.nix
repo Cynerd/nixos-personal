@@ -234,10 +234,10 @@
           twofactor_webauthn
           ;
         # Additional modules can be fetched with:
-        # NEXTCLOUD_VERSIONS=28 nix run nixpkgs#nc4nix -- -apps "passwords,integration_homeassistant,integration_github,integration_gitlab"
+        # NEXTCLOUD_VERSIONS=28 nix run nixpkgs#nc4nix -- -apps "passwords,money,integration_github,integration_gitlab"
         passwords = pkgs.fetchNextcloudApp {
-          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2024.7.0/passwords.tar.gz";
-          sha256 = "1RwLOE2aUwISMF/WcYmL8sKs+KXBlYv0OHw8PizrGCY=";
+          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2024.9.0/passwords.tar.gz";
+          sha256 = "L+jumcussL0c9xNMg/GMs1GSd1IY9wUvC8ZEg+3U+sc=";
           license = "agpl3Plus";
         };
         integration_github = pkgs.fetchNextcloudApp {
@@ -246,8 +246,13 @@
           license = "agpl3Plus";
         };
         integration_gitlab = pkgs.fetchNextcloudApp {
-          url = "https://github.com/nextcloud-releases/integration_gitlab/releases/download/v3.0.1/integration_gitlab-v3.0.1.tar.gz";
-          sha256 = "FAF5CHwAVm55QS9NO8B5zsvJ0BWa7Mwfw6kYr2js0Es=";
+          url = "https://github.com/nextcloud-releases/integration_gitlab/releases/download/v3.1.1/integration_gitlab-v3.1.1.tar.gz";
+          sha256 = "nBqnBDVoNEqRGp+WKq4okis1kCr6pzEz4G6368MaxuE=";
+          license = "agpl3Plus";
+        };
+        money = pkgs.fetchNextcloudApp {
+          url = "https://github.com/powerpaul17/nc_money/releases/download/v0.29.0/money.tar.gz";
+          sha256 = "EXcY69z5h6rT0RdkmOhQYKSWmVBr2zaWuSRj/m5dMkI=";
           license = "agpl3Plus";
         };
       };
