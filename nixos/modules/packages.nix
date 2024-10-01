@@ -66,6 +66,7 @@ in {
       speedtest-cli
       librespeed-cli
       termshark
+      w3m
 
       lm_sensors
     ]

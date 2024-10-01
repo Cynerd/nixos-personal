@@ -70,6 +70,7 @@ in {
             msmtp
             notmuch
             astroid
+            dodo
             taskwarrior3
             vdirsyncer
             khal

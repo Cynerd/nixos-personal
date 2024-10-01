@@ -29,6 +29,8 @@ in {
 
   bigclown-leds = final.callPackage ./bigclown-leds {};
 
+  dodo = final.callPackage ./dodo {};
+
   # nixpkgs patches
   zigbee2mqtt = prev.zigbee2mqtt.overrideAttrs {
     npmInstallFlags = ["--no-optional"]; # Fix cross build
