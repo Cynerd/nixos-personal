@@ -35,7 +35,7 @@
   in
     {
       overlays = {
-        lib = _: prev: import ./lib prev;
+        lib = final: prev: import ./lib final prev;
         pkgs = final: prev: import ./pkgs final prev;
         default = nixpkgs.lib.composeManyExtensions [
           agenix.overlays.default
