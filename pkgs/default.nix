@@ -1,13 +1,4 @@
-final: prev: let
-  # The NodeJS packages has to be build in 32bit environment if host platform is
-  # also 32bit because it uses 32bit stubs and links against 32bit OpenSSL. The
-  # only architecture that generally supports execution of 32bit is x86_64 and
-  # thus that is the only one handled here.
-  callPackageNodejs =
-    if prev.stdenv.buildPlatform.isx86_64 && prev.stdenv.is32bit
-    then prev.buildPackages.pkgsi686Linux.callPackage
-    else prev.callPackage;
-in {
+final: prev: {
   luks-hw-password = final.callPackage ./luks-hw-password {};
   dev = final.callPackage ./dev {
     devShells = import ../devShells final;
@@ -35,12 +26,6 @@ in {
   zigbee2mqtt = prev.zigbee2mqtt.overrideAttrs {
     npmInstallFlags = ["--no-optional"]; # Fix cross build
   };
-  nodejs_18 = callPackageNodejs (prev.path + "/pkgs/development/web/nodejs/v18.nix") {};
-  nodejs-slim_18 = callPackageNodejs (prev.path + "/pkgs/development/web/nodejs/v18.nix") {enableNpm = false;};
-  nodejs_20 = callPackageNodejs (prev.path + "/pkgs/development/web/nodejs/v20.nix") {};
-  nodejs-slim_20 = callPackageNodejs (prev.path + "/pkgs/development/web/nodejs/v20.nix") {enableNpm = false;};
-  nodejs_22 = callPackageNodejs (prev.path + "/pkgs/development/web/nodejs/v22.nix") {};
-  nodejs-slim_22 = callPackageNodejs (prev.path + "/pkgs/development/web/nodejs/v22.nix") {enableNpm = false;};
 
   # Older version of packages
   flac1_3 = prev.flac.overrideAttrs {
