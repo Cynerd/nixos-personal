@@ -26,12 +26,12 @@ in {
       enable = false;
       ar9287 = {
         interface = "wlp1s0";
-        bssids = ["04:f0:21:23:3d:ce" "08:f0:21:23:3d:ce" "0c:f0:21:23:3d:ce"];
+        bssids = config.secrets.wifiMacs.adm-omnia.ar9287;
         channel = 11;
       };
       qca988x = {
         interface = "wlp3s0";
-        bssids = ["04:f0:21:24:0b:4e" "08:f0:21:24:0b:4e" "0c:f0:21:24:0b:4e"];
+        bssids = config.secrets.wifiMacs.adm-omnia.qca988x;
         channel = 36;
       };
     };

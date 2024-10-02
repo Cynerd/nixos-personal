@@ -17,7 +17,7 @@
       enable = true;
       qca988x = {
         interface = "wlp1s0";
-        bssids = ["04:f0:21:24:24:d2" "08:f0:21:24:24:d2"];
+        bssids = config.secrets.wifiMacs.spt-mox.qca988x;
         channel = 7;
       };
     };

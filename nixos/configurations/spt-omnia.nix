@@ -24,12 +24,12 @@ in {
       enable = true;
       ar9287 = {
         interface = "wlp1s0";
-        bssids = ["04:f0:21:24:21:93" "08:f0:21:24:21:93"];
+        bssids = config.secrets.wifiMacs.spt-omnia.ar9287;
         channel = 11;
       };
       qca988x = {
         interface = "wlp3s0";
-        bssids = ["04:f0:21:23:16:64" "08:f0:21:23:16:64"];
+        bssids = config.secrets.wifiMacs.spt-omnia.qca988x;
         channel = 36;
       };
     };

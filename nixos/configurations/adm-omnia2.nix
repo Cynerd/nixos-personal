@@ -15,12 +15,12 @@
       enable = true;
       ar9287 = {
         interface = "wlp2s0";
-        bssids = ["12:f0:21:23:2b:00" "12:f0:21:23:2b:01" "12:f0:21:23:2b:02"];
+        bssids = config.secrets.wifiMacs.adm-omnia2.ar9287;
         channel = 11;
       };
       qca988x = {
         interface = "wlp1s0";
-        bssids = ["12:f0:21:23:2b:03" "12:f0:21:23:2b:04" "12:f0:21:23:2b:05"];
+        bssids = config.secrets.wifiMacs.adm-omnia2.qca988x;
         channel = 36;
       };
     };
