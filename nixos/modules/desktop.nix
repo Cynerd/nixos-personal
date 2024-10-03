@@ -147,12 +147,15 @@ in {
             kdenlive
 
             # GStreamer
-            gst_all_1.gst-libav
-            gst_all_1.gst-plugins-bad
+            gst_all_1.gstreamer
             gst_all_1.gst-plugins-base
             gst_all_1.gst-plugins-good
+            gst_all_1.gst-plugins-bad
             gst_all_1.gst-plugins-ugly
+            gst_all_1.gst-plugins-rs
             gst_all_1.gst-plugins-viperfx
+            gst_all_1.gst-libav
+            gst_all_1.gst-vaapi
 
             # Writing
             typst
@@ -245,9 +248,15 @@ in {
         alsa.enable = true;
         alsa.support32Bit = true;
         pulse.enable = true;
-        extraConfig.pipewire."10-zeroconf" = {
-          "context.modules" = [{name = "libpipewire-module-zeroconf-discover";}];
-        };
+        configPackages = [
+          (pkgs.writeTextDir "share/pipewire/pipewire.conf.d/10-zeroconf-discover.conf" ''
+            context.modules = [
+            {   name = libpipewire-module-zeroconf-discover
+                args = { }
+            }
+            ]
+          '')
+        ];
       };
 
       upower.enable = true;
