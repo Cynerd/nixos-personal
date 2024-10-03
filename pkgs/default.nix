@@ -21,6 +21,17 @@ final: prev: {
   bigclown-leds = final.callPackage ./bigclown-leds {};
 
   dodo = final.callPackage ./dodo {};
+  astroid = prev.astroid.overrideAttrs (oldAttrs: {
+    version = "240629";
+    src = final.fetchFromGitHub {
+      owner = "astroidmail";
+      repo = "astroid";
+      rev = "bd0cd0c0a0f1793ced1b3f4e41654cb8cfb32d42";
+      hash = "sha256-cQCHWP9kLU6D4op6WMz36ZpzoDKgd+FGbUDuOXoboEQ=";
+    };
+    patches = [];
+    buildInputs = oldAttrs.buildInputs ++ [final.webkitgtk_4_1];
+  });
 
   # nixpkgs patches
   zigbee2mqtt = prev.zigbee2mqtt.overrideAttrs {
