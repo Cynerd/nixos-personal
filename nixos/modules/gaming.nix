@@ -35,6 +35,26 @@ in {
             libopus
           ];
       };
+      heroic = pkgs.heroic.override {
+        extraPkgs = pkgs:
+          with pkgs; [
+            ncurses
+            xorg.libXpm
+            flac1_3
+            libopus
+            SDL
+            SDL2_image
+            SDL2_mixer
+            SDL2_ttf
+            SDL_image
+            SDL_mixer
+            SDL_ttf
+            glew110
+            libdrm
+            libidn
+            tbb
+          ];
+      };
     };
   };
 }
