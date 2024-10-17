@@ -26,6 +26,7 @@ in {
     "encroot" = "/dev/disk/by-uuid/7c412ae6-6016-45af-8c2a-8fcc394dbbe6";
     "enchdd1" = "/dev/disk/by-uuid/87f16080-5ff6-43dd-89f3-307455a46fbe";
     "enchdd2" = "/dev/disk/by-uuid/be4a33fa-8bc6-431d-a3ac-787668f223ed";
+    #"encback" = "/dev/disk/by-uuid/1bd8c637-f71e-4fb0-96de-b660c4f1afaf";
   };
   fileSystems = {
     "/" = {
@@ -53,6 +54,11 @@ in {
       fsType = "btrfs";
       options = ["compress=lzo" "subvol=@home"];
     };
+    #"/back" = {
+    #  device = "/dev/mapper/encback";
+    #  fsType = "btrfs";
+    #  options = ["compress=lzo"];
+    #};
   };
   services.btrfs.autoScrub = {
     enable = true;

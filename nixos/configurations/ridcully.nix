@@ -26,6 +26,7 @@ in {
   cynerd.autounlock = {
     "encroot" = "/dev/disk/by-uuid/bc7d2ba4-6e04-4c49-b40c-3aecd1a86c71";
     "enchdd" = "/dev/disk/by-uuid/7fee3cda-efa0-47cd-8832-fdead9a7e6db";
+    "encback" = "/dev/disk/by-uuid/b426cbe7-fba2-473b-90f9-9ebe3e34b76e";
   };
   fileSystems = {
     "/" = {
@@ -47,6 +48,11 @@ in {
       device = "/dev/mapper/enchdd";
       fsType = "btrfs";
       options = ["compress=lzo" "subvol=@home"];
+    };
+    "/back" = {
+      device = "/dev/mapper/encback";
+      fsType = "btrfs";
+      options = ["compress=lzo"];
     };
   };
   services.btrfs.autoScrub = {

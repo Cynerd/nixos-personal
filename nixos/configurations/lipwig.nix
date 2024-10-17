@@ -25,6 +25,31 @@
       };
       wireguard = true;
       openvpn.oldpersonal = true;
+      borgjobs = {
+        postgresql = {
+          preHook = ''
+            /run/current-system/sw/bin/nextcloud-occ maintenance:mode --on
+          '';
+          dumpCommand = pkgs.writeScript "postgreqsl-backup.sh" ''
+            /run/wrappers/bin/sudo -u postgres /run/current-system/sw/bin/pg_dumpall
+          '';
+          postHook = ''
+            /run/current-system/sw/bin/nextcloud-occ maintenance:mode --off
+          '';
+        };
+        nextcloud_data = {
+          preHook = ''
+            /run/current-system/sw/bin/nextcloud-occ maintenance:mode --on
+          '';
+          paths = "/nas/nextcloud/data";
+          postHook = ''
+            /run/current-system/sw/bin/nextcloud-occ maintenance:mode --off
+          '';
+        };
+        sync_data = {
+          paths = "/nas/sync";
+        };
+      };
     };
 
     boot.loader.systemd-boot.enable = false;
@@ -200,7 +225,6 @@
         adminpassFile = "/run/secrets/nextcloud.admin.pass";
         dbtype = "pgsql";
         dbhost = "/run/postgresql";
-        dbtableprefix = "oc_";
       };
       settings = {
         #log_type = "systemd";
