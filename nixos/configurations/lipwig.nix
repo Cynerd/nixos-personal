@@ -26,29 +26,11 @@
       wireguard = true;
       openvpn.oldpersonal = true;
       borgjobs = {
-        postgresql = {
-          preHook = ''
-            /run/current-system/sw/bin/nextcloud-occ maintenance:mode --on
-          '';
-          dumpCommand = pkgs.writeScript "postgreqsl-backup.sh" ''
-            /run/wrappers/bin/sudo -u postgres /run/current-system/sw/bin/pg_dumpall
-          '';
-          postHook = ''
-            /run/current-system/sw/bin/nextcloud-occ maintenance:mode --off
-          '';
-        };
-        nextcloud_data = {
-          preHook = ''
-            /run/current-system/sw/bin/nextcloud-occ maintenance:mode --on
-          '';
-          paths = "/nas/nextcloud/data";
-          postHook = ''
-            /run/current-system/sw/bin/nextcloud-occ maintenance:mode --off
-          '';
-        };
-        sync_data = {
-          paths = "/nas/sync";
-        };
+        postgresql.dumpCommand = pkgs.writeScript "postgreqsl-backup.sh" ''
+          /run/wrappers/bin/sudo -u postgres /run/current-system/sw/bin/pg_dumpall
+        '';
+        nextcloud_data.paths = "/nas/nextcloud/data";
+        sync_data.paths = "/nas/sync";
       };
     };
 
