@@ -12,7 +12,7 @@ pkgs.mkShell {
     libtool
 
     gnumake
-    #bear
+    bear
     meson
     ninja
     cmake
