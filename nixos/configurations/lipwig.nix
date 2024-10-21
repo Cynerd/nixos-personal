@@ -198,7 +198,7 @@
     # Nextcloud ################################################################
     services.nextcloud = {
       enable = true;
-      package = pkgs.nextcloud28;
+      package = pkgs.nextcloud29;
       https = true;
       hostName = "cloud.cynerd.cz";
       datadir = "/nas/nextcloud";
@@ -240,20 +240,20 @@
           twofactor_webauthn
           ;
         # Additional modules can be fetched with:
-        # NEXTCLOUD_VERSIONS=28 nix run nixpkgs#nc4nix -- -apps "passwords,money,integration_github,integration_gitlab"
+        # NEXTCLOUD_VERSIONS=29 nix run nixpkgs#nc4nix -- -apps "passwords,money,integration_github,integration_gitlab"
         passwords = pkgs.fetchNextcloudApp {
           url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2024.9.0/passwords.tar.gz";
           sha256 = "L+jumcussL0c9xNMg/GMs1GSd1IY9wUvC8ZEg+3U+sc=";
           license = "agpl3Plus";
         };
         integration_github = pkgs.fetchNextcloudApp {
-          url = "https://github.com/nextcloud-releases/integration_github/releases/download/v2.0.7/integration_github-v2.0.7.tar.gz";
-          sha256 = "x4BrBdrvmbdwZcZL6FLAY27B5OpkXIsw92XsD076Aqg=";
+          url = "https://github.com/nextcloud-releases/integration_github/releases/download/v3.0.0/integration_github-v3.0.0.tar.gz";
+          sha256 = "ruLN4lw3Vy8OavTYm1g2L9q1wusRP0a+BpvfXkrZI3A=";
           license = "agpl3Plus";
         };
         integration_gitlab = pkgs.fetchNextcloudApp {
-          url = "https://github.com/nextcloud-releases/integration_gitlab/releases/download/v3.1.1/integration_gitlab-v3.1.1.tar.gz";
-          sha256 = "nBqnBDVoNEqRGp+WKq4okis1kCr6pzEz4G6368MaxuE=";
+          url = "https://github.com/nextcloud-releases/integration_gitlab/releases/download/v3.1.2/integration_gitlab-v3.1.2.tar.gz";
+          sha256 = "nCH0DqYmr4T856sOU5PhSK6WAHIF9mnYThgytxEbkNA=";
           license = "agpl3Plus";
         };
         money = pkgs.fetchNextcloudApp {
