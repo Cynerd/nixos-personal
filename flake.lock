@@ -201,11 +201,11 @@
     },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1729333370,
-        "narHash": "sha256-NU+tYe3QWzDNpB8RagpqR3hNQXn4BNuBd7ZGosMHLL8=",
+        "lastModified": 1730368399,
+        "narHash": "sha256-F8vJtG389i9fp3k2/UDYHMed3PLCJYfxCqwiVP7b9ig=",
         "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "38279034170b1e2929b2be33bdaedbf14a57bfeb",
+        "rev": "da14839ac5f38ee6adbdb4e6db09b5eef6d6ccdc",
         "type": "github"
       },
       "original": {
@@ -245,16 +245,15 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1729308112,
-        "narHash": "sha256-Ap+cPeiluam2KFZO+OWuFTl/IkIJfyGYGMgkT2pVCRY=",
+        "lastModified": 1730272153,
+        "narHash": "sha256-B5WRZYsRlJgwVHIV6DvidFN7VX7Fg9uuwkRW9Ha8z+w=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "61253596816c4cd65e2a0f474cbc0ac0c6e0f7cf",
+        "rev": "2d2a9ddbe3f2c00747398f3dc9b05f7f2ebb0f53",
         "type": "github"
       },
       "original": {
         "id": "nixpkgs",
-        "ref": "nixos-unstable-small",
         "type": "indirect"
       }
     },
@@ -561,11 +560,11 @@
     },
     "vpsadminos": {
       "locked": {
-        "lastModified": 1729249735,
-        "narHash": "sha256-+7agcWXbYZHMFJkjt+Axl+sGKEujX55FwSMJjxyAI8g=",
+        "lastModified": 1730290190,
+        "narHash": "sha256-a+op2lnWrCytuEhLOE24SKR/irRfjwDEHkpLyAL5P90=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "fb35bdb582a7612a6a659d696befb2fff0e4c971",
+        "rev": "63ac771b9667b45ab2ea87363f69ca7f85668e9b",
         "type": "github"
       },
       "original": {

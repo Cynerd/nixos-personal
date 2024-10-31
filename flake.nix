@@ -2,7 +2,6 @@
   description = "Cynerd's personal flake";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-unstable-small";
     nixos-hardware.url = "nixos-hardware";
     nixdeploy.url = "gitlab:cynerd/nixosdeploy";
     personal-secret.url = "git+ssh://git@cynerd.cz/nixos-personal-secret";
