@@ -13,7 +13,7 @@ final: prev: {
   stardict-en-cz = final.callPackage ./stardict/en-cz.nix {};
   stardict-de-cz = final.callPackage ./stardict/de-cz.nix {};
   stardict-cz = final.callPackage ./stardict/cz.nix {};
-  sdcv-unwrapped = final.callPackage ./sdcv {};
+  sdcv-unwrapped = prev.sdcv;
   sdcv = final.callPackage ./stardict/wrapper.nix {stardict = final.sdcv-unwrapped;};
 
   lorem-text = final.callPackage ./lorem-text {};
