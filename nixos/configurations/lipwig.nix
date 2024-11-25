@@ -198,7 +198,7 @@
     # Nextcloud ################################################################
     services.nextcloud = {
       enable = true;
-      package = pkgs.nextcloud29;
+      package = pkgs.nextcloud30;
       https = true;
       hostName = "cloud.cynerd.cz";
       datadir = "/nas/nextcloud";
@@ -236,29 +236,29 @@
           previewgenerator
           spreed
           tasks
-          twofactor_nextcloud_notification
+          #twofactor_nextcloud_notification
           twofactor_webauthn
           ;
         # Additional modules can be fetched with:
-        # NEXTCLOUD_VERSIONS=29 nix run nixpkgs#nc4nix -- -apps "passwords,money,integration_github,integration_gitlab"
-        passwords = pkgs.fetchNextcloudApp {
-          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2024.9.0/passwords.tar.gz";
-          sha256 = "L+jumcussL0c9xNMg/GMs1GSd1IY9wUvC8ZEg+3U+sc=";
-          license = "agpl3Plus";
-        };
+        # NEXTCLOUD_VERSIONS=30 nix run nixpkgs#nc4nix -- -apps "passwords,money,integration_github,integration_gitlab"
         integration_github = pkgs.fetchNextcloudApp {
-          url = "https://github.com/nextcloud-releases/integration_github/releases/download/v3.0.0/integration_github-v3.0.0.tar.gz";
-          sha256 = "ruLN4lw3Vy8OavTYm1g2L9q1wusRP0a+BpvfXkrZI3A=";
+          url = "https://github.com/nextcloud-releases/integration_github/releases/download/v3.1.1/integration_github-v3.1.1.tar.gz";
+          hash = "sha256-nm463H33WyXTJkb7+OSsunARNuSl5nc3uGClgwkVvhM=";
           license = "agpl3Plus";
         };
         integration_gitlab = pkgs.fetchNextcloudApp {
           url = "https://github.com/nextcloud-releases/integration_gitlab/releases/download/v3.1.2/integration_gitlab-v3.1.2.tar.gz";
-          sha256 = "nCH0DqYmr4T856sOU5PhSK6WAHIF9mnYThgytxEbkNA=";
+          hash = "sha256-nCH0DqYmr4T856sOU5PhSK6WAHIF9mnYThgytxEbkNA=";
           license = "agpl3Plus";
         };
         money = pkgs.fetchNextcloudApp {
           url = "https://github.com/powerpaul17/nc_money/releases/download/v0.29.0/money.tar.gz";
-          sha256 = "EXcY69z5h6rT0RdkmOhQYKSWmVBr2zaWuSRj/m5dMkI=";
+          hash = "sha256-EXcY69z5h6rT0RdkmOhQYKSWmVBr2zaWuSRj/m5dMkI=";
+          license = "agpl3Plus";
+        };
+        passwords = pkgs.fetchNextcloudApp {
+          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2024.11.0/passwords.tar.gz";
+          hash = "sha256-69oYRbNh07QSsC/7RBMB/9CQsBg+iUBeG3qj3j46EkA=";
           license = "agpl3Plus";
         };
       };
