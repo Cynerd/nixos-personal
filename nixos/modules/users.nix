@@ -73,8 +73,6 @@ in {
       defaultEditor = !isArm;
       withNodeJs = true;
     };
-
-    wireshark.enable = true;
   };
 
   programs.fuse.userAllowOther = true;

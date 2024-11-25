@@ -39,7 +39,7 @@ final: prev: {
   };
 
   # Older version of packages
-  flac1_3 = prev.flac.overrideAttrs {
+  flac134 = prev.flac.overrideAttrs {
     version = "1.3.4";
     src = final.fetchurl {
       url = "http://downloads.xiph.org/releases/flac/flac-1.3.4.tar.xz";

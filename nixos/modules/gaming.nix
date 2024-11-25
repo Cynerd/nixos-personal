@@ -31,7 +31,7 @@ in {
           with pkgs; [
             ncurses
             xorg.libXpm
-            flac1_3
+            flac134
             libopus
           ];
       };
@@ -40,7 +40,7 @@ in {
           with pkgs; [
             ncurses
             xorg.libXpm
-            flac1_3
+            flac134
             libopus
             SDL
             SDL2_image

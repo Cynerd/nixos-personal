@@ -157,7 +157,10 @@ in {
       # Images
       imagemagick
     ];
-    programs.wireshark.package = pkgs.wireshark;
+    programs.wireshark = {
+      enable = true;
+      package = pkgs.wireshark;
+    };
 
     documentation = {
       nixos = {
