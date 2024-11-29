@@ -293,7 +293,7 @@ in {
     };
 
     fonts.packages = with pkgs; [
-      (nerdfonts.override {fonts = ["Hack"];})
+      nerd-fonts.hack
       arkpandora_ttf
       corefonts
       dejavu_fonts
