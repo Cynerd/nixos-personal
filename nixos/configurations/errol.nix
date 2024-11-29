@@ -86,7 +86,7 @@ in {
   };
 
   environment.systemPackages = [
-    #pkgs.nvtopPackages.amd
+    pkgs.nvtopPackages.amd
   ];
 
   services.syncthing = {
