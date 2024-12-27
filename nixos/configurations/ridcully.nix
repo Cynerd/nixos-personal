@@ -67,10 +67,6 @@ in {
   systemd.network = {
     wait-online.enable = false;
   };
-  #networking.vlans."enp6s0.adm" = {
-  #id = 2;
-  #interface = "enp6s0";
-  #};
 
   environment.systemPackages = [
     pkgs.nvtopPackages.amd

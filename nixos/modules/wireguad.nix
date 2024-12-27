@@ -44,18 +44,15 @@ in {
                 PublicKey = config.secrets.wireguardPubs.spt-omnia;
               }
               // (optionalAttrs (!is_endpoint) {PersistentKeepalive = 25;}))
-            #{
-            #  wireguardPeerConfig =
-            #    {
-            #      Endpoint = "adm.cynerd.cz:51820";
-            #      AllowedIPs = [
-            #        "${config.cynerd.hosts.wg.adm-omnia}/32"
-            #        "10.8.3.0/24"
-            #      ];
-            #      PublicKey = config.secrets.wireguardPubs.adm-omnia;
-            #    }
-            #    // (optionalAttrs (!is_endpoint) {PersistentKeepalive = 25;});
-            #}
+            ({
+                Endpoint = "adm.cynerd.cz:51820";
+                AllowedIPs = [
+                  "${config.cynerd.hosts.wg.adm-omnia}/32"
+                  "10.8.3.0/24"
+                ];
+                PublicKey = config.secrets.wireguardPubs.adm-omnia;
+              }
+              // (optionalAttrs (!is_endpoint) {PersistentKeepalive = 25;}))
           ]
           ++ (optionals is_endpoint (mapAttrsToList (n: v: {
             AllowedIPs = "${config.cynerd.hosts.wg."${n}"}/32";

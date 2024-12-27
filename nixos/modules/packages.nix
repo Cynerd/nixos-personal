@@ -43,7 +43,6 @@ in {
       mc
       screen
       tmux
-      pv
 
       # ls tools
       tree
@@ -73,6 +72,7 @@ in {
     ++ optionals (system == "x86_64-linux") [
       nmap
       ltrace
+      pv
     ]
     ++ optionals (!isNative) [
       ncdu_1

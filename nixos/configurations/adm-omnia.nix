@@ -3,8 +3,8 @@
 in {
   turris.board = "omnia";
   deploy = {
-    enable = false;
-    ssh.host = "omnia.adm";
+    enable = true;
+    ssh.host = "adm.cynerd.cz";
   };
 
   cynerd = {
@@ -54,6 +54,10 @@ in {
   };
   systemd.network = {
     networks = {
+      "end2" = {
+        matchConfig.Name = "end2"; # Ensure that it is managed by systemd-networkd
+        networkConfig.IPv6AcceptRA = false;
+      };
       "pppoe-wan" = {
         matchConfig.Name = "pppoe-wan";
         networkConfig = {
@@ -75,7 +79,7 @@ in {
         linkConfig.RequiredForOnline = "routable";
       };
       "lan-brlan" = {
-        matchConfig.Name = "lan[1-4]";
+        matchConfig.Name = "lan4";
         networkConfig.Bridge = "brlan";
         bridgeVLANs = [
           {
@@ -86,7 +90,7 @@ in {
         ];
       };
       "lan-guest" = {
-        matchConfig.Name = "lan0";
+        matchConfig.Name = "lan[0-3]";
         networkConfig.Bridge = "brlan";
         bridgeVLANs = [
           {
@@ -118,6 +122,7 @@ in {
   # TODO limit NSS clamping to just pppoe-wan
   networking.firewall.extraForwardRules = ''
     tcp flags syn tcp option maxseg size set rt mtu comment "Needed for PPPoE to fix IPv4"
-    iifname {"home", "personalvpn", "wg"} oifname {"home", "personalvpn", "wg"} accept
+    iifname {"home", "wg"} oifname {"home", "wg"} accept
+    iifname "home" oifname "guest" accept comment "Allow home to access guest devices"
   '';
 }
