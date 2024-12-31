@@ -9,11 +9,6 @@
 in {
   options = {
     cynerd.openvpn = {
-      oldpersonal = mkOption {
-        type = types.bool;
-        default = false;
-        description = "My personal old OpenVPN";
-      };
       elektroline = mkOption {
         type = types.bool;
         default = false;
@@ -24,9 +19,6 @@ in {
 
   config = {
     services.openvpn.servers = {
-      oldpersonal = mkIf cnf.oldpersonal {
-        config = "config /run/secrets/old.ovpn";
-      };
       elektroline = mkIf cnf.elektroline {
         config = "config /run/secrets/elektroline.ovpn";
         up = ''

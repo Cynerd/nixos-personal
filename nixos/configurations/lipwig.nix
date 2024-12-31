@@ -24,7 +24,6 @@
         baseDir = "/nas";
       };
       wireguard = true;
-      openvpn.oldpersonal = true;
       borgjobs = {
         postgresql.dumpCommand = pkgs.writeScript "postgreqsl-backup.sh" ''
           /run/wrappers/bin/sudo -u postgres /run/current-system/sw/bin/pg_dumpall
