@@ -66,20 +66,14 @@ in {
           IPv4Forwarding = "yes";
         };
         routes =
-          (optional (hostName != "lipwig") {
-            # OpenVPN network
-            Gateway = config.cynerd.hosts.wg.lipwig;
-            Destination = "10.8.0.0/24";
-            Metric = 2048;
-          })
-          ++ (optional (hostName != "spt-omnia") {
+          (optional (hostName != "spt-omnia") {
             # SPT network
             Gateway = config.cynerd.hosts.wg.spt-omnia;
             Destination = "10.8.2.0/24";
             Metric = 2048;
           })
-          ++ (optional (hostName != "adm-omnia" && hostName != "lipwig") {
-            # Adamkovi network
+          ++ (optional (hostName != "adm-omnia") {
+            # ADM network
             Gateway = config.cynerd.hosts.wg.adm-omnia;
             Destination = "10.8.3.0/24";
             Metric = 2048;
