@@ -6,6 +6,34 @@
   inherit (lib) mkOption mkEnableOption types mkIf hostapd elemAt;
   cnf = config.cynerd.wifiAP.adm;
 
+  networks = name: {
+    "${cnf."${name}".interface}" = {
+      bssid = elemAt cnf."${name}".bssids 0;
+      ssid = "TurrisAdamkovi";
+      authentication = {
+        mode = "wpa3-sae-transition";
+        wpaPasswordFile = "/run/secrets/hostapd-TurrisAdamkovi.pass";
+        saePasswordsFile = "/run/secrets/hostapd-TurrisAdamkovi.pass";
+      };
+    };
+    "${cnf."${name}".interface}-nela" = {
+      bssid = elemAt cnf."${name}".bssids 1;
+      ssid = "Nela";
+      authentication = {
+        mode = "wpa2-sha256";
+        wpaPasswordFile = "/run/secrets/hostapd-Nela.pass";
+      };
+    };
+    "${cnf."${name}".interface}.milan" = {
+      bssid = elemAt cnf."${name}".bssids 2;
+      ssid = "MILAN-AC";
+      authentication = {
+        mode = "wpa2-sha1";
+        wpaPasswordFile = "/run/secrets/hostapd-MILAN-AC.pass";
+      };
+    };
+  };
+
   wOptions = card: channelDefault: {
     interface = mkOption {
       type = with types; nullOr str;
@@ -43,32 +71,7 @@ in {
             enable = true;
             inherit (hostapd.qualcomAtherosAR9287.wifi4) capabilities;
           };
-          networks = {
-            "${cnf.ar9287.interface}" = {
-              bssid = elemAt cnf.ar9287.bssids 0;
-              ssid = "TurrisAdamkovi";
-              authentication = {
-                mode = "wpa2-sha256";
-                wpaPasswordFile = "/run/secrets/hostapd-TurrisAdamkovi.pass";
-              };
-            };
-            "${cnf.ar9287.interface}-nela" = {
-              bssid = elemAt cnf.ar9287.bssids 1;
-              ssid = "Nela";
-              authentication = {
-                mode = "wpa2-sha256";
-                wpaPasswordFile = "/run/secrets/hostapd-Nela.pass";
-              };
-            };
-            "${cnf.ar9287.interface}.milan" = {
-              bssid = elemAt cnf.ar9287.bssids 2;
-              ssid = "MILAN-AC";
-              authentication = {
-                mode = "wpa2-sha256";
-                wpaPasswordFile = "/run/secrets/hostapd-MILAN-AC.pass";
-              };
-            };
-          };
+          networks = networks "ar9287";
         };
         "${cnf.qca988x.interface}" = mkIf (cnf.qca988x.interface != null) {
           countryCode = "CZ";
@@ -82,32 +85,7 @@ in {
             enable = true;
             inherit (hostapd.qualcomAtherosQCA988x.wifi5) capabilities;
           };
-          networks = {
-            "${cnf.qca988x.interface}" = {
-              bssid = elemAt cnf.qca988x.bssids 0;
-              ssid = "TurrisAdamkovi";
-              authentication = {
-                mode = "wpa2-sha256";
-                wpaPasswordFile = "/run/secrets/hostapd-TurrisAdamkovi.pass";
-              };
-            };
-            "${cnf.qca988x.interface}-nela" = {
-              bssid = elemAt cnf.qca988x.bssids 1;
-              ssid = "Nela";
-              authentication = {
-                mode = "wpa2-sha256";
-                wpaPasswordFile = "/run/secrets/hostapd-Nela.pass";
-              };
-            };
-            "${cnf.qca988x.interface}.milan" = {
-              bssid = elemAt cnf.qca988x.bssids 2;
-              ssid = "MILAN-AC";
-              authentication = {
-                mode = "wpa2-sha256";
-                wpaPasswordFile = "/run/secrets/hostapd-MILAN-AC.pass";
-              };
-            };
-          };
+          networks = networks "qca988x";
         };
       };
     };

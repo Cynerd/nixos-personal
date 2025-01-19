@@ -6,6 +6,35 @@
   inherit (lib) mkOption mkEnableOption types mkIf mkForce mkMerge hostapd elemAt;
   cnf = config.cynerd.wifiAP.spt;
 
+  networks = name: let
+    is2g = cnf."${name}".channel <= 14;
+  in {
+    "${cnf."${name}".interface}" = {
+      bssid = elemAt cnf."${name}".bssids 0;
+      ssid = "TurrisRules${
+        if is2g
+        then ""
+        else "5"
+      }";
+      authentication = {
+        mode = "wpa2-sha256";
+        wpaPasswordFile = "/run/secrets/hostapd-TurrisRules.pass";
+      };
+      settings = mkIf is2g {
+        ieee80211w = 0;
+        wpa_key_mgmt = mkForce "WPA-PSK"; # force use without sha256
+      };
+    };
+    "${cnf."${name}".interface}.guest" = {
+      bssid = elemAt cnf."${name}".bssids 1;
+      ssid = "Kocovi";
+      authentication = {
+        mode = "wpa2-sha256";
+        wpaPasswordFile = "/run/secrets/hostapd-Kocovi.pass";
+      };
+    };
+  };
+
   wOptions = card: channelDefault: {
     interface = mkOption {
       type = with types; nullOr str;
@@ -48,28 +77,7 @@ in {
               enable = true;
               inherit (hostapd.qualcomAtherosAR9287.wifi4) capabilities;
             };
-            networks = {
-              "${cnf.ar9287.interface}" = {
-                bssid = elemAt cnf.ar9287.bssids 0;
-                ssid = "TurrisRules";
-                authentication = {
-                  mode = "wpa2-sha256";
-                  wpaPasswordFile = "/run/secrets/hostapd-TurrisRules.pass";
-                };
-                settings = {
-                  ieee80211w = 0;
-                  wpa_key_mgmt = mkForce "WPA-PSK"; # force use without sha256
-                };
-              };
-              "${cnf.ar9287.interface}.guest" = {
-                bssid = elemAt cnf.ar9287.bssids 1;
-                ssid = "Kocovi";
-                authentication = {
-                  mode = "wpa2-sha256";
-                  wpaPasswordFile = "/run/secrets/hostapd-Kocovi.pass";
-                };
-              };
-            };
+            networks = networks "ar9287";
           };
         })
         (mkIf (cnf.qca988x.interface != null) {
@@ -90,32 +98,7 @@ in {
               enable = !is2g;
               inherit (hostapd.qualcomAtherosQCA988x.wifi5) capabilities;
             };
-            networks = {
-              "${cnf.qca988x.interface}" = {
-                bssid = elemAt cnf.qca988x.bssids 0;
-                ssid = "TurrisRules${
-                  if is2g
-                  then ""
-                  else "5"
-                }";
-                authentication = {
-                  mode = "wpa2-sha256";
-                  wpaPasswordFile = "/run/secrets/hostapd-TurrisRules.pass";
-                };
-                settings = mkIf is2g {
-                  ieee80211w = 0;
-                  wpa_key_mgmt = mkForce "WPA-PSK"; # force use without sha256
-                };
-              };
-              "${cnf.qca988x.interface}.guest" = {
-                bssid = elemAt cnf.qca988x.bssids 1;
-                ssid = "Kocovi";
-                authentication = {
-                  mode = "wpa2-sha256";
-                  wpaPasswordFile = "/run/secrets/hostapd-Kocovi.pass";
-                };
-              };
-            };
+            networks = networks "qca988x";
           };
         })
       ];

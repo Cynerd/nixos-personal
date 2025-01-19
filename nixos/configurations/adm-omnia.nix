@@ -23,16 +23,16 @@ in {
       };
     };
     wifiAP.adm = {
-      enable = false;
+      enable = true;
       ar9287 = {
-        interface = "wlp1s0";
+        interface = "wlp2s0";
         bssids = config.secrets.wifiMacs.adm-omnia.ar9287;
-        channel = 11;
+        channel = 7;
       };
       qca988x = {
-        interface = "wlp3s0";
+        interface = "wlp1s0";
         bssids = config.secrets.wifiMacs.adm-omnia.qca988x;
-        channel = 36;
+        channel = 44;
       };
     };
     wireguard = true;
