@@ -121,7 +121,10 @@ in {
       password metronet
     '';
   };
-  systemd.services."pppd-wan".after = ["sys-subsystem-net-devices-end2.848.device"];
+  systemd.services."pppd-wan" = {
+    after = ["sys-subsystem-net-devices-end2.848.device"];
+    partOf = ["systemd-networkd.service"];
+  };
   # TODO limit NSS clamping to just pppoe-wan
   networking.firewall.extraForwardRules = ''
     tcp flags syn tcp option maxseg size set rt mtu comment "Needed for PPPoE to fix IPv4"
