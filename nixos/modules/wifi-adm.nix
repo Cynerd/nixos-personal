@@ -91,7 +91,10 @@ in {
     };
     systemd.network.networks = {
       "lan-${cnf.ar9287.interface}" = {
-        matchConfig.Name = cnf.ar9287.interface;
+        matchConfig = {
+          Name = cnf.ar9287.interface;
+          WLANInterfaceType = "ap";
+        };
         networkConfig.Bridge = "brlan";
         bridgeVLANs = [
           {
@@ -121,7 +124,10 @@ in {
         ];
       };
       "lan-${cnf.qca988x.interface}" = {
-        matchConfig.Name = cnf.qca988x.interface;
+        matchConfig = {
+          Name = cnf.qca988x.interface;
+          WLANInterfaceType = "ap";
+        };
         networkConfig.Bridge = "brlan";
         bridgeVLANs = [
           {
