@@ -31,8 +31,11 @@ in {
     };
 
     boot = {
-      loader.systemd-boot.enable = mkOverride 1100 true;
-      loader.efi.canTouchEfiVariables = mkDefault true;
+      loader = {
+        systemd-boot.enable = mkOverride 1100 true;
+        efi.canTouchEfiVariables = mkDefault true;
+        grub.enable = mkOverride 1100 false;
+      };
       kernelPackages = mkOverride 1100 pkgs.linuxPackages_latest;
       kernelParams = ["boot.shell_on_fail"];
     };

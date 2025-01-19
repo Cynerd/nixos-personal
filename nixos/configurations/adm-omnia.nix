@@ -48,10 +48,12 @@ in {
     fileSystems = ["/"];
   };
 
-  networking = {
-    useNetworkd = true;
-    useDHCP = false;
+  services.fail2ban = {
+    enable = true;
+    ignoreIP = ["10.8.1.0/24" "10.8.2.0/24"];
   };
+
+  networking.useDHCP = false;
   systemd.network = {
     networks = {
       "end2" = {

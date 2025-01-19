@@ -125,6 +125,6 @@ in {
   # TODO limit NSS clamping to just pppoe-wan
   networking.firewall.extraForwardRules = ''
     tcp flags syn tcp option maxseg size set rt mtu comment "Needed for PPPoE to fix IPv4"
-    iifname {"home", "personalvpn", "wg"} oifname {"home", "personalvpn", "wg"} accept
+    iifname {"home", "wg"} oifname {"home", "wg"} accept
   '';
 }

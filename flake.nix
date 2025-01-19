@@ -62,17 +62,23 @@
     }
     // eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages."${system}".extend self.overlays.default;
-    in {
-      packages =
-        {default = pkgs.nixdeploy;}
-        // mapAttrs' (n: v: let
+
+      osFilterMap = attr:
+        mapAttrs' (n: v: let
           os =
             if v.config.nixpkgs.hostPlatform.system == system
             then v
             else (v.extendModules {modules = [{nixpkgs.buildPlatform.system = system;}];});
         in
-          nameValuePair "tarball-${n}" os.config.system.build.tarball)
-        (filterAttrs (_: v: v.config.system.build ? tarball) self.nixosConfigurations);
+          nameValuePair "${attr}-${n}" os.config.system.build."${attr}")
+        (filterAttrs (_: v: v.config.system.build ? "${attr}")
+          self.nixosConfigurations);
+    in {
+      packages =
+        {default = pkgs.nixdeploy;}
+        // (osFilterMap "toplevel")
+        // (osFilterMap "tarball")
+        // (osFilterMap "firmware");
       legacyPackages = pkgs;
       devShells = filterPackages system (import ./devShells pkgs);
       formatter = pkgs.alejandra;

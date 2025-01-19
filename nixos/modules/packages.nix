@@ -41,7 +41,6 @@ in {
       btop
       iotop
       mc
-      screen
       tmux
 
       # ls tools
@@ -73,6 +72,7 @@ in {
       nmap
       ltrace
       pv
+      screen
     ]
     ++ optionals (!isNative) [
       ncdu_1

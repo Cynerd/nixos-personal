@@ -37,6 +37,15 @@ final: prev: {
   zigbee2mqtt = prev.zigbee2mqtt.overrideAttrs {
     npmInstallFlags = ["--no-optional"]; # Fix cross build
   };
+  ubootRaspberryPi3_btrfs = prev.buildUBoot {
+    defconfig = "rpi_3_defconfig";
+    extraConfig = ''
+      CONFIG_FS_BTRFS=y
+      CONFIG_CMD_BTRFS=y
+    '';
+    extraMeta.platforms = ["aarch64-linux"];
+    filesToInstall = ["u-boot.bin"];
+  };
 
   # Older version of packages
   flac134 = prev.flac.overrideAttrs {

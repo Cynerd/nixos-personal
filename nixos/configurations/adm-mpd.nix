@@ -5,26 +5,16 @@
 }: let
   inherit (lib) filterAttrs;
 in {
-  nixpkgs.hostPlatform.system = "aarch64-linux";
-
-  fileSystems = {
-    "/" = {
-      device = "/dev/mmcblk0p2";
-      options = ["compress=lzo" "subvol=@nix"];
-    };
-    "/home" = {
-      device = "/dev/mmcblk0p2";
-      options = ["compress=lzo" "subvol=@home"];
-    };
-    "/boot" = {
-      device = "/dev/mmcblk0p1";
-    };
+  cynerd.rpi = 3;
+  deploy = {
+    enable = true;
+    ssh.host = "nixos@mpd.adm";
   };
 
   networking.wireless = {
     enable = true;
     networks = filterAttrs (n: _: n == "Nela") config.secrets.wifiNetworks;
-    environmentFile = "/run/secrets/wifi.env";
+    secretsFile = "/run/secrets/wifi.secrets";
     userControlled.enable = true;
   };
 
@@ -33,24 +23,24 @@ in {
   #alsa.enable = true;
   #pulse.enable = true;
   #};
-  hardware.pulseaudio = {
-    enable = true;
-    systemWide = true;
-    zeroconf.publish.enable = true;
-  };
+  #hardware.pulseaudio = {
+  #  enable = true;
+  #  systemWide = true;
+  #  zeroconf.publish.enable = true;
+  #};
 
-  services.spotifyd = {
-    enable = true;
-    settings.global = {
-      device_name = "Adámkovi";
-      device = "sysdefault";
-      mixer = "Master";
-      bitrate = 320;
-      cache_path = "/var/cahe/spotify";
-      no_audio_cache = true;
-      volume_normalisation = true;
-      normalisation_pregain = -10;
-      initial_volume = 60;
-    };
-  };
+  #services.spotifyd = {
+  #  enable = true;
+  #  settings.global = {
+  #    device_name = "Adámkovi";
+  #    device = "sysdefault";
+  #    mixer = "Master";
+  #    bitrate = 320;
+  #    cache_path = "/var/cahe/spotify";
+  #    no_audio_cache = true;
+  #    volume_normalisation = true;
+  #    normalisation_pregain = -10;
+  #    initial_volume = 60;
+  #  };
+  #};
 }
