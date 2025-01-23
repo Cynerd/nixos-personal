@@ -28,7 +28,7 @@ in {
         channel = 11;
       };
       qca988x = {
-        interface = "wlp3s0";
+        interface = "wlp2s0";
         bssids = config.secrets.wifiMacs.spt-omnia.qca988x;
         channel = 36;
       };
