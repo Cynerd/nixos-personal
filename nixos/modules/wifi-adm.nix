@@ -3,10 +3,10 @@
   lib,
   ...
 }: let
-  inherit (lib) mkOption mkEnableOption types mkIf hostapd elemAt;
+  inherit (lib) mkOption mkEnableOption types mkIf mkMerge hostapd elemAt;
   cnf = config.cynerd.wifiAP.adm;
 
-  networks = name: {
+  wifi-networks = name: {
     "${cnf."${name}".interface}" = {
       bssid = elemAt cnf."${name}".bssids 0;
       ssid = "TurrisAdamkovi";
@@ -16,7 +16,7 @@
         saePasswordsFile = "/run/secrets/hostapd-TurrisAdamkovi.pass";
       };
     };
-    "${cnf."${name}".interface}-nela" = {
+    "${cnf."${name}".interface}.nela" = {
       bssid = elemAt cnf."${name}".bssids 1;
       ssid = "Nela";
       authentication = {
@@ -31,6 +31,42 @@
         mode = "wpa2-sha1";
         wpaPasswordFile = "/run/secrets/hostapd-MILAN-AC.pass";
       };
+    };
+  };
+
+  net-networks = name: {
+    "lan-${cnf."${name}".interface}" = {
+      matchConfig = {
+        Name = cnf."${name}".interface;
+        WLANInterfaceType = "ap";
+      };
+      networkConfig.Bridge = "brlan";
+      bridgeVLANs = [
+        {
+          EgressUntagged = 1;
+          PVID = 1;
+        }
+      ];
+    };
+    "lan-${cnf."${name}".interface}.nela" = {
+      matchConfig.Name = "${cnf."${name}".interface}-nela";
+      networkConfig.Bridge = "brlan";
+      bridgeVLANs = [
+        {
+          EgressUntagged = 2;
+          PVID = 2;
+        }
+      ];
+    };
+    "lan-${cnf."${name}".interface}.milan" = {
+      matchConfig.Name = "${cnf."${name}".interface}.milan";
+      networkConfig.Bridge = "brlan";
+      bridgeVLANs = [
+        {
+          EgressUntagged = 2;
+          PVID = 2;
+        }
+      ];
     };
   };
 
@@ -71,7 +107,7 @@ in {
             enable = true;
             inherit (hostapd.qualcomAtherosAR9287.wifi4) capabilities;
           };
-          networks = networks "ar9287";
+          networks = wifi-networks "ar9287";
         };
         "${cnf.qca988x.interface}" = mkIf (cnf.qca988x.interface != null) {
           countryCode = "CZ";
@@ -85,77 +121,13 @@ in {
             enable = true;
             inherit (hostapd.qualcomAtherosQCA988x.wifi5) capabilities;
           };
-          networks = networks "qca988x";
+          networks = wifi-networks "qca988x";
         };
       };
     };
-    systemd.network.networks = {
-      "lan-${cnf.ar9287.interface}" = {
-        matchConfig = {
-          Name = cnf.ar9287.interface;
-          WLANInterfaceType = "ap";
-        };
-        networkConfig.Bridge = "brlan";
-        bridgeVLANs = [
-          {
-            EgressUntagged = 1;
-            PVID = 1;
-          }
-        ];
-      };
-      "lan-${cnf.ar9287.interface}-nela" = {
-        matchConfig.Name = "${cnf.ar9287.interface}-nela";
-        networkConfig.Bridge = "brlan";
-        bridgeVLANs = [
-          {
-            EgressUntagged = 2;
-            PVID = 2;
-          }
-        ];
-      };
-      "lan-${cnf.ar9287.interface}.milan" = {
-        matchConfig.Name = "${cnf.ar9287.interface}.milan";
-        networkConfig.Bridge = "brlan";
-        bridgeVLANs = [
-          {
-            EgressUntagged = 2;
-            PVID = 2;
-          }
-        ];
-      };
-      "lan-${cnf.qca988x.interface}" = {
-        matchConfig = {
-          Name = cnf.qca988x.interface;
-          WLANInterfaceType = "ap";
-        };
-        networkConfig.Bridge = "brlan";
-        bridgeVLANs = [
-          {
-            EgressUntagged = 1;
-            PVID = 1;
-          }
-        ];
-      };
-      "lan-${cnf.qca988x.interface}-nela" = {
-        matchConfig.Name = "${cnf.qca988x.interface}-nela";
-        networkConfig.Bridge = "brlan";
-        bridgeVLANs = [
-          {
-            EgressUntagged = 2;
-            PVID = 2;
-          }
-        ];
-      };
-      "lan-${cnf.qca988x.interface}.milan" = {
-        matchConfig.Name = "${cnf.qca988x.interface}.milan";
-        networkConfig.Bridge = "brlan";
-        bridgeVLANs = [
-          {
-            EgressUntagged = 2;
-            PVID = 2;
-          }
-        ];
-      };
-    };
+    systemd.network.networks = mkMerge [
+      (mkIf (cnf.ar9287.interface != null) (net-networks "ar9287"))
+      (mkIf (cnf.qca988x.interface != null) (net-networks "qca988x"))
+    ];
   };
 }

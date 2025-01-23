@@ -201,11 +201,11 @@
     },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1736978406,
-        "narHash": "sha256-oMr3PVIQ8XPDI8/x6BHxsWEPBRU98Pam6KGVwUh8MPk=",
+        "lastModified": 1737590910,
+        "narHash": "sha256-qM/y6Dtpu9Wmf5HqeZajQdn+cS0aljdYQQQnrvx+LJE=",
         "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "b678606690027913f3434dea3864e712b862dde5",
+        "rev": "9368027715d8dde4b84c79c374948b5306fdd2db",
         "type": "github"
       },
       "original": {
@@ -245,11 +245,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1737110817,
-        "narHash": "sha256-DSenga8XjPaUV5KUFW/i3rNkN7jm9XmguW+qQ1ZJTR4=",
+        "lastModified": 1737525964,
+        "narHash": "sha256-3wFonKmNRWKq1himW9N3TllbeGIHFACI5vmLpk6moF8=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "041c867bad68dfe34b78b2813028a2e2ea70a23c",
+        "rev": "5757bbb8bd7c0630a0cc4bb19c47e588db30b97c",
         "type": "github"
       },
       "original": {
@@ -348,11 +348,11 @@
     },
     "personal-secret": {
       "locked": {
-        "lastModified": 1737306019,
-        "narHash": "sha256-XXrP6fZwG5jXDHAakvhIeSZlNJJ/ZwYgekuL2i2ANXY=",
+        "lastModified": 1737384491,
+        "narHash": "sha256-5ePb3HAOoepnaADMZF2ATdkMr0bBP/s9zDqSqyrlX+A=",
         "ref": "refs/heads/master",
-        "rev": "e975c3ce7c68245523bea96e5ecdaab118f0d5cc",
-        "revCount": 121,
+        "rev": "81298163c38df333577b498eaf372e287b31ba93",
+        "revCount": 122,
         "type": "git",
         "url": "ssh://git@cynerd.cz/nixos-personal-secret"
       },
