@@ -256,8 +256,8 @@
           license = "agpl3Plus";
         };
         passwords = pkgs.fetchNextcloudApp {
-          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2024.11.0/passwords.tar.gz";
-          hash = "sha256-69oYRbNh07QSsC/7RBMB/9CQsBg+iUBeG3qj3j46EkA=";
+          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2024.12.1/passwords.tar.gz";
+          hash = "sha256-I0+w8H56Lam9CChAPrGbA6VvEmkNi3FhmBuOUgvlTaE=";
           license = "agpl3Plus";
         };
       };
