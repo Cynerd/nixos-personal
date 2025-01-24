@@ -130,4 +130,34 @@ in {
     tcp flags syn tcp option maxseg size set rt mtu comment "Needed for PPPoE to fix IPv4"
     iifname {"home", "wg"} oifname {"home", "wg"} accept
   '';
+
+  ##############################################################################
+  services = {
+    zigbee2mqtt = {
+      enable = true;
+      settings = {
+        serial.port = "/dev/serial/by-id/usb-ITEAD_SONOFF_Zigbee_3.0_USB_Dongle_Plus_V2_20220812153849-if00";
+        mqtt = {
+          server = "mqtt://${config.cynerd.hosts.spt.mox}:1883";
+          user = "zigbee2mqtt";
+          password = "!secret.yaml mqtt_password";
+        };
+        advanced = {
+          network_key = "!secret.yaml network_key";
+          homeassistant_legacy_entity_attributes = false;
+          legacy_api = false;
+          legacy_availability_payload = false;
+          last_seen = "epoch";
+        };
+        frontend = true;
+        availability = true;
+        homeassistant = {
+          legacy_triggers = false;
+        };
+        device_options.legacy = false;
+        permit_join = false;
+        devices = config.secrets.zigbee2mqttDevices;
+      };
+    };
+  };
 }

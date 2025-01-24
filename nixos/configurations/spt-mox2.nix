@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{config, ...}: {
   turris.board = "mox";
   deploy = {
     enable = true;

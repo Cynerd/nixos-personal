@@ -89,75 +89,50 @@ in {
     pkgs.nvtopPackages.amd
   ];
 
-  services.syncthing = {
-    enable = true;
-    user = mkDefault "cynerd";
-    group = mkDefault "cynerd";
-    openDefaultPorts = true;
+  ##############################################################################
+  services = {
+    syncthing = {
+      enable = true;
+      user = mkDefault "cynerd";
+      group = mkDefault "cynerd";
+      openDefaultPorts = true;
 
-    overrideDevices = false;
-    overrideFolders = false;
+      overrideDevices = false;
+      overrideFolders = false;
 
-    dataDir = "/home/cynerd";
-    configDir = "/home/cynerd/.config/syncthing";
-  };
-
-  nixpkgs.config.permittedInsecurePackages = ["openssl-1.1.1w"]; # TODO
-  services.home-assistant = {
-    enable = true;
-    openFirewall = true;
-    configDir = "/var/lib/hass";
-    config = {
-      homeassistant = {
-        name = "SPT";
-        latitude = "!secret latitude";
-        longitude = "!secret longitude";
-        elevation = "!secret elevation";
-        time_zone = "Europe/Prague";
-        country = "CZ";
-      };
-      http.server_port = 8808;
-      mqtt = {
-        sensor = import ../modules/home-assistant/sensors.nix;
-        light = import ../modules/home-assistant/light.nix;
-      };
-      default_config = {};
-      automation = "!include automations.yaml";
+      dataDir = "/home/cynerd";
+      configDir = "/home/cynerd/.config/syncthing";
     };
-    extraComponents = ["met"];
-    package = pkgs.home-assistant.override {
-      extraPackages = pkgs:
-        with pkgs; [
-          securetar
-          pyipp
-        ];
-    };
-  };
 
-  services.zigbee2mqtt = {
-    enable = true;
-    settings = {
-      serial.port = "/dev/serial/by-id/usb-ITEAD_SONOFF_Zigbee_3.0_USB_Dongle_Plus_V2_20220812153849-if00";
-      mqtt = {
-        server = "mqtt://${config.cynerd.hosts.spt.mox}:1883";
-        user = "zigbee2mqtt";
-        password = "!secret.yaml mqtt_password";
+    home-assistant = {
+      enable = true;
+      openFirewall = true;
+      configDir = "/var/lib/hass";
+      config = {
+        homeassistant = {
+          name = "SPT";
+          latitude = "!secret latitude";
+          longitude = "!secret longitude";
+          elevation = "!secret elevation";
+          time_zone = "Europe/Prague";
+          country = "CZ";
+        };
+        http.server_port = 8808;
+        mqtt = {
+          sensor = import ../home-assistant/sensors.nix;
+          light = import ../home-assistant/light.nix;
+        };
+        default_config = {};
+        automation = "!include automations.yaml";
       };
-      advanced = {
-        network_key = "!secret.yaml network_key";
-        homeassistant_legacy_entity_attributes = false;
-        legacy_api = false;
-        legacy_availability_payload = false;
-        last_seen = "epoch";
+      extraComponents = ["met"];
+      package = pkgs.home-assistant.override {
+        extraPackages = pkgs:
+          with pkgs; [
+            securetar
+            pyipp
+          ];
       };
-      frontend = true;
-      availability = true;
-      homeassistant = {
-        legacy_triggers = false;
-      };
-      device_options.legacy = false;
-      permit_join = false;
-      devices = config.secrets.zigbee2mqttDevices;
     };
   };
 }
