@@ -1,6 +1,8 @@
 {config, ...}: let
   hosts = config.cynerd.hosts.adm;
 in {
+  system.stateVersion = "24.05";
+
   turris.board = "omnia";
   deploy = {
     enable = true;

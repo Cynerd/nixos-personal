@@ -5,6 +5,8 @@
 }: let
   inherit (lib) filterAttrs;
 in {
+  system.stateVersion = "24.05";
+
   cynerd.rpi = 3;
   deploy = {
     enable = true;

@@ -5,6 +5,7 @@
 }: let
   inherit (lib) mkDefault;
 in {
+  system.stateVersion = "24.05";
   nixpkgs.hostPlatform.system = "x86_64-linux";
   deploy = {
     enable = true;

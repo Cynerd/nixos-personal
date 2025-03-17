@@ -1,4 +1,5 @@
 {
+  system.stateVersion = "25.05";
   nixpkgs.hostPlatform.system = "armv7l-linux";
 
   fileSystems = {

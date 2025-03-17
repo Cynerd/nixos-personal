@@ -1,4 +1,6 @@
 {config, ...}: {
+  system.stateVersion = "24.05";
+
   turris.board = "omnia";
   deploy = {
     enable = true;

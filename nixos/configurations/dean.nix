@@ -1,4 +1,5 @@
 {pkgs, ...}: {
+  system.stateVersion = "24.05";
   turris.board = "mox";
   deploy.enable = true;
 
