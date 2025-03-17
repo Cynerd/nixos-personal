@@ -152,7 +152,7 @@ in {
       stdmanpages
 
       # SHV
-      shvcli
+      (shvcli.withPlugins [python3Packages.shvcli-ell])
 
       # Images
       imagemagick
