@@ -32,6 +32,15 @@ final: prev: {
     patches = [];
     buildInputs = oldAttrs.buildInputs ++ [final.webkitgtk_4_1];
   });
+  notmuch = prev.notmuch.overrideAttrs {
+    patches = [
+      (final.fetchpatch {
+        name = "add-workaround-for-Emacs-30-pp-changes.patch";
+        url = "https://git.notmuchmail.org/git?p=notmuch;a=patch;h=e3d4721b1ba4836c7646e057b50123fe994652eb";
+        hash = "sha256-phfNSOlTajTmaf+DjtdmBAWSm+2tUbrQEChInUlwn5k=";
+      })
+    ];
+  };
 
   # nixpkgs patches
   zigbee2mqtt = prev.zigbee2mqtt.overrideAttrs {
