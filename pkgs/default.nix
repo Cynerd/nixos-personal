@@ -31,6 +31,7 @@ final: prev: {
     };
     patches = [];
     buildInputs = oldAttrs.buildInputs ++ [final.webkitgtk_4_1];
+    meta = oldAttrs.meta // {broken = false;};
   });
   notmuch = prev.notmuch.overrideAttrs {
     patches = [
