@@ -20,10 +20,6 @@
         hw = false;
         drives = false;
       };
-      syncthing = {
-        enable = false;
-        baseDir = "/nas";
-      };
       wireguard = true;
       borgjobs = {
         postgresql.dumpCommand = pkgs.writeScript "postgreqsl-backup.sh" ''
@@ -236,7 +232,6 @@
           previewgenerator
           spreed
           tasks
-          #twofactor_nextcloud_notification
           twofactor_webauthn
           ;
         # Additional modules can be fetched with:
@@ -252,13 +247,13 @@
           license = "agpl3Plus";
         };
         money = pkgs.fetchNextcloudApp {
-          url = "https://github.com/powerpaul17/nc_money/releases/download/v0.29.0/money.tar.gz";
-          hash = "sha256-EXcY69z5h6rT0RdkmOhQYKSWmVBr2zaWuSRj/m5dMkI=";
+          url = "https://github.com/powerpaul17/nc_money/releases/download/v0.29.1/money.tar.gz";
+          hash = "sha256-6ZCVcJRmE2gNsp+Tg7Jcddwv6yqmNFATFHn9x6UJL7c=";
           license = "agpl3Plus";
         };
         passwords = pkgs.fetchNextcloudApp {
-          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2024.12.1/passwords.tar.gz";
-          hash = "sha256-I0+w8H56Lam9CChAPrGbA6VvEmkNi3FhmBuOUgvlTaE=";
+          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2025.2.0/passwords.tar.gz";
+          hash = "sha256-Nu6WViFawQWby9CEEezAwoBNdp7O5O8a9IhDp/me/E0=";
           license = "agpl3Plus";
         };
       };
@@ -354,16 +349,12 @@
     };
     users.groups.searx.members = ["nginx"];
 
-    # Old Syncthing ############################################################
+    # Syncthing ################################################################
     services.syncthing = {
       enable = true;
-      openDefaultPorts = true;
-
-      overrideDevices = false;
-      overrideFolders = false;
-
+      user = "syncthing";
+      group = "syncthing";
       dataDir = "/nas/sync";
-      configDir = "/nas/sync/.syncthing";
     };
   };
 }

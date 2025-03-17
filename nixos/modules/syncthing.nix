@@ -3,119 +3,96 @@
   lib,
   ...
 }: let
-  inherit (lib) filterAttrs mkOption types mkIf any mkDefault recursiveUpdate genAttrs;
-  cnf = config.cynerd.syncthing;
-  inherit (config.networking) hostName;
+  inherit (lib) elem filterAttrs mkIf any mkDefault recursiveUpdate genAttrs;
+
   allDevices = [
-    "albert"
     "binky"
     "errol"
     "lipwig"
     "ridcully"
-    "spt-omnia"
-  ];
-  mediaDevices = [
-    "lipwig"
-    "binky"
-    "errol"
-    "ridcully"
-    "spt-omnia"
   ];
   bigStorageDevices = [
     "errol"
     "ridcully"
-    "spt-omnia"
   ];
+
+  inherit (config.networking) hostName;
+  baseDir = config.services.syncthing.dataDir;
   filterDevice = filterAttrs (_: v: any (d: d == hostName) v.devices);
 in {
-  options = {
-    cynerd.syncthing = {
-      enable = mkOption {
-        type = types.bool;
-        default = false;
-        description = "My personal Syncthing configuration";
-      };
-
-      baseDir = mkOption {
-        type = types.str;
-        default = "/home/cynerd";
-        description = "Base directory for all folders being synced.";
-      };
-    };
-  };
-
-  config = mkIf cnf.enable {
+  config = mkIf (config.services.syncthing.enable && elem hostName allDevices) {
     services.syncthing = {
-      enable = any (n: n == hostName) allDevices;
       user = mkDefault "cynerd";
+      group = mkDefault "cynerd";
+
       key = "/run/secrets/syncthing.key.pem";
       cert = "/run/secrets/syncthing.cert.pem";
 
       openDefaultPorts = true;
-
       overrideFolders = true;
-      folders = filterDevice {
-        "${cnf.baseDir}/documents" = {
-          label = "Documents";
-          id = "documents";
-          devices = allDevices;
-          ignorePerms = false;
-        };
-        "${cnf.baseDir}/notes" = {
-          label = "Notes";
-          id = "notes";
-          devices = allDevices;
-          ignorePerms = false;
-        };
-        "${cnf.baseDir}/projects" = {
-          label = "Projects";
-          id = "projects";
-          devices = allDevices;
-          ignorePerms = false;
-        };
-        "${cnf.baseDir}/pictures" = {
-          label = "Pictures";
-          id = "pictures";
-          devices = mediaDevices;
-          ignorePerms = false;
-        };
-        # TODO phone-photos
-        "${cnf.baseDir}/music/primary" = {
-          label = "Music-primary";
-          id = "music-primary";
-          devices = mediaDevices;
-          ignorePerms = false;
-        };
-        "${cnf.baseDir}/music/secondary" = {
-          label = "Music-secondary";
-          id = "music-secondary";
-          devices = bigStorageDevices;
-          ignorePerms = false;
-        };
-        "${cnf.baseDir}/music/flac" = {
-          label = "Music-flac";
-          id = "music-flac";
-          devices = bigStorageDevices;
-          ignorePerms = false;
-        };
-        "${cnf.baseDir}/video" = {
-          label = "Video";
-          id = "video";
-          devices = bigStorageDevices;
-          ignorePerms = false;
-        };
-      };
-
       overrideDevices = true;
-      devices =
-        recursiveUpdate
-        (genAttrs allDevices (name: {
-          id = config.secrets.syncthingIDs."${name}";
-        }))
-        {
-          lipwig.addresses = ["tcp://cynerd.cz"];
+
+      settings = {
+        folders = filterDevice {
+          "${baseDir}/documents" = {
+            label = "Documents";
+            id = "documents";
+            devices = allDevices;
+            ignorePerms = false;
+          };
+          "${baseDir}/notes" = {
+            label = "Notes";
+            id = "notes";
+            devices = allDevices;
+            ignorePerms = false;
+          };
+          "${baseDir}/projects" = {
+            label = "Projects";
+            id = "projects";
+            devices = allDevices;
+            ignorePerms = false;
+          };
+          "${baseDir}/elektroline" = {
+            label = "Elektroline";
+            id = "elektroline";
+            devices = allDevices;
+            ignorePerms = false;
+          };
+          "${baseDir}/pictures" = {
+            label = "Pictures";
+            id = "pictures";
+            devices = bigStorageDevices;
+            ignorePerms = false;
+          };
+          "${baseDir}/music" = {
+            label = "Music";
+            id = "music";
+            devices = bigStorageDevices;
+            ignorePerms = false;
+          };
+          "${baseDir}/video" = {
+            label = "Video";
+            id = "video";
+            devices = bigStorageDevices;
+            ignorePerms = false;
+          };
+          "${baseDir}/turris" = {
+            label = "Turris";
+            id = "turris";
+            devices = bigStorageDevices;
+            ignorePerms = false;
+          };
         };
-      # TODO phone
+
+        devices =
+          recursiveUpdate
+          (genAttrs allDevices (name: {
+            id = config.secrets.syncthingIDs."${name}";
+          }))
+          {
+            lipwig.addresses = ["tcp://cynerd.cz"];
+          };
+      };
     };
   };
 }

@@ -94,15 +94,7 @@ in {
   services = {
     syncthing = {
       enable = true;
-      user = mkDefault "cynerd";
-      group = mkDefault "cynerd";
-      openDefaultPorts = true;
-
-      overrideDevices = false;
-      overrideFolders = false;
-
       dataDir = "/home/cynerd";
-      configDir = "/home/cynerd/.config/syncthing";
     };
 
     home-assistant = {
