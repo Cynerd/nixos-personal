@@ -72,9 +72,6 @@ in {
             astroid
             dodo
             taskwarrior3
-            vdirsyncer
-            khal
-            khard
             gnupg
             pinentry-gnome3
             pinentry-curses
@@ -124,7 +121,6 @@ in {
 
             tigervnc
             freerdp
-            plasma5Packages.kdeconnect-kde
 
             gnome-firmware
             hdparm
@@ -144,7 +140,7 @@ in {
             gimp
             inkscape
             blender
-            kdenlive
+            kdePackages.kdenlive
 
             # GStreamer
             gst_all_1.gstreamer
@@ -158,9 +154,9 @@ in {
 
             # Writing
             typst
-            typst-fmt
+            typstfmt
             typst-live
-            typst-lsp
+            tinymist
             vale
 
             # CAD
@@ -202,6 +198,8 @@ in {
         enableSSHSupport = true;
         enableBrowserSocket = true;
       };
+
+      kdeconnect.enable = true;
     };
 
     xdg = {

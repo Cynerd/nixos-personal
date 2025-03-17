@@ -20,6 +20,10 @@ in {
 
     environment.systemPackages = [pkgs.heroic];
 
+    nixpkgs.config.permittedInsecurePackages = [
+      "SDL_ttf-2.0.11" # TODO
+    ];
+
     programs.steam = {
       enable = true;
       remotePlay.openFirewall = true;

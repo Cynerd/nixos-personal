@@ -4,7 +4,7 @@
   ...
 }: let
   isNative = config.nixpkgs.hostPlatform == config.nixpkgs.buildPlatform;
-  isArm = config.nixpkgs.hostPlatform.isAarch;
+  isArm = pkgs.hostPlatform.isAarch;
 in {
   users = {
     mutableUsers = false;
