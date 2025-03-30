@@ -140,7 +140,8 @@ in {
             gimp
             inkscape
             blender
-            kdePackages.kdenlive
+            tenacity
+            #kdePackages.kdenlive
 
             # GStreamer
             gst_all_1.gstreamer
@@ -278,6 +279,12 @@ in {
       davfs2.enable = true;
 
       locate.enable = true;
+
+      gnome = {
+        at-spi2-core.enable = true;
+        gnome-keyring.enable = true;
+        gnome-online-accounts.enable = true;
+      };
     };
 
     # Beneficial for Pipewire

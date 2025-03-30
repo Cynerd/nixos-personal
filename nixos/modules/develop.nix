@@ -128,6 +128,9 @@ in {
       # Julia
       julia
 
+      # XML
+      libxml2
+
       # Qemmu
       qemu
       virt-manager

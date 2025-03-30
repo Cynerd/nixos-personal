@@ -26,8 +26,8 @@ final: prev: {
     src = final.fetchFromGitHub {
       owner = "astroidmail";
       repo = "astroid";
-      rev = "bd0cd0c0a0f1793ced1b3f4e41654cb8cfb32d42";
-      hash = "sha256-cQCHWP9kLU6D4op6WMz36ZpzoDKgd+FGbUDuOXoboEQ=";
+      rev = "65acc24048a57039753cf2326dbfca6b608b91d1";
+      hash = "sha256-PXFVOaCgBHNUg0aCJD1TL/ulzjz9v70/jW5ManUPcHw=";
     };
     patches = [];
     buildInputs = oldAttrs.buildInputs ++ [final.webkitgtk_4_1];
