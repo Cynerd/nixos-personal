@@ -26,7 +26,7 @@
           /run/wrappers/bin/sudo -u postgres /run/current-system/sw/bin/pg_dumpall
         '';
         nextcloud_data.paths = "/nas/nextcloud/data";
-        sync_data.paths = "/nas/sync";
+        sync_data.paths = "/sync";
       };
     };
 
@@ -42,7 +42,7 @@
         ];
       };
       "/nas/nextcloud-sync" = {
-        device = "/nas/sync";
+        device = "/sync";
         fsType = "fuse.bindfs";
         options = ["map=syncthing/nextcloud:@syncthing/@nextcloud"];
       };
@@ -354,7 +354,7 @@
       enable = true;
       user = "syncthing";
       group = "syncthing";
-      dataDir = "/nas/sync";
+      dataDir = "/sync";
     };
   };
 }
