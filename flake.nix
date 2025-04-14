@@ -3,13 +3,16 @@
 
   inputs = {
     nixos-hardware.url = "nixos-hardware";
-    nixdeploy.url = "gitlab:cynerd/nixosdeploy";
+    nixosdeploy.url = "gitlab:cynerd/nixosdeploy";
     personal-secret.url = "git+ssh://git@cynerd.cz/nixos-personal-secret";
     shellrc.url = "git+https://git.cynerd.cz/shellrc";
 
     agenix.url = "github:ryantm/agenix";
     shvcli.url = "github:silicon-heaven/shvcli";
-    shvcli-ell.url = "gitlab:elektroline-predator/shvcli-ell";
+    shvcli-ell = {
+      url = "gitlab:elektroline-predator/shvcli-ell";
+      inputs.shvcli.follows = "shvcli";
+    };
 
     usbkey.url = "gitlab:cynerd/usbkey";
 
@@ -21,11 +24,10 @@
     self,
     flake-utils,
     nixpkgs,
-    nixdeploy,
+    nixosdeploy,
     personal-secret,
     shellrc,
     agenix,
-    shvcli,
     shvcli-ell,
     usbkey,
     nixturris,
@@ -40,11 +42,10 @@
         pkgs = final: prev: import ./pkgs final prev;
         default = nixpkgs.lib.composeManyExtensions [
           agenix.overlays.default
-          nixdeploy.overlays.default
+          nixosdeploy.overlays.default
           self.overlays.pkgs
           shellrc.overlays.default
-          shvcli.overlays.default
-          shvcli-ell.overlays.noInherit
+          shvcli-ell.overlays.default
           usbkey.overlays.default
         ];
       };
@@ -52,7 +53,7 @@
       nixosModules = import ./nixos/modules {
         inherit (nixpkgs) lib;
         default_modules = [
-          nixdeploy.nixosModules.default
+          nixosdeploy.nixosModules.default
           nixturris.nixosModules.default
           personal-secret.nixosModules.default
           shellrc.nixosModules.default
@@ -78,7 +79,7 @@
           self.nixosConfigurations);
     in {
       packages =
-        {default = pkgs.nixdeploy;}
+        {inherit (nixosdeploy.packages.${system}) default;}
         // (osFilterMap "toplevel")
         // (osFilterMap "tarball")
         // (osFilterMap "firmware");
