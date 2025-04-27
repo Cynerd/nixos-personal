@@ -136,8 +136,8 @@ in {
     })
 
     (mkIf (config.networking.hostName == "lipwig") {
-      # InfluxDB
       services = {
+        # InfluxDB
         influxdb2.enable = true;
         telegraf.extraConfig.inputs.prometheus = {
           urls = ["http://localhost:8086/metrics"];

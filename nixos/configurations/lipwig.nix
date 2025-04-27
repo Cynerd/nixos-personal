@@ -115,9 +115,9 @@
           forceSSL = true;
           useACMEHost = "cynerd.cz";
           locations."/" = {
-            proxyPass = "http://127.0.0.1:${toString config.services.grafana.settings.server.http_port}/";
-            extraConfig = "proxy_set_header Host $host;";
+            proxyPass = "http://localhost:${toString config.services.grafana.settings.server.http_port}";
             proxyWebsockets = true;
+            recommendedProxySettings = true;
           };
         };
         "searx.cynerd.cz" = {
