@@ -11,8 +11,10 @@ in
   pkgs.buildPackages.mkShell {
     packages = with pkgs; [
       qtrvsim
-      glibc.static
+      #glibc.static
       riscvPkgs.buildPackages.gcc
+      pkgsCross.armv7l-hf-multiplatform.buildPackages.gcc
+      pkgsCross.armv7l-hf-multiplatform.glibc.static
     ];
     inputsFrom = [c];
     meta.platforms = pkgs.lib.platforms.linux;
