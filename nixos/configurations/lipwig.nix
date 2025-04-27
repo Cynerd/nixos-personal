@@ -103,6 +103,12 @@
             fastcgi_param HTTP_HOST    $server_name;
           '';
         };
+        "forgejo.cynerd.cz" = {
+          forceSSL = true;
+          useACMEHost = "cynerd.cz";
+          locations."/".proxyPass = "http://127.0.0.1:${toString config.services.forgejo.settings.server.HTTP_PORT}/";
+          extraConfig = "client_max_body_size 512M;";
+        };
         "cloud.cynerd.cz" = {
           forceSSL = true;
           useACMEHost = "cynerd.cz";
@@ -140,6 +146,7 @@
       certs."cynerd.cz".extraDomainNames = [
         "cloud.cynerd.cz"
         "office.cynerd.cz"
+        "forgejo.cynerd.cz"
         "git.cynerd.cz"
         "grafana.cynerd.cz"
         "searx.cynerd.cz"
@@ -195,6 +202,27 @@
       project-list=/var/lib/git/projects.list
       scan-path=/var/lib/git/repositories/
     '';
+
+    services.forgejo = {
+      enable = true;
+      database.type = "postgres";
+      lfs.enable = true;
+      settings = {
+        server = {
+          DOMAIN = "forgejo.cynerd.cz";
+          # You need to specify this to remove the port from URLs in the web UI.
+          ROOT_URL = "https://${config.services.forgejo.settings.server.DOMAIN}/";
+          HTTP_PORT = 3001;
+        };
+        # You can temporarily allow registration to create an admin user.
+        service.DISABLE_REGISTRATION = true;
+        # Add support for actions, based on act: https://github.com/nektos/act
+        actions = {
+          ENABLED = true;
+          DEFAULT_ACTIONS_URL = "github";
+        };
+      };
+    };
 
     # Nextcloud ################################################################
     services.nextcloud = {
