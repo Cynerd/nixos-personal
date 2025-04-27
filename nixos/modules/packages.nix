@@ -68,6 +68,9 @@ in {
 
       lm_sensors
     ]
+    ++ optionals (system != "armv7l-linux") [
+      ranger
+    ]
     ++ optionals (system == "x86_64-linux") [
       nmap
       ltrace
