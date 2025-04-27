@@ -107,6 +107,10 @@
           forceSSL = true;
           useACMEHost = "cynerd.cz";
         };
+        "office.cynerd.cz" = {
+          forceSSL = true;
+          useACMEHost = "cynerd.cz";
+        };
         "grafana.cynerd.cz" = {
           forceSSL = true;
           useACMEHost = "cynerd.cz";
@@ -135,6 +139,7 @@
       defaults.email = "cynerd+acme@email.cz";
       certs."cynerd.cz".extraDomainNames = [
         "cloud.cynerd.cz"
+        "office.cynerd.cz"
         "git.cynerd.cz"
         "grafana.cynerd.cz"
         "searx.cynerd.cz"
@@ -206,7 +211,22 @@
       };
       settings = {
         #log_type = "systemd";
+        default_locale = "CZ";
         default_phone_region = "CZ";
+        default_timezone = "Europe/Prague";
+        enabledPreviewProviders = [
+          "OC\\Preview\\BMP"
+          "OC\\Preview\\GIF"
+          "OC\\Preview\\JPEG"
+          "OC\\Preview\\Krita"
+          "OC\\Preview\\MarkDown"
+          "OC\\Preview\\MP3"
+          "OC\\Preview\\OpenDocument"
+          "OC\\Preview\\PNG"
+          "OC\\Preview\\TXT"
+          "OC\\Preview\\XBitmap"
+          "OC\\Preview\\HEIC"
+        ];
       };
       phpExtraExtensions = php: [php.pgsql php.pdo_pgsql];
       phpOptions = {
@@ -228,6 +248,7 @@
           maps
           memories
           notes
+          onlyoffice
           phonetrack
           previewgenerator
           spreed
@@ -247,16 +268,21 @@
           license = "agpl3Plus";
         };
         money = pkgs.fetchNextcloudApp {
-          url = "https://github.com/powerpaul17/nc_money/releases/download/v0.29.1/money.tar.gz";
-          hash = "sha256-6ZCVcJRmE2gNsp+Tg7Jcddwv6yqmNFATFHn9x6UJL7c=";
+          url = "https://github.com/powerpaul17/nc_money/releases/download/v0.30.0/money.tar.gz";
+          hash = "sha256-4gHm6sF9S+1G1naRTr+eR8ZyjCpB3viXTzRCNQFUtF0=";
           license = "agpl3Plus";
         };
         passwords = pkgs.fetchNextcloudApp {
-          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2025.2.0/passwords.tar.gz";
-          hash = "sha256-Nu6WViFawQWby9CEEezAwoBNdp7O5O8a9IhDp/me/E0=";
+          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2025.4.0/passwords.tar.gz";
+          hash = "sha256-lj130UJ2WkDytGuYqofN8WtyPEWR0PSiTGIelRGtIyA=";
           license = "agpl3Plus";
         };
       };
+    };
+    # OnlyOffice ###############################################################
+    services.onlyoffice = {
+      enable = true;
+      hostname = "office.cynerd.cz";
     };
 
     # Postgresql ###############################################################
