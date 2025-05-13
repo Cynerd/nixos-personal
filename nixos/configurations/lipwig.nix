@@ -199,7 +199,7 @@
     # Nextcloud ################################################################
     services.nextcloud = {
       enable = true;
-      package = pkgs.nextcloud30;
+      package = pkgs.nextcloud31;
       https = true;
       hostName = "cloud.cynerd.cz";
       datadir = "/nas/nextcloud";
@@ -245,7 +245,6 @@
           forms
           groupfolders
           impersonate
-          maps
           memories
           notes
           onlyoffice
@@ -273,8 +272,13 @@
           license = "agpl3Plus";
         };
         passwords = pkgs.fetchNextcloudApp {
-          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2025.4.0/passwords.tar.gz";
-          hash = "sha256-lj130UJ2WkDytGuYqofN8WtyPEWR0PSiTGIelRGtIyA=";
+          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2025.5.1/passwords.tar.gz";
+          hash = "sha256-v4IVpqbTN3TKORESFX+sJsiSrLkUc0b5Stj8CmznSIw=";
+          license = "agpl3Plus";
+        };
+        maps = pkgs.fetchNextcloudApp {
+          url = "https://github.com/nextcloud/maps/releases/download/v1.6.0-3-nightly/maps-1.6.0-3-nightly.tar.gz";
+          hash = "sha256-E0S/CwXyye19lcuiONEQCyHJqlL0ZG1A9Q7oOTEZH1g=";
           license = "agpl3Plus";
         };
       };
