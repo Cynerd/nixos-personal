@@ -18,7 +18,10 @@ in {
   config = mkIf cnf {
     cynerd.desktop.enable = true;
 
-    environment.systemPackages = [pkgs.heroic];
+    environment.systemPackages = with pkgs; [
+      heroic
+      prismlauncher
+    ];
 
     nixpkgs.config.permittedInsecurePackages = [
       "SDL_ttf-2.0.11" # TODO

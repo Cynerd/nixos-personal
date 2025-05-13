@@ -28,13 +28,15 @@
     };
   };
 
-  services.journald.extraConfig = ''
-    SystemMaxUse=512M
-  '';
+  services = {
+    journald.extraConfig = ''
+      SystemMaxUse=512M
+    '';
 
-  services.btrfs.autoScrub = {
-    enable = true;
-    fileSystems = ["/"];
+    btrfs.autoScrub = {
+      enable = true;
+      fileSystems = ["/"];
+    };
   };
 
   networking = {

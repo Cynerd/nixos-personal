@@ -84,7 +84,6 @@ in {
             ferdium
             signal-desktop
             libreoffice
-            onlyoffice-desktopeditors
             mupdf
             zathura
             pdfgrep
