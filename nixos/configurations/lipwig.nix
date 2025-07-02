@@ -245,6 +245,7 @@
           forms
           groupfolders
           impersonate
+          maps
           memories
           notes
           onlyoffice
@@ -255,15 +256,15 @@
           twofactor_webauthn
           ;
         # Additional modules can be fetched with:
-        # NEXTCLOUD_VERSIONS=30 nix run nixpkgs#nc4nix -- -apps "passwords,money,integration_github,integration_gitlab"
+        # NEXTCLOUD_VERSIONS=31 nix run nixpkgs#nc4nix -- -apps "passwords,money,integration_github,integration_gitlab"
         integration_github = pkgs.fetchNextcloudApp {
-          url = "https://github.com/nextcloud-releases/integration_github/releases/download/v3.1.1/integration_github-v3.1.1.tar.gz";
-          hash = "sha256-nm463H33WyXTJkb7+OSsunARNuSl5nc3uGClgwkVvhM=";
+          url = "https://github.com/nextcloud-releases/integration_github/releases/download/v3.2.1/integration_github-v3.2.1.tar.gz";
+          hash = "sha256-iBWphFaXmQHNxgoi9qkfV7vCTChwtk6yg0aVr9Lhn4c=";
           license = "agpl3Plus";
         };
         integration_gitlab = pkgs.fetchNextcloudApp {
-          url = "https://github.com/nextcloud-releases/integration_gitlab/releases/download/v3.1.2/integration_gitlab-v3.1.2.tar.gz";
-          hash = "sha256-nCH0DqYmr4T856sOU5PhSK6WAHIF9mnYThgytxEbkNA=";
+          url = "https://github.com/nextcloud-releases/integration_gitlab/releases/download/v3.2.0/integration_gitlab-v3.2.0.tar.gz";
+          hash = "sha256-BDDuqQIDV3pn1mYutjA7Z3L2nib2wW6DlZgyqU46f8Q=";
           license = "agpl3Plus";
         };
         money = pkgs.fetchNextcloudApp {
@@ -274,11 +275,6 @@
         passwords = pkgs.fetchNextcloudApp {
           url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2025.5.1/passwords.tar.gz";
           hash = "sha256-v4IVpqbTN3TKORESFX+sJsiSrLkUc0b5Stj8CmznSIw=";
-          license = "agpl3Plus";
-        };
-        maps = pkgs.fetchNextcloudApp {
-          url = "https://github.com/nextcloud/maps/releases/download/v1.6.0-3-nightly/maps-1.6.0-3-nightly.tar.gz";
-          hash = "sha256-E0S/CwXyye19lcuiONEQCyHJqlL0ZG1A9Q7oOTEZH1g=";
           license = "agpl3Plus";
         };
       };

@@ -46,22 +46,16 @@ pkgs.mkShell {
     libffi.dev
 
     # Qt
-    #qt6.qttools
-    #qt6.qtbase
-    #qt6.qttranslations
-    #qt6.qtserialport
-    #qt6.qtwebsockets
-    #qt6.qtcharts
-    #qt6.qtsvg
-    #qt6.qtnetworkauth
-    #qt6.qtwayland
-    #qt6.wrapQtAppsHook
-    libsForQt5.qtbase
-    libsForQt5.qttranslations
-    libsForQt5.qtserialport
-    libsForQt5.qtwebsockets
-    libsForQt5.qtcharts
-    libsForQt5.qtwayland
+    qt6.qttools
+    qt6.qtbase
+    qt6.qttranslations
+    qt6.qtserialport
+    qt6.qtwebsockets
+    qt6.qtcharts
+    qt6.qtsvg
+    qt6.qtnetworkauth
+    qt6.qtwayland
+    qt6.wrapQtAppsHook
   ];
   meta.platforms = pkgs.lib.platforms.linux;
 }

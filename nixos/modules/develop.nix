@@ -112,6 +112,9 @@ in {
 
           pylxd
           selenium
+
+          pyvisa
+          pyvisa-py
         ]))
       ruff
       geckodriver

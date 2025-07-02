@@ -47,6 +47,7 @@ in {
       tree
       lsof
       strace
+      ripgrep
 
       sourceHighlight # Colors for less
       unrar

@@ -19,7 +19,7 @@ in {
         default = true;
         description = "Use my personal static hosts";
       };
-      vpn = staticZoneOption;
+      zd = staticZoneOption;
       wg = staticZoneOption;
       spt = staticZoneOption;
       adm = staticZoneOption;
@@ -28,9 +28,10 @@ in {
 
   config = {
     cynerd.hosts = {
-      vpn = {
-        "lipwig" = "10.8.0.1";
-        "adm-omnia" = "10.8.0.51";
+      zd = {
+        "mox" = "10.8.0.1";
+        # Portable
+        "binky" = "10.8.0.63";
       };
       wg = {
         "lipwig" = "10.8.1.1";
@@ -40,6 +41,7 @@ in {
         # Endpoints
         "spt-omnia" = "10.8.1.50";
         "adm-omnia" = "10.8.1.51";
+        "zd-mox" = "10.8.1.52";
         # Endpoints without routing
         "dean" = "10.8.1.59";
       };
@@ -72,15 +74,16 @@ in {
     };
 
     networking.hosts = mkIf cnf.enable {
-      # VPN
-      "${cnf.vpn.lipwig}" = ["lipwig.vpn"];
-      "${cnf.vpn.adm-omnia}" = ["adm.vpn"];
+      # Zd
+      "${cnf.zd.mox}" = ["mox.zd"];
+      "${cnf.zd.binky}" = ["binky.zd"];
       # Wireguard
       "${cnf.wg.lipwig}" = ["lipwig.wg"];
       "${cnf.wg.binky}" = ["binky.wg"];
       "${cnf.wg.android}" = ["android.wg"];
       "${cnf.wg.spt-omnia}" = ["spt.wg"];
       "${cnf.wg.adm-omnia}" = ["adm.wg"];
+      "${cnf.wg.zd-mox}" = ["zd.wg"];
       "${cnf.wg.dean}" = ["dean" "dean.wg"];
       # Spt
       "${cnf.spt.omnia}" = ["omnia.spt"];

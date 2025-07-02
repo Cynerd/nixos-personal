@@ -81,12 +81,18 @@ in {
             ]))
 
             chromium
+            tangram
             ferdium
             signal-desktop
-            libreoffice
             mupdf
             zathura
             pdfgrep
+
+            libreoffice-qt6-fresh
+            hunspell
+            hunspellDicts.en_US-large
+            hunspellDicts.en_GB-large
+            hunspellDicts.cs_CZ
 
             xdg-utils
             xdg-launch
