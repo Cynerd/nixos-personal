@@ -75,24 +75,9 @@
               acl = ["read bigclown/node/#"];
               passwordFile = "/run/secrets/mosquitto.telegraf.pass";
             };
-            homeassistant = {
-              acl = [
-                "readwrite homeassistant/#"
-                "readwrite bigclown/#"
-                "readwrite zigbee2mqtt/#"
-              ];
-              passwordFile = "/run/secrets/mosquitto.homeassistant.pass";
-            };
             bigclown = {
               acl = ["readwrite bigclown/#"];
               passwordFile = "/run/secrets/mosquitto.bigclown.pass";
-            };
-            zigbee2mqtt = {
-              acl = [
-                "readwrite homeassistant/#"
-                "readwrite zigbee2mqtt/#"
-              ];
-              passwordFile = "/run/secrets/mosquitto.zigbee2mqtt.pass";
             };
           };
         }

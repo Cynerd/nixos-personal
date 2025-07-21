@@ -39,18 +39,20 @@ in {
     monitoring.speedtest = true;
   };
 
-  services.journald.extraConfig = ''
-    SystemMaxUse=8G
-  '';
+  services = {
+    journald.extraConfig = ''
+      SystemMaxUse=8G
+    '';
 
-  services.btrfs.autoScrub = {
-    enable = true;
-    fileSystems = ["/"];
-  };
+    btrfs.autoScrub = {
+      enable = true;
+      fileSystems = ["/"];
+    };
 
-  services.fail2ban = {
-    enable = true;
-    ignoreIP = ["10.8.1.0/24" "10.8.2.0/24"];
+    fail2ban = {
+      enable = true;
+      ignoreIP = ["10.8.1.0/24" "10.8.2.0/24"];
+    };
   };
 
   networking.useDHCP = false;
@@ -134,32 +136,11 @@ in {
   '';
 
   ##############################################################################
-  services = {
-    zigbee2mqtt = {
-      enable = true;
-      settings = {
-        serial.port = "/dev/serial/by-id/usb-ITEAD_SONOFF_Zigbee_3.0_USB_Dongle_Plus_V2_20220812153849-if00";
-        mqtt = {
-          server = "mqtt://${config.cynerd.hosts.spt.mox}:1883";
-          user = "zigbee2mqtt";
-          password = "!secret.yaml mqtt_password";
-        };
-        advanced = {
-          network_key = "!secret.yaml network_key";
-          homeassistant_legacy_entity_attributes = false;
-          legacy_api = false;
-          legacy_availability_payload = false;
-          last_seen = "epoch";
-        };
-        frontend = true;
-        availability = true;
-        homeassistant = {
-          legacy_triggers = false;
-        };
-        device_options.legacy = false;
-        permit_join = false;
-        devices = config.secrets.zigbee2mqttDevices;
-      };
-    };
+  cynerd.ha = {
+    enable = true;
+    domain = "spt.cynerd.cz";
+    extraOptions = [
+      "--device=/dev/serial/by-id/usb-ITEAD_SONOFF_Zigbee_3.0_USB_Dongle_Plus_V2_20220812153849-if00:/dev/ttyACM0"
+    ];
   };
 }
