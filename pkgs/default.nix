@@ -75,6 +75,13 @@ final: prev: {
     extraMeta.platforms = ["aarch64-linux"];
     filesToInstall = ["u-boot.bin"];
   };
+  wolfssl = prev.wolfssl.overrideAttrs (oldAttrs: rec {
+    version = "5.8.2";
+    src = oldAttrs.src.override {
+      tag = "v${version}-stable";
+      hash = "sha256-rWBfpI6tdpKvQA/XdazBvU5hzyai5PtKRBpM4iplZDU=";
+    };
+  });
 
   # Older version of packages
   flac134 = prev.flac.overrideAttrs {
