@@ -15,7 +15,6 @@ in {
       wan = "pppoe-wan";
       lanIP = hosts.omnia;
       staticLeases = {
-        "70:85:c2:4a:59:f2" = hosts.ridcully;
         "7c:b0:c2:bb:9c:ca" = hosts.albert;
         "4c:d5:77:0d:85:d9" = hosts.binky;
         "b8:27:eb:49:54:5a" = hosts.mpd;

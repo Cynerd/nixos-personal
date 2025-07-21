@@ -1,10 +1,4 @@
-{
-  lib,
-  pkgs,
-  ...
-}: let
-  inherit (lib) mkDefault;
-in {
+{pkgs, ...}: {
   system.stateVersion = "24.05";
   nixpkgs.hostPlatform.system = "x86_64-linux";
   deploy.enable = true;
@@ -79,5 +73,5 @@ in {
   };
 
   # Force nix to use less jobs
-  nix.settings.max-jobs = 8;
+  nix.settings.max-jobs = 4;
 }

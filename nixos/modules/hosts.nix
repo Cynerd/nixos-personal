@@ -53,6 +53,7 @@ in {
         # Local
         "mpd" = "10.8.2.51";
         "errol" = "10.8.2.60";
+        "ridcully" = "10.8.2.59";
         "printer" = "10.8.2.90";
         # Portable
         "albert" = "10.8.2.61";
@@ -63,7 +64,6 @@ in {
         "omnia" = "10.8.3.1";
         "omnia2" = "10.8.3.3";
         # Local
-        "ridcully" = "10.8.3.60";
         "3dprint" = "10.8.3.80";
         "mpd" = "10.8.3.51";
         "printer" = "192.168.1.20";
@@ -91,14 +91,14 @@ in {
       "${cnf.spt.mox2}" = ["mox2.spt"];
       "10.8.2.4" = ["mi3g.spt"];
       "${cnf.spt.mpd}" = ["mpd.spt"];
-      "${cnf.spt.errol}" = ["errol" "desktop.spt"];
+      "${cnf.spt.errol}" = ["errol"];
+      "${cnf.spt.ridcully}" = ["ridcully"];
       "${cnf.spt.albert}" = ["albert.spt"];
       "${cnf.spt.binky}" = ["binky.spt"];
       # Adm
       "${cnf.adm.omnia}" = ["omnia.adm"];
       "10.8.3.2" = ["redmi.adm"];
       "${cnf.adm.omnia2}" = ["omnia2.adm"];
-      "${cnf.adm.ridcully}" = ["ridcully" "desktop.adm"];
       "${cnf.adm.albert}" = ["albert.adm"];
       "${cnf.adm.binky}" = ["binky.adm"];
       "${cnf.adm."3dprint"}" = ["3dprint"];
