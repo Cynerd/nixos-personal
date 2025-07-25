@@ -248,7 +248,6 @@
           maps
           memories
           notes
-          onlyoffice
           phonetrack
           previewgenerator
           spreed
@@ -273,16 +272,11 @@
           license = "agpl3Plus";
         };
         passwords = pkgs.fetchNextcloudApp {
-          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2025.5.1/passwords.tar.gz";
-          hash = "sha256-v4IVpqbTN3TKORESFX+sJsiSrLkUc0b5Stj8CmznSIw=";
+          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2025.7.0/passwords.tar.gz";
+          hash = "sha256-SVItAtFRO/CbZ203ZS86inCZ+ZpGy0NUS3y2Xj1b+LI=";
           license = "agpl3Plus";
         };
       };
-    };
-    # OnlyOffice ###############################################################
-    services.onlyoffice = {
-      enable = true;
-      hostname = "office.cynerd.cz";
     };
 
     # Postgresql ###############################################################

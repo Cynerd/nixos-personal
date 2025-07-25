@@ -10,10 +10,7 @@
 
     agenix.url = "github:ryantm/agenix";
     shvcli.url = "github:silicon-heaven/shvcli";
-    shvcli-ell = {
-      url = "gitlab:elektroline-predator/shvcli-ell";
-      inputs.shvcli.follows = "shvcli";
-    };
+    shvcli-ell.url = "gitlab:elektroline-predator/shvcli-ell";
 
     usbkey.url = "gitlab:cynerd/usbkey";
 
@@ -29,6 +26,7 @@
     personal-secret,
     shellrc,
     agenix,
+    shvcli,
     shvcli-ell,
     usbkey,
     nixturris,
@@ -46,7 +44,8 @@
           nixosdeploy.overlays.default
           self.overlays.pkgs
           shellrc.overlays.default
-          shvcli-ell.overlays.default
+          shvcli.overlays.default
+          shvcli-ell.overlays.packages
           usbkey.overlays.default
         ];
       };
