@@ -20,7 +20,7 @@
 
   outputs = {
     self,
-    flake-utils,
+    systems,
     nixpkgs,
     nixosdeploy,
     personal-secret,
@@ -32,59 +32,63 @@
     nixturris,
     ...
   }: let
-    inherit (flake-utils.lib) eachDefaultSystem filterPackages;
-    inherit (nixpkgs.lib) mapAttrs' nameValuePair filterAttrs;
-  in
-    {
-      overlays = {
-        lib = final: prev: import ./lib final prev;
-        pkgs = final: prev: import ./pkgs final prev;
-        default = nixpkgs.lib.composeManyExtensions [
-          agenix.overlays.default
-          nixosdeploy.overlays.default
-          self.overlays.pkgs
-          shellrc.overlays.default
-          shvcli.overlays.default
-          shvcli-ell.overlays.packages
-          usbkey.overlays.default
-        ];
-      };
+    inherit (nixpkgs.lib) genAttrs mapAttrs' nameValuePair filterAttrs;
+    forSystems = genAttrs (import systems);
+    withPkgs = func: forSystems (system: func self.legacyPackages.${system});
 
-      nixosModules = import ./nixos/modules {
-        inherit (nixpkgs) lib;
-        default_modules = [
-          nixosdeploy.nixosModules.default
-          nixturris.nixosModules.default
-          personal-secret.nixosModules.default
-          shellrc.nixosModules.default
-          usbkey.nixosModules.default
-        ];
-      };
+    osFilterMap = system: attr:
+      mapAttrs' (n: v: let
+        os =
+          if v.config.nixpkgs.hostPlatform.system == system
+          then v
+          else (v.extendModules {modules = [{nixpkgs.buildPlatform.system = system;}];});
+      in
+        nameValuePair "${attr}-${n}" os.config.system.build."${attr}")
+      (filterAttrs (_: v: v.config.system.build ? "${attr}")
+        self.nixosConfigurations);
+  in {
+    overlays = {
+      lib = final: prev: import ./lib final prev;
+      pkgs = final: prev: import ./pkgs final prev;
+      default = nixpkgs.lib.composeManyExtensions [
+        agenix.overlays.default
+        nixosdeploy.overlays.default
+        self.overlays.pkgs
+        shellrc.overlays.default
+        shvcli.overlays.default
+        shvcli-ell.overlays.packages
+        usbkey.overlays.default
+      ];
+    };
 
-      nixosConfigurations = import ./nixos/configurations self;
-      lib = import ./lib nixpkgs.lib;
-    }
-    // eachDefaultSystem (system: let
-      pkgs = nixpkgs.legacyPackages."${system}".extend self.overlays.default;
+    nixosModules = import ./nixos/modules {
+      inherit (nixpkgs) lib;
+      default_modules = [
+        nixosdeploy.nixosModules.default
+        nixturris.nixosModules.default
+        personal-secret.nixosModules.default
+        shellrc.nixosModules.default
+        usbkey.nixosModules.default
+      ];
+    };
 
-      osFilterMap = attr:
-        mapAttrs' (n: v: let
-          os =
-            if v.config.nixpkgs.hostPlatform.system == system
-            then v
-            else (v.extendModules {modules = [{nixpkgs.buildPlatform.system = system;}];});
-        in
-          nameValuePair "${attr}-${n}" os.config.system.build."${attr}")
-        (filterAttrs (_: v: v.config.system.build ? "${attr}")
-          self.nixosConfigurations);
-    in {
-      packages =
+    nixosConfigurations = import ./nixos/configurations self;
+    lib = import ./lib nixpkgs.lib;
+
+    legacyPackages =
+      forSystems (system:
+        nixpkgs.legacyPackages.${system}.extend self.overlays.default);
+
+    packages = forSystems (
+      system:
         {inherit (nixosdeploy.packages.${system}) default;}
         // (osFilterMap "toplevel")
         // (osFilterMap "tarball")
-        // (osFilterMap "firmware");
-      legacyPackages = pkgs;
-      devShells = filterPackages system (import ./devShells pkgs);
-      formatter = pkgs.alejandra;
-    });
+        // (osFilterMap "firmware")
+    );
+
+    devShells = withPkgs (import ./devShells);
+
+    formatter = withPkgs (pkgs: pkgs.alejandra);
+  };
 }

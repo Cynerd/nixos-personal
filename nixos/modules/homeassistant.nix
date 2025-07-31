@@ -25,13 +25,9 @@ in {
       containers.homeassistant = {
         volumes = ["home-assistant:/config" "/run/dbus:/run/dbus:ro"];
         environment.TZ = "Europe/Prague";
-        image = "ghcr.io/home-assistant/armv7-homeassistant:stable";
+        image = "ghcr.io/home-assistant/armv7-homeassistant:latest";
         extraOptions =
-          [
-            "--privileged"
-            "--pull=always"
-            "--network=host"
-          ]
+          ["--privileged" "--network=host"]
           ++ cnf.extraOptions;
       };
     };
