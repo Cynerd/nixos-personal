@@ -228,11 +228,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1753250450,
-        "narHash": "sha256-i+CQV2rPmP8wHxj0aq4siYyohHwVlsh40kV89f3nw1s=",
+        "lastModified": 1753694789,
+        "narHash": "sha256-cKgvtz6fKuK1Xr5LQW/zOUiAC0oSQoA9nOISB0pJZqM=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "fc02ee70efb805d3b2865908a13ddd4474557ecf",
+        "rev": "dc9637876d0dcc8c9e5e22986b857632effeb727",
         "type": "github"
       },
       "original": {
@@ -364,11 +364,11 @@
         "nixpkgs": "nixpkgs_7"
       },
       "locked": {
-        "lastModified": 1753282553,
-        "narHash": "sha256-/U2vv0Ys6d/MpHRiVcaWntKa0BVynT/2p9Lt2dBw0B4=",
+        "lastModified": 1753438446,
+        "narHash": "sha256-CPF/qCTzxUNbuZo6C/coefYOVVYQqTzvSa5KuznutIM=",
         "owner": "silicon-heaven",
         "repo": "pyshv",
-        "rev": "83f33940663d99d1e7ba3a23ced18e2b9a3cbe68",
+        "rev": "7f56bca6560641f2de6efb839be99a08465c51d3",
         "type": "gitlab"
       },
       "original": {
@@ -383,11 +383,11 @@
         "nixpkgs": "nixpkgs_9"
       },
       "locked": {
-        "lastModified": 1753431296,
-        "narHash": "sha256-QOI2nf+S7+ABWYCnfnZvam2QLasitmE8SIM3MCuBQUU=",
+        "lastModified": 1753438446,
+        "narHash": "sha256-CPF/qCTzxUNbuZo6C/coefYOVVYQqTzvSa5KuznutIM=",
         "owner": "silicon-heaven",
         "repo": "pyshv",
-        "rev": "977cff94a4ef13f565bb980413ed820ba879aa43",
+        "rev": "7f56bca6560641f2de6efb839be99a08465c51d3",
         "type": "gitlab"
       },
       "original": {
@@ -436,11 +436,11 @@
         "pyshv": "pyshv"
       },
       "locked": {
-        "lastModified": 1753283480,
-        "narHash": "sha256-42j03deFJeRCOagLI6kHerpxIelwvmbgCrB25JPv68M=",
+        "lastModified": 1753439134,
+        "narHash": "sha256-z+8sH7VG0a9JtAWqm+9qA/iQr1rPquFHGINdE7stlio=",
         "owner": "silicon-heaven",
         "repo": "shvcli",
-        "rev": "8d84eb3bffaed1e31dbc5ab8430a5025efaff97b",
+        "rev": "3b2c365e205e8bf3d2338f88b0afd2dffab0f762",
         "type": "github"
       },
       "original": {
@@ -454,11 +454,11 @@
         "shvcli": "shvcli_2"
       },
       "locked": {
-        "lastModified": 1753359539,
-        "narHash": "sha256-AWLgMR5oUPAghKlyN7DF+RkeNovLlbcMVdghs42d7wg=",
+        "lastModified": 1753439820,
+        "narHash": "sha256-0QFazrPFTIFhOvLNXgaehwjfHSO9/W8a/y1hzIcMj9w=",
         "owner": "elektroline-predator",
         "repo": "shvcli-ell",
-        "rev": "5ad717e1ba7cf5c6f18553bd4005ca9a98750e79",
+        "rev": "9de977746f1aba386a58121e527bdfbf60286451",
         "type": "gitlab"
       },
       "original": {
@@ -472,11 +472,11 @@
         "pyshv": "pyshv_2"
       },
       "locked": {
-        "lastModified": 1753431978,
-        "narHash": "sha256-f6ysfKSOc7Va8nPdIstwppQ5UMD1EFPJExemiqjir5k=",
+        "lastModified": 1753439134,
+        "narHash": "sha256-z+8sH7VG0a9JtAWqm+9qA/iQr1rPquFHGINdE7stlio=",
         "owner": "silicon-heaven",
         "repo": "shvcli",
-        "rev": "df0be3085a8cadef8aed0d104ae86db0ddf70524",
+        "rev": "3b2c365e205e8bf3d2338f88b0afd2dffab0f762",
         "type": "gitlab"
       },
       "original": {
@@ -579,11 +579,11 @@
     },
     "vpsadminos": {
       "locked": {
-        "lastModified": 1753170959,
-        "narHash": "sha256-3PwbCpoSYm8+fgqBvARNt2RO//2v3BoLtykRaIKbSSg=",
+        "lastModified": 1753881559,
+        "narHash": "sha256-1GBdBzn7UXDXVhxjdoNsajd2tYGVq0x4f1FRxhaiOSA=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "1345df0074d7382916e067a48fde9d9c5bf642e6",
+        "rev": "f0580af94a38240ed88da3de980ac3332612b255",
         "type": "github"
       },
       "original": {
