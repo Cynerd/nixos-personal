@@ -110,6 +110,11 @@
         "office.cynerd.cz" = {
           forceSSL = true;
           useACMEHost = "cynerd.cz";
+          locations."/" = {
+            proxyPass = "http://localhost:${toString config.services.collabora-online.port}";
+            proxyWebsockets = true;
+            recommendedProxySettings = true;
+          };
         };
         "grafana.cynerd.cz" = {
           forceSSL = true;
@@ -197,84 +202,107 @@
     '';
 
     # Nextcloud ################################################################
-    services.nextcloud = {
-      enable = true;
-      package = pkgs.nextcloud31;
-      https = true;
-      hostName = "cloud.cynerd.cz";
-      datadir = "/nas/nextcloud";
-      config = {
-        adminuser = "cynerd";
-        adminpassFile = "/run/secrets/nextcloud.admin.pass";
-        dbtype = "pgsql";
-        dbhost = "/run/postgresql";
-      };
-      settings = {
-        #log_type = "systemd";
-        default_locale = "CZ";
-        default_phone_region = "CZ";
-        default_timezone = "Europe/Prague";
-        enabledPreviewProviders = [
-          "OC\\Preview\\BMP"
-          "OC\\Preview\\GIF"
-          "OC\\Preview\\JPEG"
-          "OC\\Preview\\Krita"
-          "OC\\Preview\\MarkDown"
-          "OC\\Preview\\MP3"
-          "OC\\Preview\\OpenDocument"
-          "OC\\Preview\\PNG"
-          "OC\\Preview\\TXT"
-          "OC\\Preview\\XBitmap"
-          "OC\\Preview\\HEIC"
-        ];
-      };
-      phpExtraExtensions = php: [php.pgsql php.pdo_pgsql];
-      phpOptions = {
-        "opcache.interned_strings_buffer" = "16";
-      };
-      maxUploadSize = "1G";
-      appstoreEnable = false;
-      extraApps = {
-        inherit
-          (config.services.nextcloud.package.packages.apps)
-          bookmarks
-          calendar
-          contacts
-          cookbook
-          deck
-          forms
-          groupfolders
-          impersonate
-          maps
-          memories
-          notes
-          phonetrack
-          previewgenerator
-          spreed
-          tasks
-          twofactor_webauthn
-          ;
-        # Additional modules can be fetched with:
-        # NEXTCLOUD_VERSIONS=31 nix run nixpkgs#nc4nix -- -apps "passwords,money,integration_github,integration_gitlab"
-        integration_github = pkgs.fetchNextcloudApp {
-          url = "https://github.com/nextcloud-releases/integration_github/releases/download/v3.2.1/integration_github-v3.2.1.tar.gz";
-          hash = "sha256-iBWphFaXmQHNxgoi9qkfV7vCTChwtk6yg0aVr9Lhn4c=";
-          license = "agpl3Plus";
+    services = {
+      nextcloud = {
+        enable = true;
+        package = pkgs.nextcloud31;
+        https = true;
+        hostName = "cloud.cynerd.cz";
+        datadir = "/nas/nextcloud";
+        config = {
+          adminuser = "cynerd";
+          adminpassFile = "/run/secrets/nextcloud.admin.pass";
+          dbtype = "pgsql";
+          dbhost = "/run/postgresql";
         };
-        integration_gitlab = pkgs.fetchNextcloudApp {
-          url = "https://github.com/nextcloud-releases/integration_gitlab/releases/download/v3.2.0/integration_gitlab-v3.2.0.tar.gz";
-          hash = "sha256-BDDuqQIDV3pn1mYutjA7Z3L2nib2wW6DlZgyqU46f8Q=";
-          license = "agpl3Plus";
+        settings = {
+          #log_type = "systemd";
+          default_locale = "CZ";
+          default_phone_region = "CZ";
+          default_timezone = "Europe/Prague";
+          enabledPreviewProviders = [
+            "OC\\Preview\\BMP"
+            "OC\\Preview\\GIF"
+            "OC\\Preview\\JPEG"
+            "OC\\Preview\\Krita"
+            "OC\\Preview\\MarkDown"
+            "OC\\Preview\\MP3"
+            "OC\\Preview\\OpenDocument"
+            "OC\\Preview\\PNG"
+            "OC\\Preview\\TXT"
+            "OC\\Preview\\XBitmap"
+            "OC\\Preview\\HEIC"
+          ];
         };
-        money = pkgs.fetchNextcloudApp {
-          url = "https://github.com/powerpaul17/nc_money/releases/download/v0.30.0/money.tar.gz";
-          hash = "sha256-4gHm6sF9S+1G1naRTr+eR8ZyjCpB3viXTzRCNQFUtF0=";
-          license = "agpl3Plus";
+        phpExtraExtensions = php: [php.pgsql php.pdo_pgsql];
+        phpOptions = {
+          "opcache.interned_strings_buffer" = "16";
         };
-        passwords = pkgs.fetchNextcloudApp {
-          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2025.7.0/passwords.tar.gz";
-          hash = "sha256-SVItAtFRO/CbZ203ZS86inCZ+ZpGy0NUS3y2Xj1b+LI=";
-          license = "agpl3Plus";
+        maxUploadSize = "1G";
+        appstoreEnable = false;
+        extraApps = {
+          inherit
+            (config.services.nextcloud.package.packages.apps)
+            bookmarks
+            calendar
+            contacts
+            cookbook
+            deck
+            forms
+            groupfolders
+            impersonate
+            maps
+            memories
+            notes
+            phonetrack
+            previewgenerator
+            spreed
+            tasks
+            twofactor_webauthn
+            ;
+          # Additional modules can be fetched with:
+          # NEXTCLOUD_VERSIONS=31 nix run nixpkgs#nc4nix -- -apps "passwords,money,integration_github,integration_gitlab"
+          integration_github = pkgs.fetchNextcloudApp {
+            url = "https://github.com/nextcloud-releases/integration_github/releases/download/v3.2.1/integration_github-v3.2.1.tar.gz";
+            hash = "sha256-iBWphFaXmQHNxgoi9qkfV7vCTChwtk6yg0aVr9Lhn4c=";
+            license = "agpl3Plus";
+          };
+          integration_gitlab = pkgs.fetchNextcloudApp {
+            url = "https://github.com/nextcloud-releases/integration_gitlab/releases/download/v3.2.0/integration_gitlab-v3.2.0.tar.gz";
+            hash = "sha256-BDDuqQIDV3pn1mYutjA7Z3L2nib2wW6DlZgyqU46f8Q=";
+            license = "agpl3Plus";
+          };
+          money = pkgs.fetchNextcloudApp {
+            url = "https://github.com/powerpaul17/nc_money/releases/download/v0.30.0/money.tar.gz";
+            hash = "sha256-4gHm6sF9S+1G1naRTr+eR8ZyjCpB3viXTzRCNQFUtF0=";
+            license = "agpl3Plus";
+          };
+          passwords = pkgs.fetchNextcloudApp {
+            url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2025.7.0/passwords.tar.gz";
+            hash = "sha256-SVItAtFRO/CbZ203ZS86inCZ+ZpGy0NUS3y2Xj1b+LI=";
+            license = "agpl3Plus";
+          };
+        };
+      };
+
+      collabora-online = {
+        enable = true;
+        settings = {
+          ssl = {
+            enable = false;
+            termination = true;
+          };
+          # Listen on loopback interface only, and accept requests from ::1
+          net = {
+            listen = "loopback";
+            post_allow.host = ["127.0.0.1" "::1"];
+          };
+
+          server_name = "office.cynerd.cz";
+          storage.wopi = {
+            "@allow" = true;
+            host = ["cloud.cynerd.cz"];
+          };
         };
       };
     };
@@ -360,7 +388,7 @@
           }
         ];
       };
-      runInUwsgi = true;
+      configureUwsgi = true;
       uwsgiConfig = {
         socket = "/run/searx/searx.sock";
         chmod-socket = "660";
