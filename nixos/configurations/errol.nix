@@ -1,11 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: let
-  inherit (lib) mkDefault;
-in {
+{pkgs, ...}: {
   system.stateVersion = "24.05";
   nixpkgs.hostPlatform.system = "x86_64-linux";
   deploy.enable = true;
@@ -95,37 +88,6 @@ in {
     syncthing = {
       enable = true;
       dataDir = "/home/cynerd";
-    };
-
-    home-assistant = {
-      enable = true;
-      openFirewall = true;
-      configDir = "/var/lib/hass";
-      config = {
-        homeassistant = {
-          name = "SPT";
-          latitude = "!secret latitude";
-          longitude = "!secret longitude";
-          elevation = "!secret elevation";
-          time_zone = "Europe/Prague";
-          country = "CZ";
-        };
-        http.server_port = 8808;
-        mqtt = {
-          sensor = import ../home-assistant/sensors.nix;
-          light = import ../home-assistant/light.nix;
-        };
-        default_config = {};
-        automation = "!include automations.yaml";
-      };
-      extraComponents = ["met"];
-      package = pkgs.home-assistant.override {
-        extraPackages = pkgs:
-          with pkgs; [
-            securetar
-            pyipp
-          ];
-      };
     };
   };
 }
