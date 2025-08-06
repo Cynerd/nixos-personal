@@ -69,7 +69,6 @@ in {
             isync
             msmtp
             notmuch
-            astroid
             dodo
             taskwarrior3
             gnupg

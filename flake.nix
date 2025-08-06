@@ -82,9 +82,9 @@
     packages = forSystems (
       system:
         {inherit (nixosdeploy.packages.${system}) default;}
-        // (osFilterMap "toplevel")
-        // (osFilterMap "tarball")
-        // (osFilterMap "firmware")
+        // (osFilterMap system "toplevel")
+        // (osFilterMap system "tarball")
+        // (osFilterMap system "firmware")
     );
 
     devShells = withPkgs (import ./devShells);

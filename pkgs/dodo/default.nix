@@ -6,14 +6,14 @@
 }:
 python3Packages.buildPythonApplication {
   pname = "dodo";
-  version = "250313";
+  version = "250806";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "akissinger";
     repo = "dodo";
-    rev = "c108dd93aa637ef757fa8d86cf210d37093f03ec";
-    hash = "sha256-tRLaPOh2y87zcBKTtZazfsNzJnLUXRaAEMEMND7XnNY=";
+    rev = "bcb0db840f6eb0223f99e9ddefe147d84f50dc98";
+    hash = "sha256-ScMzSz6HzSUHE5jOrXvcMaokQILaXJV58k87SXujaXg=";
   };
 
   build-system = with python3Packages; [

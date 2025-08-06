@@ -21,18 +21,6 @@ final: prev: {
   bigclown-leds = final.callPackage ./bigclown-leds {};
 
   dodo = final.callPackage ./dodo {};
-  astroid = prev.astroid.overrideAttrs (oldAttrs: {
-    version = "240629";
-    src = final.fetchFromGitHub {
-      owner = "astroidmail";
-      repo = "astroid";
-      rev = "65acc24048a57039753cf2326dbfca6b608b91d1";
-      hash = "sha256-PXFVOaCgBHNUg0aCJD1TL/ulzjz9v70/jW5ManUPcHw=";
-    };
-    patches = [];
-    buildInputs = oldAttrs.buildInputs ++ [final.webkitgtk_4_1];
-    meta = oldAttrs.meta // {broken = false;};
-  });
 
   # OpenWrt One
   armTrustedFirmwareMT7981 = final.callPackage ./mtk-arm-trusted-firmware rec {
@@ -63,9 +51,6 @@ final: prev: {
     });
 
   # nixpkgs patches
-  zigbee2mqtt = prev.zigbee2mqtt.overrideAttrs {
-    npmInstallFlags = ["--no-optional"]; # Fix cross build
-  };
   ubootRaspberryPi3_btrfs = prev.buildUBoot {
     defconfig = "rpi_3_defconfig";
     extraConfig = ''
@@ -81,6 +66,10 @@ final: prev: {
       tag = "v${version}-stable";
       hash = "sha256-rWBfpI6tdpKvQA/XdazBvU5hzyai5PtKRBpM4iplZDU=";
     };
+  });
+  bind = prev.bind.overrideAttrs (oldAttrs: {
+    nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [final.buildPackages.protobufc];
+    strictDeps = true;
   });
 
   # Older version of packages

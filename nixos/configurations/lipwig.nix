@@ -107,6 +107,10 @@
           forceSSL = true;
           useACMEHost = "cynerd.cz";
         };
+        "office.cynerd.cz" = {
+          forceSSL = true;
+          useACMEHost = "cynerd.cz";
+        };
         "grafana.cynerd.cz" = {
           forceSSL = true;
           useACMEHost = "cynerd.cz";
@@ -252,11 +256,6 @@
           ;
         # Additional modules can be fetched with:
         # NEXTCLOUD_VERSIONS=31 nix run nixpkgs#nc4nix -- -apps "passwords,money,integration_github,integration_gitlab"
-        fileslibreofficeedit = pkgs.fetchNextcloudApp {
-          url = "https://github.com/allotropia/nextcloud_files_libreoffice_edit/releases/download/v2.0.1/fileslibreofficeedit.tar.gz";
-          hash = "sha256-Xqx5snQWintYJG3Q1Crw22TkNw18DdADXkurMQqt3X8=";
-          license = "agpl3Plus";
-        };
         integration_github = pkgs.fetchNextcloudApp {
           url = "https://github.com/nextcloud-releases/integration_github/releases/download/v3.2.1/integration_github-v3.2.1.tar.gz";
           hash = "sha256-iBWphFaXmQHNxgoi9qkfV7vCTChwtk6yg0aVr9Lhn4c=";
@@ -361,7 +360,7 @@
           }
         ];
       };
-      configureUwsgi = true;
+      runInUwsgi = true;
       uwsgiConfig = {
         socket = "/run/searx/searx.sock";
         chmod-socket = "660";
