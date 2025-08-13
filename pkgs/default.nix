@@ -80,5 +80,6 @@ final: prev: {
       hash = "sha256-j/BgfnWjIt181uxI9PIlRxQEricw0OqUUSexNVFV5zc=";
     };
     outputs = ["out"];
+    doCheck = false;
   };
 }

@@ -38,7 +38,7 @@ in {
           with pkgs; [
             ncurses
             xorg.libXpm
-            #flac134
+            flac134
             libopus
           ];
       };
@@ -47,7 +47,7 @@ in {
           with pkgs; [
             ncurses
             xorg.libXpm
-            #flac134
+            flac134 # For Nebuchadnezzar
             libopus
             SDL
             SDL2_image
