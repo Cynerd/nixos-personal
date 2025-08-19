@@ -37,7 +37,7 @@ in {
       kernelPackages = mkOverride 1100 pkgs.linuxPackages_latest;
       kernelParams = ["boot.shell_on_fail"];
     };
-    hardware.enableAllFirmware = true;
+    hardware.enableAllFirmware = mkDefault true;
     services.fwupd.enable = mkDefault (pkgs.system == "x86_64-linux");
     systemd.oomd.enable = false;
 

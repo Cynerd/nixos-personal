@@ -23,13 +23,17 @@
     };
   };
 
-  services.journald.extraConfig = ''
-    SystemMaxUse=512M
-  '';
+  boot.initrd.availableKernelModules = ["dm-mod"];
 
-  services.btrfs.autoScrub = {
-    enable = true;
-    fileSystems = ["/"];
+  services = {
+    journald.extraConfig = ''
+      SystemMaxUse=512M
+    '';
+
+    btrfs.autoScrub = {
+      enable = true;
+      fileSystems = ["/"];
+    };
   };
 
   networking = {

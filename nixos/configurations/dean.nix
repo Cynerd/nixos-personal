@@ -11,6 +11,20 @@
     };
   };
 
+  boot.initrd.availableKernelModules = ["dm-mod"];
+
+  hardware.enableAllFirmware = false; # No wifi so we do not need firmwares
+  services = {
+    journald.extraConfig = ''
+      SystemMaxUse=512M
+    '';
+
+    btrfs.autoScrub = {
+      enable = true;
+      fileSystems = ["/"];
+    };
+  };
+
   networking = {
     useNetworkd = true;
     useDHCP = false;

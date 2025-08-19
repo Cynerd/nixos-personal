@@ -29,6 +29,8 @@ in {
     monitoring.speedtest = true;
   };
 
+  boot.initrd.availableKernelModules = ["dm-mod"];
+
   services = {
     journald.extraConfig = ''
       SystemMaxUse=512M
