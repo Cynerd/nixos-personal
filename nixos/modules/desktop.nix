@@ -78,6 +78,7 @@ in {
               exts.pass-otp
               exts.pass-audit
             ]))
+            ranger
 
             chromium
             tangram

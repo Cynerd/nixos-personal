@@ -48,14 +48,15 @@
         self.nixosConfigurations);
   in {
     overlays = {
-      lib = final: prev: import ./lib final prev;
-      pkgs = final: prev: import ./pkgs final prev;
+      lib = import ./lib;
+      pkgs = import ./pkgs;
       default = nixpkgs.lib.composeManyExtensions [
         agenix.overlays.default
         nixosdeploy.overlays.default
         self.overlays.pkgs
         shellrc.overlays.default
         shvcli.overlays.default
+        shvcli-ell.inputs.ellembimages.overlays.default
         shvcli-ell.overlays.packages
         usbkey.overlays.default
       ];
@@ -73,7 +74,6 @@
     };
 
     nixosConfigurations = import ./nixos/configurations self;
-    lib = import ./lib nixpkgs.lib;
 
     legacyPackages =
       forSystems (system:

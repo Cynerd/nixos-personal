@@ -41,7 +41,6 @@ in {
       btop
       iotop
       mc
-      tmux
 
       # ls tools
       tree
@@ -68,9 +67,6 @@ in {
       w3m
 
       lm_sensors
-    ]
-    ++ optionals (system != "armv7l-linux") [
-      ranger
     ]
     ++ optionals (system == "x86_64-linux") [
       nmap

@@ -72,6 +72,21 @@ final: prev: {
     strictDeps = true;
   });
 
+  gvproxy =
+    if prev.hostPlatform.is32bit
+    then
+      # Downgrade to get 32bit support working
+      prev.gvproxy.overrideAttrs {
+        version = "0.8.6";
+        src = prev.buildPackages.fetchFromGitHub {
+          owner = "containers";
+          repo = "gvisor-tap-vsock";
+          rev = "v0.8.6";
+          hash = "sha256-a/Gd1QUxZ+47sQtndbehx86UjC1DezhqwS5d5VTIjRc=";
+        };
+      }
+    else prev.gvproxy;
+
   # Older version of packages
   flac134 = prev.flac.overrideAttrs {
     version = "1.3.4";

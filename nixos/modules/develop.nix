@@ -29,7 +29,7 @@ in {
       cloc
       openssl
       tio
-      vim-vint
+      #vim-vint
       nodePackages.vim-language-server
       vale
 
@@ -63,7 +63,7 @@ in {
       # C
       clang-tools
       massif-visualizer
-      qcachegrind
+      #qcachegrind
 
       # Python
       (python3.withPackages (pypkgs:
@@ -182,13 +182,17 @@ in {
       doc.enable = true;
     };
 
-    services.udev.extraRules = ''
-      SUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="3748", MODE:="0660", GROUP="develop", SYMLINK+="stlinkv2_%n"
-      SUBSYSTEMS=="usb", ATTRS{idVendor}=="a600", ATTRS{idProduct}=="a003", MODE:="0660", GROUP="develop", SYMLINK+="aix_forte_%n"
-      SUBSYSTEMS=="usb", ATTRS{idVendor}=="1366", ATTRS{idProduct}=="0105", MODE:="0660", GROUP="develop", SYMLINK+="jlink_%n"
-      SUBSYSTEMS=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2111", MODE:="0660", GROUP="develop", SYMLINK+="cmsip_dap_%n"
-      SUBSYSTEMS=="usb", ATTRS{idVendor}=="1ab1", ATTRS{idProduct}=="0e11", MODE:="0660", GROUP="develop"
-    '';
+    services = {
+      udev.extraRules = ''
+        SUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="3748", MODE:="0660", GROUP="develop", SYMLINK+="stlinkv2_%n"
+        SUBSYSTEMS=="usb", ATTRS{idVendor}=="a600", ATTRS{idProduct}=="a003", MODE:="0660", GROUP="develop", SYMLINK+="aix_forte_%n"
+        SUBSYSTEMS=="usb", ATTRS{idVendor}=="1366", ATTRS{idProduct}=="0105", MODE:="0660", GROUP="develop", SYMLINK+="jlink_%n"
+        SUBSYSTEMS=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2111", MODE:="0660", GROUP="develop", SYMLINK+="cmsip_dap_%n"
+        SUBSYSTEMS=="usb", ATTRS{idVendor}=="1ab1", ATTRS{idProduct}=="0e11", MODE:="0660", GROUP="develop"
+      '';
+
+      guix.enable = true;
+    };
 
     virtualisation = {
       containers.enable = true;
@@ -197,10 +201,10 @@ in {
         autoPrune.enable = true;
         storageDriver = "btrfs";
       };
-      lxd = {
-        enable = true;
-        recommendedSysctlSettings = true;
-      };
+      #lxd = {
+      #  enable = true;
+      #  recommendedSysctlSettings = true;
+      #};
       lxc.enable = true;
       libvirtd.enable = true;
       spiceUSBRedirection.enable = true;

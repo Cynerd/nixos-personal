@@ -43,12 +43,25 @@ in {
     };
   };
 
-  security.sudo.extraRules = [
-    {
-      groups = ["wheel"];
-      commands = ["ALL"];
-    }
-  ];
+  security = {
+    doas = {
+      enable = true;
+      extraRules = [
+        {
+          groups = ["wheel"];
+          keepEnv = true;
+          persist = true;
+        }
+      ];
+    };
+
+    sudo.extraRules = [
+      {
+        groups = ["wheel"];
+        commands = ["ALL"];
+      }
+    ];
+  };
 
   services.openssh = {
     enable = true;
