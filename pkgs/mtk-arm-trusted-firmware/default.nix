@@ -12,13 +12,13 @@
 }:
 stdenv.mkDerivation {
   pname = "arm-trusted-firmware${lib.optionalString (platform != null) "-${platform}"}";
-  version = "2025.02.12";
+  version = "2025.07.11";
 
   src = fetchFromGitHub {
     owner = "mtk-openwrt";
     repo = "arm-trusted-firmware";
-    rev = "e090770684e775711a624e68e0b28112227a4c38";
-    hash = "sha256-VI5OB2nWdXUjkSuUXl/0yQN+/aJp9Jkt+hy7DlL+PMg=";
+    rev = "78a0dfd927bb00ce973a1f8eb4079df0f755887a";
+    hash = "sha256-m9ApkBVf0I11rNg68vxofGRJ+BcnlM6C+Zrn8TfMvbY=";
   };
 
   depsBuildBuild = [buildPackages.stdenv.cc];

@@ -24,18 +24,20 @@ final: prev: {
 
   # OpenWrt One
   armTrustedFirmwareMT7981 = final.callPackage ./mtk-arm-trusted-firmware rec {
-    extraMakeFlags = ["BOOT_DEVICE=spim-nand" "DRAM_USE_DDR4=1" "bl2" "bl31"];
+    extraMakeFlags = [
+      "BOOT_DEVICE=spim-nand"
+      "DRAM_USE_DDR4=1"
+      "UBI=1"
+      "OVERRIDE_UBI_START_ADDR=0x100000"
+      "bl2"
+      "bl31"
+    ];
     platform = "mt7981";
     extraMeta.platforms = ["aarch64-linux"];
     filesToInstall = ["build/${platform}/release/bl2.bin" "build/${platform}/release/bl31.bin"];
   };
   ubootOpenWrtOne =
     (final.buildUBoot {
-      version = "2025.04";
-      src = final.fetchurl {
-        url = "https://ftp.denx.de/pub/u-boot/u-boot-2025.04.tar.bz2";
-        hash = "sha256-Q5077ylu/9VBML5qcxxbEYvn/d1/zGY8y8X7GClNhxg=";
-      };
       defconfig = "mt7981_openwrt-one-spi-nand_defconfig";
       extraMeta.platforms = ["aarch64-linux"];
       BL31 = "${final.armTrustedFirmwareMT7981}/bl31.elf";

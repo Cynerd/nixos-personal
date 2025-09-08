@@ -29,7 +29,7 @@ in {
       cloc
       openssl
       tio
-      #vim-vint
+      vim-vint
       nodePackages.vim-language-server
       vale
 
