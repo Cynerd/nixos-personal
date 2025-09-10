@@ -303,15 +303,20 @@ in {
     };
 
     fonts.packages = with pkgs; [
-      nerd-fonts.hack
       arkpandora_ttf
       corefonts
       dejavu_fonts
+      fira-code
+      fira-code-symbols
+      fira-math
+      fira-mono
+      fira-sans
       font-awesome
       freefont_ttf
       hack-font
       liberation_ttf
       libertine
+      nerd-fonts.hack
       noto-fonts
       noto-fonts-emoji
       terminus_font_ttf
