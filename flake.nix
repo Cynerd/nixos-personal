@@ -9,6 +9,7 @@
     shellrc.url = "git+https://git.cynerd.cz/shellrc";
 
     agenix.url = "github:ryantm/agenix";
+    pyshv.url = "github:silicon-heaven/pyshv";
     shvcli.url = "github:silicon-heaven/shvcli";
     shvcli-ell.url = "gitlab:elektroline-predator/shvcli-ell";
 
@@ -26,6 +27,7 @@
     personal-secret,
     shellrc,
     agenix,
+    pyshv,
     shvcli,
     shvcli-ell,
     usbkey,
@@ -55,7 +57,8 @@
         nixosdeploy.overlays.default
         self.overlays.pkgs
         shellrc.overlays.default
-        shvcli.overlays.default
+        pyshv.overlays.default
+        shvcli.overlays.packages
         shvcli-ell.inputs.ellembimages.overlays.default
         shvcli-ell.overlays.packages
         usbkey.overlays.default

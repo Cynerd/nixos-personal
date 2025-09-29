@@ -1,6 +1,9 @@
+diff --git a/arch/arm/dts/openwrt-one.dts b/arch/arm/dts/openwrt-one.dts
+new file mode 100644
+index 00000000000..5828310fb2d
 --- /dev/null
 +++ b/arch/arm/dts/openwrt-one.dts
-@@ -0,0 +1,203 @@
+@@ -0,0 +1,207 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (c) 2024 John Crispin <john@phrozen.org>
@@ -63,6 +66,10 @@
 +};
 +
 +&uart0 {
++	status = "okay";
++};
++
++&pcie {
 +	status = "okay";
 +};
 +
@@ -204,6 +211,9 @@
 +&watchdog {
 +	status = "disabled";
 +};
+diff --git a/configs/mt7981_openwrt-one-nor_defconfig b/configs/mt7981_openwrt-one-nor_defconfig
+new file mode 100644
+index 00000000000..c83d6f2a516
 --- /dev/null
 +++ b/configs/mt7981_openwrt-one-nor_defconfig
 @@ -0,0 +1,125 @@
@@ -332,6 +342,9 @@
 +CONFIG_USB_STORAGE=y
 +CONFIG_UBIFS_SILENCE_MSG=y
 +CONFIG_HEXDUMP=y
+diff --git a/configs/mt7981_openwrt-one-spi-nand_defconfig b/configs/mt7981_openwrt-one-spi-nand_defconfig
+new file mode 100644
+index 00000000000..ccca0a0c9dc
 --- /dev/null
 +++ b/configs/mt7981_openwrt-one-spi-nand_defconfig
 @@ -0,0 +1,126 @@
@@ -461,6 +474,9 @@
 +CONFIG_USB_XHCI_MTK=y
 +CONFIG_USB_STORAGE=y
 +CONFIG_HEXDUMP=y
+diff --git a/defenvs/openwrt-one-nor_env b/defenvs/openwrt-one-nor_env
+new file mode 100644
+index 00000000000..f3ffa599f5d
 --- /dev/null
 +++ b/defenvs/openwrt-one-nor_env
 @@ -0,0 +1,48 @@
@@ -512,6 +528,9 @@
 +_init_env=setenv _init_env ; echo Initialize Env ; run ubi_create_env ; saveenv
 +_switch_to_menu=setenv _switch_to_menu ; setenv bootdelay 3 ; setenv bootmenu_delay 3 ; setenv bootmenu_0 $bootmenu_0d ; setenv bootmenu_0d ; run _bootmenu_update_title
 +_bootmenu_update_title=setenv _bootmenu_update_title ; setenv bootmenu_title "$bootmenu_title       [33m$ver[0m"
+diff --git a/defenvs/openwrt-one-spi-nand_env b/defenvs/openwrt-one-spi-nand_env
+new file mode 100644
+index 00000000000..8d59dd3dd6d
 --- /dev/null
 +++ b/defenvs/openwrt-one-spi-nand_env
 @@ -0,0 +1,62 @@

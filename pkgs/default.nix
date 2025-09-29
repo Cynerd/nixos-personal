@@ -40,13 +40,29 @@ final: prev: {
     (final.buildUBoot {
       defconfig = "mt7981_openwrt-one-spi-nand_defconfig";
       extraMeta.platforms = ["aarch64-linux"];
-      BL31 = "${final.armTrustedFirmwareMT7981}/bl31.elf";
-      filesToInstall = ["u-boot.bin"];
+      filesToInstall = ["u-boot.fip" ".config"];
       extraPatches = [./u-boot-add-openwrt-one.patch];
       extraConfig = ''
-        CONFIG_FS_BTRFS=y
-        CONFIG_CMD_BTRFS=y
+        CONFIG_CMD_BOOTMENU=n
+        CONFIG_AUTOBOOT_MENU_SHOW=n
+        CONFIG_BOOTDELAY=3
+
+        CONFIG_PCI=y
+        CONFIG_PCIE_MEDIATEK_GEN3=y
+        CONFIG_PCI_DEBUG=y
+        CONFIG_DM_DEBUG=y
+        CONFIG_NVME=y
+        CONFIG_NVME_PCI=y
+        CONFIG_CMD_NVME=y
+        #CONFIG_FS_BTRFS=y
+        #CONFIG_CMD_BTRFS=y
         CONFIG_BOARD_LATE_INIT=n
+      '';
+      postBuild = ''
+        ${final.buildPackages.armTrustedFirmwareTools}/bin/fiptool create \
+          --soc-fw '${final.armTrustedFirmwareMT7981}/bl31.bin' \
+          --nt-fw ./u-boot.bin \
+          u-boot.fip
       '';
     }).overrideAttrs (oldAttrs: {
       nativeBuildInputs = [final.buildPackages.unixtools.xxd] ++ oldAttrs.nativeBuildInputs;
@@ -78,15 +94,13 @@ final: prev: {
     if prev.hostPlatform.is32bit
     then
       # Downgrade to get 32bit support working
-      prev.gvproxy.overrideAttrs {
+      prev.gvproxy.overrideAttrs (oldAttrs: {
         version = "0.8.6";
-        src = prev.buildPackages.fetchFromGitHub {
-          owner = "containers";
-          repo = "gvisor-tap-vsock";
+        src = oldAttrs.src.override {
           rev = "v0.8.6";
           hash = "sha256-a/Gd1QUxZ+47sQtndbehx86UjC1DezhqwS5d5VTIjRc=";
         };
-      }
+      })
     else prev.gvproxy;
 
   # Older version of packages

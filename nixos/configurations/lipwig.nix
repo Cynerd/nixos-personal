@@ -251,7 +251,7 @@
           twofactor_webauthn
           ;
         # Additional modules can be fetched with:
-        # NEXTCLOUD_VERSIONS=31 nix run nixpkgs#nc4nix -- -apps "passwords,money,integration_github,integration_gitlab"
+        # NEXTCLOUD_VERSIONS=31 nix run nixpkgs#nc4nix -- -apps "passwords,money,integration_github,integration_gitlab,fileslibreofficeedit"
         fileslibreofficeedit = pkgs.fetchNextcloudApp {
           url = "https://github.com/allotropia/nextcloud_files_libreoffice_edit/releases/download/v2.0.1/fileslibreofficeedit.tar.gz";
           hash = "sha256-Xqx5snQWintYJG3Q1Crw22TkNw18DdADXkurMQqt3X8=";
@@ -273,8 +273,8 @@
           license = "agpl3Plus";
         };
         passwords = pkgs.fetchNextcloudApp {
-          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2025.7.0/passwords.tar.gz";
-          hash = "sha256-SVItAtFRO/CbZ203ZS86inCZ+ZpGy0NUS3y2Xj1b+LI=";
+          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2025.9.0/passwords.tar.gz";
+          hash = "sha256-BMu7TPd6xwa/bSQOgN/wFPnK7AK0KgsUKqSqMatjqqw=";
           license = "agpl3Plus";
         };
       };
