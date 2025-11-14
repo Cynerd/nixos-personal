@@ -14,15 +14,9 @@ in {
       wan = "pppoe-wan";
       lanIP = hosts.mox;
       staticLeases = {
+        "70:85:c2:4a:59:f2" = hosts.ridcully;
+        "f8:dc:7a:79:00:e6" = hosts.tc;
         "4c:d5:77:0d:85:d9" = hosts.binky;
-      };
-    };
-    wifiAP.zd = {
-      enable = false;
-      qca988x = {
-        interface = "wlp1s0";
-        bssids = config.secrets.wifiMacs.zd-mox.qca988x;
-        channel = 36;
       };
     };
     wireguard = true;
@@ -50,27 +44,27 @@ in {
   networking.useDHCP = false;
   systemd.network = {
     netdevs = {
-      "end2.848" = {
+      "end0.848" = {
         netdevConfig = {
           Kind = "vlan";
-          Name = "end2.848";
+          Name = "end0.848";
         };
         vlanConfig.Id = 848;
       };
     };
     networks = {
-      "end2" = {
-        matchConfig.Name = "end2";
-        networkConfig.VLAN = ["end2.848"];
+      "end0" = {
+        matchConfig.Name = "end0";
+        networkConfig.VLAN = ["end0.848"];
       };
-      "end2.848" = {
-        matchConfig.Name = "end2.848";
-        networkConfig.BindCarrier = "end2";
+      "end0.848" = {
+        matchConfig.Name = "end0.848";
+        networkConfig.BindCarrier = "end0";
       };
       "pppoe-wan" = {
         matchConfig.Name = "pppoe-wan";
         networkConfig = {
-          BindCarrier = "end2.848";
+          BindCarrier = "end0.848";
           DHCP = "ipv6";
           IPv6AcceptRA = "no";
           DHCPPrefixDelegation = "yes";
@@ -105,7 +99,7 @@ in {
   services.pppd = {
     enable = true;
     peers."wan".config = ''
-      plugin pppoe.so end2.848
+      plugin pppoe.so end0.848
       ifname pppoe-wan
       lcp-echo-interval 1
       lcp-echo-failure 5
@@ -117,7 +111,7 @@ in {
     '';
   };
   systemd.services."pppd-wan" = {
-    after = ["sys-subsystem-net-devices-end2.848.device"];
+    after = ["sys-subsystem-net-devices-end0.848.device"];
     partOf = ["systemd-networkd.service"];
   };
   # TODO limit NSS clamping to just pppoe-wan
@@ -125,4 +119,25 @@ in {
     tcp flags syn tcp option maxseg size set rt mtu comment "Needed for PPPoE to fix IPv4"
     iifname {"home", "wg"} oifname {"home", "wg"} accept
   '';
+
+  services.nginx = {
+    enable = true;
+    virtualHosts = {
+      "zd.cynerd.cz" = {
+        forceSSL = true;
+        enableACME = true;
+        locations."/" = {
+          proxyPass = "http://${hosts.one0}:8123";
+          proxyWebsockets = true;
+          recommendedProxySettings = true;
+        };
+      };
+    };
+  };
+  security.acme = {
+    acceptTerms = true;
+    defaults.email = "cynerd+acme@email.cz";
+    certs."zd.cynerd.cz" = {};
+  };
+  networking.firewall.allowedTCPPorts = [80 443];
 }

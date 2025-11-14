@@ -3,13 +3,6 @@
   nixpkgs.hostPlatform.system = "x86_64-linux";
   deploy.enable = true;
 
-  cynerd = {
-    desktop.enable = true;
-    develop = true;
-    gaming = true;
-    openvpn.elektroline = true;
-  };
-
   boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "usb_storage"];
   boot.kernelModules = ["kvm-amd"];
 

@@ -1,0 +1,2353 @@
+From patchwork Wed Nov  5 21:17:56 2025
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Sjoerd Simons <sjoerd@collabora.com>
+X-Patchwork-Id: 14300874
+Return-Path: 
+ <linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 27658CCF9F8
+	for <linux-mediatek@archiver.kernel.org>;
+ Wed,  5 Nov 2025 21:18:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=pbQ8LYX0/2mwbWfiTZ/4KA3hdnCFGb6BlEXU0Ey9ARA=; b=Cb1OaY2B9saEFea6/QEEi37zhv
+	kpuXc+/J3xLGdmXg1TgcfNhB1PgVJeHXsfGLBBv+8BqqtOGAq61FNtd4UMut0B8xvKju6uWFRG+Tv
+	55yGZ+IbVkoRqnKrI9MSxZpc30KfsN67z/V62HyKChRUaho5wsoyN3Lh4kBPKAEtCqtn8RgRrYvIK
+	R1P1yDXBWFspsdPhxifl5ZO4WKHs+qNrHKE8cXV31J5ndei6QhrQqSaWTjBTtAKYRFiXrKCdFSf4Y
+	poCUJ0Uurw4eLSPKTYF6Bzm+hssBZKvhbHAXibEM0Z+vTRRB4RLSlprAKw8lC1Ia2PS4voS6kkQhk
+	V6br6Mvg==;
+Received: from localhost ([::1] helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGktv-0000000EU4a-2qhd;
+	Wed, 05 Nov 2025 21:18:43 +0000
+Received: from bali.collaboradmins.com ([2a01:4f8:201:9162::2])
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGktq-0000000ETy8-1Ir7;
+	Wed, 05 Nov 2025 21:18:40 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1762377515;
+	bh=vTtFVwZhj2dtk28F9mb0pMLT2K98WweVea9+cuC24ag=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=pSe49kn1CNJa/3TIsAfyiPmVF6y8Y8PaNI39JUJJAAPA5wWIFh6XiC4HVZx6wEFNL
+	 L5Kdzgoirrmikw+CUAcBOG09J/CVlUGuVArOzbmO7Wslf7ZxtcAwnpndJ43sBsrCq1
+	 v/WOwnTgqG36ax9SAtLwXvRr9iFPFbDxYpPnBjW0uNx0LGTceQTwIerakX6nh/fve2
+	 gDgnn7FFMsjEfMxOyPv6ZSm9V2QYVpS7DfzQzkZ+RBkSvVkeyS66FamW1RxSMduaYI
+	 esxgWGjHuf5H2/qYR975Jxrx8kLKRiAIjaJPBj3Zh03WC2gVt5fDKiYp1fSDHIIPAT
+	 u+lL/PGRDqsvQ==
+Received: from beast.luon.net (unknown [IPv6:2a10:3781:2531::8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: sjoerd)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0483317E12AA;
+	Wed,  5 Nov 2025 22:18:35 +0100 (CET)
+Received: by beast.luon.net (Postfix, from userid 1000)
+	id 916BF10F352DB; Wed, 05 Nov 2025 22:18:34 +0100 (CET)
+From: Sjoerd Simons <sjoerd@collabora.com>
+Date: Wed, 05 Nov 2025 22:17:56 +0100
+Subject: [PATCH v3 01/13] arm64: dts: mediatek: mt7981b-openwrt-one: Enable
+ SPI NOR
+MIME-Version: 1.0
+Message-Id: <20251105-openwrt-one-network-v3-1-008e2cab38d1@collabora.com>
+References: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+In-Reply-To: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>,
+  Matthias Brugger <matthias.bgg@gmail.com>,
+  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+  Ryder Lee <ryder.lee@mediatek.com>,
+  Jianjun Wang <jianjun.wang@mediatek.com>,
+  Bjorn Helgaas <bhelgaas@google.com>,
+  Lorenzo Pieralisi <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy?=
+	=?utf-8?q?=C5=84ski?= <kwilczynski@kernel.org>,
+  Manivannan Sadhasivam <mani@kernel.org>,
+  Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+  Kishon Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>,
+  Andrew Lunn <andrew+netdev@lunn.ch>,
+  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+  Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+ Daniel Golle <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>,
+ Sjoerd Simons <sjoerd@collabora.com>
+X-Mailer: b4 0.14.3
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251105_131838_527801_38763342 
+X-CRM114-Status: GOOD (  13.98  )
+X-BeenThere: linux-mediatek@lists.infradead.org
+X-Mailman-Version: 2.1.34
+Precedence: list
+List-Id: <linux-mediatek.lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek@lists.infradead.org>
+List-Help: <mailto:linux-mediatek-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces@lists.infradead.org>
+Errors-To: 
+ linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org
+
+The openwrt one has a SPI NOR flash which from factory is used for:
+* Recovery system
+* WiFi eeprom data
+* ethernet Mac addresses
+
+Describe this following the same partitions as the openwrt configuration
+uses.
+
+Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+---
+V2 -> V3: Move earlier in the patch sequence
+V1 -> V2:
+  - Use numeric drive-strength values rather then defines
+  - Make nvmem cell labers more meaningfull
+  - Only define nvmem cells used in later patches by devicetree
+---
+ .../boot/dts/mediatek/mt7981b-openwrt-one.dts      | 79 ++++++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt7981b.dtsi          |  2 +-
+ 2 files changed, 80 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+index 968b91f55bb27..6bb98629f4536 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+@@ -3,6 +3,7 @@
+ /dts-v1/;
+ 
+ #include "mt7981b.dtsi"
++#include "dt-bindings/pinctrl/mt65xx.h"
+ 
+ / {
+ 	compatible = "openwrt,one", "mediatek,mt7981b";
+@@ -22,6 +23,84 @@ memory@40000000 {
+ 	};
+ };
+ 
++&pio {
++	spi2_flash_pins: spi2-pins {
++		mux {
++			function = "spi";
++			groups = "spi2";
++		};
++
++		conf-pu {
++			bias-pull-up = <MTK_PUPD_SET_R1R0_11>;
++			drive-strength = <8>;
++			pins = "SPI2_CS", "SPI2_WP";
++		};
++
++		conf-pd {
++			bias-pull-down = <MTK_PUPD_SET_R1R0_11>;
++			drive-strength = <8>;
++			pins = "SPI2_CLK", "SPI2_MOSI", "SPI2_MISO";
++		};
++	};
++};
++
++&spi2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi2_flash_pins>;
++	status = "okay";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <40000000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				reg = <0x00000 0x40000>;
++				label = "bl2-nor";
++			};
++
++			partition@40000 {
++				reg = <0x40000 0xc0000>;
++				label = "factory";
++				read-only;
++
++				nvmem-layout {
++					compatible = "fixed-layout";
++					#address-cells = <1>;
++					#size-cells = <1>;
++
++					wifi_factory_calibration: eeprom@0 {
++						reg = <0x0 0x1000>;
++					};
++
++					wan_factory_mac: macaddr@24 {
++						reg = <0x24 0x6>;
++						compatible = "mac-base";
++						#nvmem-cell-cells = <1>;
++					};
++				};
++			};
++
++			partition@100000 {
++				reg = <0x100000 0x80000>;
++				label = "fip-nor";
++			};
++
++			partition@180000 {
++				reg = <0x180000 0xc80000>;
++				label = "recovery";
++			};
++		};
++	};
++};
++
+ &uart0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+index 130ce2fda3995..f00e5bf63de35 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+@@ -156,7 +156,7 @@ i2c@11007000 {
+ 			status = "disabled";
+ 		};
+ 
+-		spi@11009000 {
++		spi2: spi@11009000 {
+ 			compatible = "mediatek,mt7981-spi-ipm", "mediatek,spi-ipm";
+ 			reg = <0 0x11009000 0 0x1000>;
+ 			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>;
+
+From patchwork Wed Nov  5 21:17:57 2025
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Sjoerd Simons <sjoerd@collabora.com>
+X-Patchwork-Id: 14300873
+Return-Path: 
+ <linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5417DCCFA0D
+	for <linux-mediatek@archiver.kernel.org>;
+ Wed,  5 Nov 2025 21:18:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=avlKJcLS27IiW4i/NSTPBJCPoTBFD15wkzKpbeqsTtI=; b=0jtAGvteycn59TWzuemDgRp4w5
+	5dy7ghMpYQVtdnPSRv7SaM6c9hVChRvqTe0BFX1mEo0kRMl8CatERDhe/C5LAkW4L2nNRe5dK+Myb
+	rlXQNXnz3kWe5icAVDFMpTILVcW374QdriXL6aIxWrYhjhpEQlZq95LLP2gmlp9IsvLjeO++cdbQ1
+	hgf8Ggvi/s/xTDt8HMTmf/kap2uq6WDxCgZkRjJHzvcSzKXBtbcGp3qzeYolHhgS55MJ9xoOFnnqA
+	u6SRlmgQm+gQP08ZKGnSh20dgkpTjHwIRc3XH1N1+PfrkK5gNwKPmb1TxwKOiJ46ekRDgUmzNUZWT
+	moS5gY4g==;
+Received: from localhost ([::1] helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGkts-0000000ETzl-3ajb;
+	Wed, 05 Nov 2025 21:18:40 +0000
+Received: from bali.collaboradmins.com ([2a01:4f8:201:9162::2])
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGktq-0000000ETy1-0qjw;
+	Wed, 05 Nov 2025 21:18:39 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1762377515;
+	bh=bArrOhdqiPrD9jwVtY5HEE/53V3p8i0UZ8xJQqCPlD0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=VOReS/tBa/q6ng2Yhr2+/vUP5UB2401ugVhFf+0UORldLzyq+GXymaYL+4TyWBzbq
+	 E5iJPmF4FgnRteq2+Zzs4MGmfv6KXhmt2G3qH5ETOCYYTIUARBRY6u25jdHX+O/gMo
+	 RQjh+GIR3h/L5Zus48T6qNKpMtJhHs1KZ5A/r+YahUv+BbOSHCEvWT7GIIh/9XOhL7
+	 6WqcFwJl8Xo3y+1LOMSyZZ/b8WZs6XemcZZkphmKBEawG5voNrNc2TjHbEBZ2Imc79
+	 JR7TkSCCYcSdQkGq79iDohJaa4FfGFvVEDfMbGBBWDITlglqViL0jmLc5ieNhvCiXt
+	 VgNVVQbZqGcxg==
+Received: from beast.luon.net (unknown [IPv6:2a10:3781:2531::8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sjoerd)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id E12A417E129C;
+	Wed,  5 Nov 2025 22:18:34 +0100 (CET)
+Received: by beast.luon.net (Postfix, from userid 1000)
+	id 96B5110F352DD; Wed, 05 Nov 2025 22:18:34 +0100 (CET)
+From: Sjoerd Simons <sjoerd@collabora.com>
+Date: Wed, 05 Nov 2025 22:17:57 +0100
+Subject: [PATCH v3 02/13] arm64: dts: mediatek: mt7981b-openwrt-one: Enable
+ software leds
+MIME-Version: 1.0
+Message-Id: <20251105-openwrt-one-network-v3-2-008e2cab38d1@collabora.com>
+References: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+In-Reply-To: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>,
+  Matthias Brugger <matthias.bgg@gmail.com>,
+  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+  Ryder Lee <ryder.lee@mediatek.com>,
+  Jianjun Wang <jianjun.wang@mediatek.com>,
+  Bjorn Helgaas <bhelgaas@google.com>,
+  Lorenzo Pieralisi <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy?=
+	=?utf-8?q?=C5=84ski?= <kwilczynski@kernel.org>,
+  Manivannan Sadhasivam <mani@kernel.org>,
+  Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+  Kishon Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>,
+  Andrew Lunn <andrew+netdev@lunn.ch>,
+  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+  Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+ Daniel Golle <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>,
+ Sjoerd Simons <sjoerd@collabora.com>
+X-Mailer: b4 0.14.3
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251105_131838_423983_A7543089 
+X-CRM114-Status: GOOD (  14.52  )
+X-BeenThere: linux-mediatek@lists.infradead.org
+X-Mailman-Version: 2.1.34
+Precedence: list
+List-Id: <linux-mediatek.lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek@lists.infradead.org>
+List-Help: <mailto:linux-mediatek-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces@lists.infradead.org>
+Errors-To: 
+ linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org
+
+The openwrt has 3 status leds at the front:
+* red: Used as failsafe led by openwrt
+* white: Used as boot led by openwrt
+* green: Used as running/upgrade led by openwrt
+
+On the back each RJ45 jack has the typical amber/green leds. For the WAN
+jack this is hardware controlled by the phy, for LAN these are under
+software control and enabled by this patch.
+
+Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+---
+V2 -> V3: Move earlier in the patch sequence
+V1 -> V2:
+  - Improve commit message
+  - Re-order nodes to be alphabetical
+---
+ .../boot/dts/mediatek/mt7981b-openwrt-one.dts      | 59 ++++++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt7981b.dtsi          |  2 +-
+ 2 files changed, 60 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+index 6bb98629f4536..2e39e72877301 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+@@ -3,6 +3,8 @@
+ /dts-v1/;
+ 
+ #include "mt7981b.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/leds/common.h>
+ #include "dt-bindings/pinctrl/mt65xx.h"
+ 
+ / {
+@@ -21,9 +23,60 @@ memory@40000000 {
+ 		reg = <0 0x40000000 0 0x40000000>;
+ 		device_type = "memory";
+ 	};
++
++	pwm-leds {
++		compatible = "pwm-leds";
++
++		led-0 {
++			color = <LED_COLOR_ID_WHITE>;
++			default-brightness = <0>;
++			function = LED_FUNCTION_STATUS;
++			max-brightness = <255>;
++			pwms = <&pwm 0 10000>;
++		};
++
++		led-1 {
++			color = <LED_COLOR_ID_GREEN>;
++			default-brightness = <0>;
++			function = LED_FUNCTION_STATUS;
++			max-brightness = <255>;
++			pwms = <&pwm 1 10000>;
++		};
++	};
++
++	gpio-leds {
++		compatible = "gpio-leds";
++
++		led-0 {
++			color = <LED_COLOR_ID_RED>;
++			function = LED_FUNCTION_STATUS;
++			gpios = <&pio 9 GPIO_ACTIVE_HIGH>;
++		};
++
++		led-1 {
++			color = <LED_COLOR_ID_AMBER>;
++			function = LED_FUNCTION_LAN;
++			gpios = <&pio 34 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "netdev";
++		};
++
++		led-2 {
++			color = <LED_COLOR_ID_GREEN>;
++			function = LED_FUNCTION_LAN;
++			gpios = <&pio 35 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "netdev";
++		};
++	};
+ };
+ 
+ &pio {
++	pwm_pins: pwm-pins {
++		mux {
++			function = "pwm";
++			groups = "pwm0_0", "pwm1_1";
++		};
++	};
++
+ 	spi2_flash_pins: spi2-pins {
+ 		mux {
+ 			function = "spi";
+@@ -44,6 +97,12 @@ conf-pd {
+ 	};
+ };
+ 
++&pwm {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm_pins>;
++	status = "okay";
++};
++
+ &spi2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&spi2_flash_pins>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+index f00e5bf63de35..416096b80770c 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+@@ -94,7 +94,7 @@ apmixedsys: clock-controller@1001e000 {
+ 			#clock-cells = <1>;
+ 		};
+ 
+-		pwm@10048000 {
++		pwm: pwm@10048000 {
+ 			compatible = "mediatek,mt7981-pwm";
+ 			reg = <0 0x10048000 0 0x1000>;
+ 			clocks = <&infracfg CLK_INFRA_PWM_STA>,
+
+From patchwork Wed Nov  5 21:17:58 2025
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Sjoerd Simons <sjoerd@collabora.com>
+X-Patchwork-Id: 14300882
+Return-Path: 
+ <linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 96882CCFA1D
+	for <linux-mediatek@archiver.kernel.org>;
+ Wed,  5 Nov 2025 21:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=YTHvtBL+VZnUTHjrz6ClSw7+XPBkv6t8SxYxsbAo8Ew=; b=HqaKb7lXfmU+r1K0zRQqpAo1TC
+	dJNXPMCIpwbBK264GNPcxjw372eoyVGs5ByAGDZn/OCM5/9QzniFovhHsv/m9OeKk462mAtHNpOQP
+	Nytx7Mj90jizLzg9FkzQUuTvBSvnz4nh+0zbAAKfC+L+iLhY34I4XMhxdIN9QeOSXLHTgZhMtnqQ4
+	mcN4czHjko6wUJIy4e2qEqDMKhZdt5qXy+4FsGOvVIMiqwiK2zguLCFc09+1ql9aGfo3SqzWMR1Ss
+	a/t8K6MhlKAAJCe1jvIoipcITv1fLOMsktu3avvVBQ3xbd1EYf4CE/rRP6046K3fseEYzAzWs2wEj
+	kqgClckA==;
+Received: from localhost ([::1] helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGkuK-0000000EUcY-1yA8;
+	Wed, 05 Nov 2025 21:19:08 +0000
+Received: from bali.collaboradmins.com ([148.251.105.195])
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGktv-0000000EU0m-0kG8;
+	Wed, 05 Nov 2025 21:18:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1762377520;
+	bh=BNloXSmxfui+A+UD0vb6639VkVLh4h7qFS1iqqJUbUo=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=XpSLf1aGffJeN3zx8uRhcaOmvn2uTssdN8S/TbdnUE69GnvkRSpHrFeCAMfgFw6h+
+	 WBE8bR6DFUQSFUfl/t8PJarzCojzGlWEe/Bjpwy//0LUvlJ4H2KglxqzierbnbGWkJ
+	 JxcwY+/LDHd88TJx4wF2pxlYa68pFOAAGnZ+LVsowRN70g0ShSx+cKfz/MuBEEx866
+	 eY2aaiv7kk6cgbVTTgbQpofXT93rsBTiSVOz3zUbIplNpgMBhJP8HWFRc1NYQ6iiQc
+	 z6Bp9JVIF1zTXGnS32qST64tNFlO9EM6BZ3Y+WERvYeLEXmsObKq7fVOFZwuL1SDIz
+	 lkVC+aPo126sA==
+Received: from beast.luon.net (unknown [IPv6:2a10:3781:2531::8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: sjoerd)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id EB61317E1562;
+	Wed,  5 Nov 2025 22:18:39 +0100 (CET)
+Received: by beast.luon.net (Postfix, from userid 1000)
+	id 9C16B10F352DF; Wed, 05 Nov 2025 22:18:34 +0100 (CET)
+From: Sjoerd Simons <sjoerd@collabora.com>
+Date: Wed, 05 Nov 2025 22:17:58 +0100
+Subject: [PATCH v3 03/13] dt-bindings: mfd: syscon: Add mt7981-topmisc
+MIME-Version: 1.0
+Message-Id: <20251105-openwrt-one-network-v3-3-008e2cab38d1@collabora.com>
+References: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+In-Reply-To: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>,
+  Matthias Brugger <matthias.bgg@gmail.com>,
+  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+  Ryder Lee <ryder.lee@mediatek.com>,
+  Jianjun Wang <jianjun.wang@mediatek.com>,
+  Bjorn Helgaas <bhelgaas@google.com>,
+  Lorenzo Pieralisi <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy?=
+	=?utf-8?q?=C5=84ski?= <kwilczynski@kernel.org>,
+  Manivannan Sadhasivam <mani@kernel.org>,
+  Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+  Kishon Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>,
+  Andrew Lunn <andrew+netdev@lunn.ch>,
+  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+  Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+ Daniel Golle <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>,
+ Sjoerd Simons <sjoerd@collabora.com>,
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.14.3
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251105_131843_431301_903B5158 
+X-CRM114-Status: UNSURE (   9.26  )
+X-CRM114-Notice: Please train this message.
+X-BeenThere: linux-mediatek@lists.infradead.org
+X-Mailman-Version: 2.1.34
+Precedence: list
+List-Id: <linux-mediatek.lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek@lists.infradead.org>
+List-Help: <mailto:linux-mediatek-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces@lists.infradead.org>
+Errors-To: 
+ linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org
+
+This hardware block amongst other things includes a multiplexer for a
+high-speed Combo-Phy. This binding allows exposing the multiplexer
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+---
+ Documentation/devicetree/bindings/mfd/syscon.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
+index 657c38175fba2..51511078c4c3b 100644
+--- a/Documentation/devicetree/bindings/mfd/syscon.yaml
++++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
+@@ -193,6 +193,7 @@ properties:
+           - mediatek,mt2701-pctl-a-syscfg
+           - mediatek,mt2712-pctl-a-syscfg
+           - mediatek,mt6397-pctl-pmic-syscfg
++          - mediatek,mt7981-topmisc
+           - mediatek,mt7988-topmisc
+           - mediatek,mt8135-pctl-a-syscfg
+           - mediatek,mt8135-pctl-b-syscfg
+
+From patchwork Wed Nov  5 21:17:59 2025
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Sjoerd Simons <sjoerd@collabora.com>
+X-Patchwork-Id: 14300883
+Return-Path: 
+ <linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 750F7CCFA1C
+	for <linux-mediatek@archiver.kernel.org>;
+ Wed,  5 Nov 2025 21:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=j/r2anqRW+90VM9McPY+HL40VXbPRjGoaWqnMpIZ0Fs=; b=IaKu3jz6YFxlujvK4OcXhsqFrZ
+	t+qFR7JRHh0BUB6pHb1n9aOWU4LQgNs0tnGcy3xCEy7MjpCeY8KvKVusalNzRjDFaBYnXr+VWZJJR
+	PjvC0fKtomtszWd4fzB8mCulXXJKBbWmeoxmjaEMCbGevdVSLDL1NWWbQWG2BDtoqG+E5BnpuH6SM
+	ZhOF9A6np+uAo40Vv7h/e3rcKcEVgabuWM7sABvHfbqH2pQEje931ivi3kXY7unZyHg2Ot7yMWnww
+	x7BoB1wUCYmAcaf0PGZcT5JjLu9TEnKI+8XXk+6A4vnvVsxnDdXPGXHbbG2lmTQnfgh8sGhdjG/sF
+	3f5TA0Xg==;
+Received: from localhost ([::1] helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGkuK-0000000EUbg-0Ql9;
+	Wed, 05 Nov 2025 21:19:08 +0000
+Received: from bali.collaboradmins.com ([2a01:4f8:201:9162::2])
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGktv-0000000EU0g-1snN;
+	Wed, 05 Nov 2025 21:18:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1762377515;
+	bh=JdKvpThqp3TDs4o0pkrFusvXBPtE9LtpoPmwO6qXgiM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=ZTJBt+chv2OorZPxJOTV0pe1cpqVHLoTNLfzME7KhrNsfGLdxx4oH4GlB0XTU3ZzV
+	 Dg/1pyFg1MGW0e662nfEk1S8BJrzpfsREKZsEPGeAY2p05QsUhTegWiVIBXoO1G2nv
+	 mfEov68FCA/RIqnRgXKcmwscA6qChdT1wHsVU4wdvAWeKz6S+JOOJNWAAhNo2hDtD1
+	 t0a14zBni0iDuSr1ArRKL9Bm1jdw/nG6dqU++jjHl20Cwo/N52n0Bo9o7E+I+I6CIb
+	 5MRJJoYhfbIbU9KPj9WrxNuNRuWVAHXdyvnH5AkIoYVAjapxGp/1IYQ56If0dyk/Fw
+	 PLZas/NOkgAGA==
+Received: from beast.luon.net (unknown [IPv6:2a10:3781:2531::8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: sjoerd)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 061F717E1396;
+	Wed,  5 Nov 2025 22:18:35 +0100 (CET)
+Received: by beast.luon.net (Postfix, from userid 1000)
+	id 9FA6010F352E1; Wed, 05 Nov 2025 22:18:34 +0100 (CET)
+From: Sjoerd Simons <sjoerd@collabora.com>
+Date: Wed, 05 Nov 2025 22:17:59 +0100
+Subject: [PATCH v3 04/13] dt-bindings: PCI: mediatek-gen3: Add MT7981 PCIe
+ compatible
+MIME-Version: 1.0
+Message-Id: <20251105-openwrt-one-network-v3-4-008e2cab38d1@collabora.com>
+References: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+In-Reply-To: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>,
+  Matthias Brugger <matthias.bgg@gmail.com>,
+  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+  Ryder Lee <ryder.lee@mediatek.com>,
+  Jianjun Wang <jianjun.wang@mediatek.com>,
+  Bjorn Helgaas <bhelgaas@google.com>,
+  Lorenzo Pieralisi <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy?=
+	=?utf-8?q?=C5=84ski?= <kwilczynski@kernel.org>,
+  Manivannan Sadhasivam <mani@kernel.org>,
+  Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+  Kishon Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>,
+  Andrew Lunn <andrew+netdev@lunn.ch>,
+  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+  Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+ Daniel Golle <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>,
+ Sjoerd Simons <sjoerd@collabora.com>,
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.14.3
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251105_131843_768347_BD42A9AF 
+X-CRM114-Status: UNSURE (   9.72  )
+X-CRM114-Notice: Please train this message.
+X-BeenThere: linux-mediatek@lists.infradead.org
+X-Mailman-Version: 2.1.34
+Precedence: list
+List-Id: <linux-mediatek.lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek@lists.infradead.org>
+List-Help: <mailto:linux-mediatek-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces@lists.infradead.org>
+Errors-To: 
+ linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org
+
+Add compatible string for MediaTek MT7981 PCIe Gen3 controller.
+The MT7981 PCIe controller is compatible with the MT8192 PCIe
+controller.
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+---
+V1 -> V2: Improve commit subject
+---
+ Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+index 0278845701ce8..4db700fc36ba7 100644
+--- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
++++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+@@ -48,6 +48,7 @@ properties:
+     oneOf:
+       - items:
+           - enum:
++              - mediatek,mt7981-pcie
+               - mediatek,mt7986-pcie
+               - mediatek,mt8188-pcie
+               - mediatek,mt8195-pcie
+
+From patchwork Wed Nov  5 21:18:00 2025
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Sjoerd Simons <sjoerd@collabora.com>
+X-Patchwork-Id: 14300876
+Return-Path: 
+ <linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E1750CCFA1B
+	for <linux-mediatek@archiver.kernel.org>;
+ Wed,  5 Nov 2025 21:18:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ksghHQTQZO35rk2pD4ByHO3UcRzFD5f5eXAve+3bdKg=; b=F7ytra4BobFP2vF4cJkBEFcr1N
+	nb92KC2u8M293hQqGx8pfMMv/5RQ+5or+2cx3IocNILotBgcFIL7Qli3JtoeTwCGaeaYPgqvodnN/
+	3nmfTFZ+FN88+6FxpzPkFJHaEnLqmVdZOS1o0bULqKO19A5/kmjIra/ZMje7YF3nheOYc0+GgkVLn
+	c5ZA22taPPoMbVW1vEw6ivJns6Q9eF/4CRvqiNq8iaMzBNSAzZ47rezQ9DUe720t1WEateAAGtSTx
+	teZzG3tBmgSgo4CdeBCCxvH+tQOI8aGBsWB39s48iqM9o0GQJOoPSqmm5aa45Ra5UPLUtcTCZcOuU
+	WeOaKIlA==;
+Received: from localhost ([::1] helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGku1-0000000EUDZ-2DzO;
+	Wed, 05 Nov 2025 21:18:49 +0000
+Received: from bali.collaboradmins.com ([148.251.105.195])
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGktu-0000000ETzV-01bB;
+	Wed, 05 Nov 2025 21:18:43 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1762377515;
+	bh=0HQMjZYjWvOC8AwZB4R1t/Hz5V/fyYneHN+5PdUNP20=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=E+0/zF+6oMms5hJTlxoUCNIi/DeN8KiZrnBjTBO/RUtepOeAYNieN3YDaZ8sXRCTg
+	 0R4a3m6gZap6/EjIdz0PgdQPDVl9JQK5VgB55EKabHBR9y9ltShIHngSc/xm9yFlMI
+	 e6ixnHLiAseOdlMdjnDpsPHOMWyTbKeOpTxoXQKNIAcKLCostve024jIAdX+WRmgu5
+	 6NqNKuorQRxMCvKTbxg23/bThwa8zbmNRYlUVmCggyw/jMvLUIxcgoofcpGAaa5WNW
+	 TNK9SI7WAfpfKHGvNQQrbqK72CLMqOvL0yUsGw5hcX5VNIfNcnZGSDoK7P7sGaTTge
+	 EvrkabOTCXGdQ==
+Received: from beast.luon.net (unknown [IPv6:2a10:3781:2531::8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: sjoerd)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id D171217E141C;
+	Wed,  5 Nov 2025 22:18:35 +0100 (CET)
+Received: by beast.luon.net (Postfix, from userid 1000)
+	id A705710F352E3; Wed, 05 Nov 2025 22:18:34 +0100 (CET)
+From: Sjoerd Simons <sjoerd@collabora.com>
+Date: Wed, 05 Nov 2025 22:18:00 +0100
+Subject: [PATCH v3 05/13] dt-bindings: phy: mediatek,tphy: Add support for
+ MT7981
+MIME-Version: 1.0
+Message-Id: <20251105-openwrt-one-network-v3-5-008e2cab38d1@collabora.com>
+References: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+In-Reply-To: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>,
+  Matthias Brugger <matthias.bgg@gmail.com>,
+  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+  Ryder Lee <ryder.lee@mediatek.com>,
+  Jianjun Wang <jianjun.wang@mediatek.com>,
+  Bjorn Helgaas <bhelgaas@google.com>,
+  Lorenzo Pieralisi <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy?=
+	=?utf-8?q?=C5=84ski?= <kwilczynski@kernel.org>,
+  Manivannan Sadhasivam <mani@kernel.org>,
+  Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+  Kishon Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>,
+  Andrew Lunn <andrew+netdev@lunn.ch>,
+  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+  Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+ Daniel Golle <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>,
+ Sjoerd Simons <sjoerd@collabora.com>,
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.14.3
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251105_131842_202316_35B8CB33 
+X-CRM114-Status: UNSURE (   9.72  )
+X-CRM114-Notice: Please train this message.
+X-BeenThere: linux-mediatek@lists.infradead.org
+X-Mailman-Version: 2.1.34
+Precedence: list
+List-Id: <linux-mediatek.lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek@lists.infradead.org>
+List-Help: <mailto:linux-mediatek-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces@lists.infradead.org>
+Errors-To: 
+ linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org
+
+Add a compatible string for Filogic 820, this chip integrates a MediaTek
+generic T-PHY version 2
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+---
+ Documentation/devicetree/bindings/phy/mediatek,tphy.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/phy/mediatek,tphy.yaml b/Documentation/devicetree/bindings/phy/mediatek,tphy.yaml
+index b2218c1519391..ff5c77ef11765 100644
+--- a/Documentation/devicetree/bindings/phy/mediatek,tphy.yaml
++++ b/Documentation/devicetree/bindings/phy/mediatek,tphy.yaml
+@@ -80,6 +80,7 @@ properties:
+               - mediatek,mt2712-tphy
+               - mediatek,mt6893-tphy
+               - mediatek,mt7629-tphy
++              - mediatek,mt7981-tphy
+               - mediatek,mt7986-tphy
+               - mediatek,mt8183-tphy
+               - mediatek,mt8186-tphy
+
+From patchwork Wed Nov  5 21:18:01 2025
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Sjoerd Simons <sjoerd@collabora.com>
+X-Patchwork-Id: 14300875
+Return-Path: 
+ <linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C874ACCFA0D
+	for <linux-mediatek@archiver.kernel.org>;
+ Wed,  5 Nov 2025 21:18:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=OewVkhzvg4trcmQP7/dgtYYz1ryrPP/rqMADz2pCeIY=; b=eBnFgMQu6a8d0DML7ZzSSFNoCZ
+	DqFsz4ne4kYrtfFmuvmuEkbTrqGBdzE9131EyGzy/uA9Fq6yDTXgNMsimzA7/m1N1Q6u63d8WdjF/
+	3p66nHdfIAb9N1dVcrm9CPX2RFnbVDyEBv2tvm8iY3tMxgDaKYzpFgnxYrJcfyLRPBXbxhVyGJo5d
+	LcYXnXYVHZUyPL0ll5Y41IouTph2oNeLpCfnVlngJIy/I5Hf2Jr8TfSYR6tbWiJ/o7WPCFM6DnKrG
+	C2JBp2cYtt1ba9c40i6XiU+AIs27VIcIrTN3Bwd5sH0Ia6FMxOTi1w3J4jXDXj0p6Zsosm0Iq0ypr
+	S3OLKEeg==;
+Received: from localhost ([::1] helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGktx-0000000EU6b-0FrT;
+	Wed, 05 Nov 2025 21:18:45 +0000
+Received: from bali.collaboradmins.com ([2a01:4f8:201:9162::2])
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGktq-0000000ETy7-1d4m;
+	Wed, 05 Nov 2025 21:18:40 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1762377515;
+	bh=USBTzS5LeZooJ42tEMhi7N85ITpVvJxHo6le5MQpsP8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=WUkRIO/LYeerYC6Qq/d0vAfift6ItxGSaUObXGhLruOzlq7/kcBr+2CN1AmZAyYlB
+	 ZRHuj0ONVxvE+iM881QLIewGCInjRhlpv766aT3kf5EdndnvQpUWI6mGcXSL9+D0bN
+	 0ymjCtAs+DhWJriToq1IQY5gRFeScXU6UIUtzPu2MxzrkrxXxGN01BwA6CQ4EmIum6
+	 Pk5d7dytEcRSh4zBULWcisWeYuZETEWT38J4AeK75/W2ocxODRxIv13QX4OA+rI2Yu
+	 gHgcEnQgXIYVVIgDHHmZ463GAH23E5F2DeDcWV6rYF/15ONDTxTVsY/8HKSAF8qhz4
+	 Y2Ku4wTENqHjg==
+Received: from beast.luon.net (simons.connected.by.freedominter.net
+ [45.83.240.172])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sjoerd)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 5918117E13DC;
+	Wed,  5 Nov 2025 22:18:35 +0100 (CET)
+Received: by beast.luon.net (Postfix, from userid 1000)
+	id AC8E110F352E5; Wed, 05 Nov 2025 22:18:34 +0100 (CET)
+From: Sjoerd Simons <sjoerd@collabora.com>
+Date: Wed, 05 Nov 2025 22:18:01 +0100
+Subject: [PATCH v3 06/13] arm64: dts: mediatek: mt7981b: Add PCIe and USB
+ support
+MIME-Version: 1.0
+Message-Id: <20251105-openwrt-one-network-v3-6-008e2cab38d1@collabora.com>
+References: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+In-Reply-To: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>,
+  Matthias Brugger <matthias.bgg@gmail.com>,
+  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+  Ryder Lee <ryder.lee@mediatek.com>,
+  Jianjun Wang <jianjun.wang@mediatek.com>,
+  Bjorn Helgaas <bhelgaas@google.com>,
+  Lorenzo Pieralisi <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy?=
+	=?utf-8?q?=C5=84ski?= <kwilczynski@kernel.org>,
+  Manivannan Sadhasivam <mani@kernel.org>,
+  Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+  Kishon Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>,
+  Andrew Lunn <andrew+netdev@lunn.ch>,
+  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+  Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+ Daniel Golle <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>,
+ Sjoerd Simons <sjoerd@collabora.com>
+X-Mailer: b4 0.14.3
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251105_131838_605736_F24BF5C4 
+X-CRM114-Status: GOOD (  13.23  )
+X-BeenThere: linux-mediatek@lists.infradead.org
+X-Mailman-Version: 2.1.34
+Precedence: list
+List-Id: <linux-mediatek.lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek@lists.infradead.org>
+List-Help: <mailto:linux-mediatek-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces@lists.infradead.org>
+Errors-To: 
+ linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org
+
+Add device tree nodes for PCIe controller and USB3 XHCI host
+controller on MT7981B SoC. Both controllers share the USB3 PHY
+which can be configured for either USB3 or PCIe operation.
+
+The USB3 XHCI controller supports USB 2.0 and USB 3.0 SuperSpeed
+operation. The PCIe controller is compatible with PCIe Gen2
+specifications.
+
+Also add the topmisc syscon node required for USB/PCIe PHY
+multiplexing.
+
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+---
+V1 -> V2: Keep xhci reg and phys properties in single lines
+---
+ arch/arm64/boot/dts/mediatek/mt7981b.dtsi | 80 +++++++++++++++++++++++++++++++
+ 1 file changed, 80 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+index 416096b80770c..d3f37413413e2 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+@@ -2,6 +2,7 @@
+ 
+ #include <dt-bindings/clock/mediatek,mt7981-clk.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/phy/phy.h>
+ #include <dt-bindings/reset/mt7986-resets.h>
+ 
+ / {
+@@ -223,6 +224,55 @@ auxadc: adc@1100d000 {
+ 			status = "disabled";
+ 		};
+ 
++		xhci: usb@11200000 {
++			compatible = "mediatek,mt7986-xhci", "mediatek,mtk-xhci";
++			reg = <0 0x11200000 0 0x2e00>, <0 0x11203e00 0 0x0100>;
++			reg-names = "mac", "ippc";
++			clocks = <&infracfg CLK_INFRA_IUSB_SYS_CK>,
++				 <&infracfg CLK_INFRA_IUSB_CK>,
++				 <&infracfg CLK_INFRA_IUSB_133_CK>,
++				 <&infracfg CLK_INFRA_IUSB_66M_CK>,
++				 <&topckgen CLK_TOP_U2U3_XHCI_SEL>;
++			clock-names = "sys_ck", "ref_ck", "mcu_ck", "dma_ck", "xhci_ck";
++			interrupts = <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
++			phys = <&u2port0 PHY_TYPE_USB2>, <&u3port0 PHY_TYPE_USB3>;
++			status = "disabled";
++		};
++
++		pcie: pcie@11280000 {
++			compatible = "mediatek,mt7981-pcie",
++				     "mediatek,mt8192-pcie";
++			reg = <0 0x11280000 0 0x4000>;
++			reg-names = "pcie-mac";
++			ranges = <0x82000000 0 0x20000000
++				  0x0 0x20000000 0 0x10000000>;
++			bus-range = <0x00 0xff>;
++			clocks = <&infracfg CLK_INFRA_IPCIE_CK>,
++				 <&infracfg CLK_INFRA_IPCIE_PIPE_CK>,
++				 <&infracfg CLK_INFRA_IPCIER_CK>,
++				 <&infracfg CLK_INFRA_IPCIEB_CK>;
++			clock-names = "pl_250m", "tl_26m", "peri_26m", "top_133m";
++			device_type = "pci";
++			phys = <&u3port0 PHY_TYPE_PCIE>;
++			phy-names = "pcie-phy";
++			interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-map-mask = <0 0 0 7>;
++			interrupt-map = <0 0 0 1 &pcie_intc 0>,
++					<0 0 0 2 &pcie_intc 1>,
++					<0 0 0 3 &pcie_intc 2>,
++					<0 0 0 4 &pcie_intc 3>;
++			#address-cells = <3>;
++			#interrupt-cells = <1>;
++			#size-cells = <2>;
++			status = "disabled";
++
++			pcie_intc: interrupt-controller {
++				interrupt-controller;
++				#address-cells = <0>;
++				#interrupt-cells = <1>;
++			};
++		};
++
+ 		pio: pinctrl@11d00000 {
+ 			compatible = "mediatek,mt7981-pinctrl";
+ 			reg = <0 0x11d00000 0 0x1000>,
+@@ -252,6 +302,36 @@ mux {
+ 			};
+ 		};
+ 
++		topmisc: topmisc@11d10000 {
++			compatible = "mediatek,mt7981-topmisc", "syscon";
++			reg = <0 0x11d10000 0 0x10000>;
++			#clock-cells = <1>;
++		};
++
++		usb_phy: t-phy@11e10000 {
++			compatible = "mediatek,mt7981-tphy",
++				     "mediatek,generic-tphy-v2";
++			ranges = <0 0 0x11e10000 0x1700>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			status = "disabled";
++
++			u2port0: usb-phy@0 {
++				reg = <0x0 0x700>;
++				clocks = <&topckgen CLK_TOP_USB_FRMCNT_SEL>;
++				clock-names = "ref";
++				#phy-cells = <1>;
++			};
++
++			u3port0: usb-phy@700 {
++				reg = <0x700 0x900>;
++				clocks = <&topckgen CLK_TOP_USB3_PHY_SEL>;
++				clock-names = "ref";
++				#phy-cells = <1>;
++				mediatek,syscon-type = <&topmisc 0x218 0>;
++			};
++		};
++
+ 		efuse@11f20000 {
+ 			compatible = "mediatek,mt7981-efuse", "mediatek,efuse";
+ 			reg = <0 0x11f20000 0 0x1000>;
+
+From patchwork Wed Nov  5 21:18:02 2025
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Sjoerd Simons <sjoerd@collabora.com>
+X-Patchwork-Id: 14300885
+Return-Path: 
+ <linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3EC2DCCFA1B
+	for <linux-mediatek@archiver.kernel.org>;
+ Wed,  5 Nov 2025 21:19:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=5LeoqZv3J6t2Lu06YdrFLcmlUA455lKj3p+A2h/ypu8=; b=PfxLR/Mh2vBYaTJCsX5x5GiFJT
+	c0XXtfD6Q7TsmIVYzLO9l2tgwYZnmIEkVuwoQmVgaUOTuLbleLuWmFzxr8IXcuR4lVScxkNwxJOJ4
+	arLlD/JihJ70w8AtqG+NlDelQAmD9eRvnysxvuQgTkrITmUAZDlfRKn6+oLfUtx4wsOrp+6lU/m0I
+	AFoY/3+mRPZVyjWrkB1aPP2LkchYiZ6ExCSaXXkYP9MoyhWinMA0n9ufduTt9gxOfaa5Z7ZEcqneh
+	O0ujcAlTyM7uqLKAMRxQpZML9inVDQvrpvFzsHSPE10NZVbkZ8vrdEyEEX7d90jfmPjBu/JMouO7L
+	EmjFICkQ==;
+Received: from localhost ([::1] helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGkuL-0000000EUdx-0bjn;
+	Wed, 05 Nov 2025 21:19:09 +0000
+Received: from bali.collaboradmins.com ([148.251.105.195])
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGktv-0000000EU0s-1jI7;
+	Wed, 05 Nov 2025 21:18:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1762377516;
+	bh=qtE8TxX+bp4mVeKXXycM622mPKaw8qoe/nGz0YEjV0g=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=IaRJcfEJJPmuVxfIA0AMonJG0NAIwG2GFs1HcbU8uvXF99pgELvzC5G7nSSRhwUVJ
+	 LuwV5lD0JO+6NbQDCg/6824/ru1L/WtPNmPZ9XIv2dmNWRPrG1D+ir8Y18q8GzoaIE
+	 qEW8KlPcmRtH5QYv8gEmfKMpqY/vnwuoHhrQxhH/YBZUJn8Mrio3T/yeFVOaa9Kfp/
+	 3bU7QVAyxxZtxGmkVSf/V0rYQ39sDr5ivWxPxN2ygRhLyKoa/vXN3Zh8b/MbgnaR53
+	 jdmgxlQ8Y7in86CB/YBRRqqqam07WivxiWw5icWmtAT4asEubhTmOpyhAMNyxRoJ/A
+	 g3EvDDnrDetBw==
+Received: from beast.luon.net (unknown [IPv6:2a10:3781:2531::8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: sjoerd)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4164C17E1500;
+	Wed,  5 Nov 2025 22:18:36 +0100 (CET)
+Received: by beast.luon.net (Postfix, from userid 1000)
+	id B209C10F352E7; Wed, 05 Nov 2025 22:18:34 +0100 (CET)
+From: Sjoerd Simons <sjoerd@collabora.com>
+Date: Wed, 05 Nov 2025 22:18:02 +0100
+Subject: [PATCH v3 07/13] arm64: dts: mediatek: mt7981b-openwrt-one: Enable
+ PCIe and USB
+MIME-Version: 1.0
+Message-Id: <20251105-openwrt-one-network-v3-7-008e2cab38d1@collabora.com>
+References: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+In-Reply-To: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>,
+  Matthias Brugger <matthias.bgg@gmail.com>,
+  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+  Ryder Lee <ryder.lee@mediatek.com>,
+  Jianjun Wang <jianjun.wang@mediatek.com>,
+  Bjorn Helgaas <bhelgaas@google.com>,
+  Lorenzo Pieralisi <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy?=
+	=?utf-8?q?=C5=84ski?= <kwilczynski@kernel.org>,
+  Manivannan Sadhasivam <mani@kernel.org>,
+  Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+  Kishon Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>,
+  Andrew Lunn <andrew+netdev@lunn.ch>,
+  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+  Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+ Daniel Golle <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>,
+ Sjoerd Simons <sjoerd@collabora.com>
+X-Mailer: b4 0.14.3
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251105_131843_751628_5822FC28 
+X-CRM114-Status: GOOD (  11.99  )
+X-BeenThere: linux-mediatek@lists.infradead.org
+X-Mailman-Version: 2.1.34
+Precedence: list
+List-Id: <linux-mediatek.lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek@lists.infradead.org>
+List-Help: <mailto:linux-mediatek-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces@lists.infradead.org>
+Errors-To: 
+ linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org
+
+Enable the PCIe controller and USB3 XHCI host on the OpenWrt One
+board. The USB controller is configured for USB 2.0 only mode, as the
+shared USB3/PCIe PHY is dedicated to PCIe functionality on this board.
+
+Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+---
+ .../boot/dts/mediatek/mt7981b-openwrt-one.dts      | 43 ++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+index 2e39e72877301..7382599cfea29 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+@@ -67,9 +67,40 @@ led-2 {
+ 			linux,default-trigger = "netdev";
+ 		};
+ 	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	reg_5v: regulator-5v {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-5V";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++};
++
++&pcie {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie_pins>;
++	status = "okay";
+ };
+ 
+ &pio {
++	pcie_pins: pcie-pins {
++		mux {
++			function = "pcie";
++			groups = "pcie_pereset";
++		};
++	};
++
+ 	pwm_pins: pwm-pins {
+ 		mux {
+ 			function = "pwm";
+@@ -163,3 +194,15 @@ partition@180000 {
+ &uart0 {
+ 	status = "okay";
+ };
++
++&usb_phy {
++	status = "okay";
++};
++
++&xhci {
++	phys = <&u2port0 PHY_TYPE_USB2>;
++	vusb33-supply = <&reg_3p3v>;
++	vbus-supply = <&reg_5v>;
++	mediatek,u3p-dis-msk = <0x01>;
++	status = "okay";
++};
+
+From patchwork Wed Nov  5 21:18:03 2025
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Sjoerd Simons <sjoerd@collabora.com>
+X-Patchwork-Id: 14300879
+Return-Path: 
+ <linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 68EEECCFA1A
+	for <linux-mediatek@archiver.kernel.org>;
+ Wed,  5 Nov 2025 21:18:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=U/HWjTcrTykICPk85BFLbniT6AbycVyNQZ2wskKa2+Y=; b=x5M00nhbHn+3doFPziZ5+1s+cC
+	nSFohk31+n65D5KFc3MQkD/xhAnz+cbHNi1o66MbO0Al6zxPP0czjOlmx/3UUy+2UyciVb71uaDyY
+	mWFtQPe3Uv+g8U6qsB5q5G8wXcDoCX0l7y8qqjSf225PjfL/f+EY8TtLMsuuD6apduiPoxYUwf0hU
+	pgoh3Qpe0A58fLM0kkFvlOEUjN7zJuMUTtVUy//izs9Xz7IiWWFaOqAFCmnMqWtxnygW8SDmiPNwU
+	E8feSR2lr2PkXvYtb56ovazoEyqlIt+48k4TMCer5QVKK3OG3xvUI6WHCy+bN71Pj9VwoU9CiGUmh
+	s0d94Bbg==;
+Received: from localhost ([::1] helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGku7-0000000EUKu-1vzn;
+	Wed, 05 Nov 2025 21:18:55 +0000
+Received: from bali.collaboradmins.com ([2a01:4f8:201:9162::2])
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGktu-0000000EU01-3nAf;
+	Wed, 05 Nov 2025 21:18:45 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1762377516;
+	bh=awDSMBDJzPPS4EnVp8+B6nVYbJz7nRdZNkEF4vHPpPs=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=ci42NPe8j7NJSLA1jJMH0sd/AmJryok+Vl512uKMGj5mF2Kxb3nn2pL+6hJVPtci6
+	 ZZkmTVlO1SqVesFxzX+Q4zRKCSPVZeCb7E01Cdng8wUwBesuwK9m0Tn2PfSzaN4oDo
+	 fKbUfb5awtUm/uQeA2LTeJgBs9vIHwaBI8zxpWSsM6pXLyiBIHKqlnnW3zA9NjO1i/
+	 ZuSqud86yIDPzsXOaxa3W11u+/4aMukzxMhNeOP9SWxZTMBWKM9ln5DhMMsdFaT1m0
+	 abYnXSsuUk+88l4wwcitMfj6JmgzN8RAJhIpUuBOXP3w4aG5Tl1kvPzmbFApEnf0/2
+	 KMjrOAZnCGYig==
+Received: from beast.luon.net (unknown [IPv6:2a10:3781:2531::8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: sjoerd)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0997B17E1465;
+	Wed,  5 Nov 2025 22:18:36 +0100 (CET)
+Received: by beast.luon.net (Postfix, from userid 1000)
+	id B56D010F352E9; Wed, 05 Nov 2025 22:18:34 +0100 (CET)
+From: Sjoerd Simons <sjoerd@collabora.com>
+Date: Wed, 05 Nov 2025 22:18:03 +0100
+Subject: [PATCH v3 08/13] dt-bindings: net: mediatek,net: Correct bindings
+ for MT7981
+MIME-Version: 1.0
+Message-Id: <20251105-openwrt-one-network-v3-8-008e2cab38d1@collabora.com>
+References: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+In-Reply-To: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>,
+  Matthias Brugger <matthias.bgg@gmail.com>,
+  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+  Ryder Lee <ryder.lee@mediatek.com>,
+  Jianjun Wang <jianjun.wang@mediatek.com>,
+  Bjorn Helgaas <bhelgaas@google.com>,
+  Lorenzo Pieralisi <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy?=
+	=?utf-8?q?=C5=84ski?= <kwilczynski@kernel.org>,
+  Manivannan Sadhasivam <mani@kernel.org>,
+  Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+  Kishon Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>,
+  Andrew Lunn <andrew+netdev@lunn.ch>,
+  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+  Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+ Daniel Golle <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>,
+ Sjoerd Simons <sjoerd@collabora.com>
+X-Mailer: b4 0.14.3
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251105_131843_168278_91D1058F 
+X-CRM114-Status: GOOD (  10.93  )
+X-BeenThere: linux-mediatek@lists.infradead.org
+X-Mailman-Version: 2.1.34
+Precedence: list
+List-Id: <linux-mediatek.lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek@lists.infradead.org>
+List-Help: <mailto:linux-mediatek-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces@lists.infradead.org>
+Errors-To: 
+ linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org
+
+Different SoCs can have different numbers of Wireless Ethernet
+Dispatch (WED) units, specifically the MT7981 only has a single WED.
+Furthermore the MT7981 uses infracfg for PHY switching. Adjust bindings
+to match both aspects.
+
+Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+---
+V2 -> V3: Only update MT7981 constraints rather then defaults
+V1 -> V2: Only overwrite constraints that are different from the default
+---
+ Documentation/devicetree/bindings/net/mediatek,net.yaml | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/mediatek,net.yaml b/Documentation/devicetree/bindings/net/mediatek,net.yaml
+index b45f67f92e80d..c49871438efc7 100644
+--- a/Documentation/devicetree/bindings/net/mediatek,net.yaml
++++ b/Documentation/devicetree/bindings/net/mediatek,net.yaml
+@@ -338,12 +338,14 @@ allOf:
+             - const: netsys0
+             - const: netsys1
+ 
+-        mediatek,infracfg: false
+-
+         mediatek,sgmiisys:
+           minItems: 2
+           maxItems: 2
+ 
++        mediatek,wed:
++          minItems: 1
++          maxItems: 1
++
+   - if:
+       properties:
+         compatible:
+
+From patchwork Wed Nov  5 21:18:04 2025
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Sjoerd Simons <sjoerd@collabora.com>
+X-Patchwork-Id: 14300880
+Return-Path: 
+ <linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7FBBCCCFA1B
+	for <linux-mediatek@archiver.kernel.org>;
+ Wed,  5 Nov 2025 21:19:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ueCHoKYMg9K7QpsQLRQi0Sc30bMhBHa09ApzlEJfMVY=; b=oliYQgrzXGp3vf+njo9cxmoUI0
+	SYH4m3tbm1tJIntPx9Y9w063n6upSy6atQ0W8wAeqeCt9R9CjK2fHnsbSZOGr8/TkQ2QLNTMKv0Qb
+	PCbjTvPayNSWTUKEI8iL4LjsbVafBOIVPC+QHjLq+Zll58hjqW/bDzeVw/I/GsuLEL+ST9EcYKtDa
+	Bb74sy8jrdoDTGwg09mXBpei524ik5p1AFNq/aC63kwwNJL1D/hw7nPJpdv+kxwohYVdYqqkOyFtp
+	dcJ01OouhL2/Bzzb8bm1+1mXERn6C9/wo65rN+SHocGUc5sL3HMNwpvLGN53seLpDIKnjRGhNVqbl
+	Jan3eReA==;
+Received: from localhost ([::1] helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGkuH-0000000EUXq-1q2R;
+	Wed, 05 Nov 2025 21:19:05 +0000
+Received: from bali.collaboradmins.com ([2a01:4f8:201:9162::2])
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGktu-0000000ETzU-0GDS;
+	Wed, 05 Nov 2025 21:18:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1762377515;
+	bh=BQ/4Q4O4iwtOMxBPtuM66Fi5zxdH24aH3c3Edh+F6Gw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=IRXC0OH241ZhJ2dEV4LfgFdc4A+BagnFWsrrwtn3vopT0NppteIBKbXw109zFFIMG
+	 2fkF/7w+APwUdAHb8p8WH8NejrZz9YQMjnZYmts9yjB2RC4J/8uGXcVWaPrpN2OYHr
+	 63AzqjmeOxP0yepmJ8/ngYGq5byQ6vpaSRrfSu1mB8RcYDlBcOy0Q3f8kKlFvO2QET
+	 hax6ycKibWsvT1isXzFk5Wf6lyrxvYFABMBQ/cW3mVVXCXYlzjQlqImgmKg3Qs5l2N
+	 lKwf4s814rTjC+0SRKPGpYey5S1ExcBlNy1zKk1+38i7C0VxUAa2NfJi4pv43fB8MB
+	 fv/XeT07/fxDA==
+Received: from beast.luon.net (simons.connected.by.freedominter.net
+ [45.83.240.172])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest
+ SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sjoerd)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6263917E1401;
+	Wed,  5 Nov 2025 22:18:35 +0100 (CET)
+Received: by beast.luon.net (Postfix, from userid 1000)
+	id BD7E410F352EB; Wed, 05 Nov 2025 22:18:34 +0100 (CET)
+From: Sjoerd Simons <sjoerd@collabora.com>
+Date: Wed, 05 Nov 2025 22:18:04 +0100
+Subject: [PATCH v3 09/13] arm64: dts: mediatek: mt7981b: Add Ethernet and
+ WiFi offload support
+MIME-Version: 1.0
+Message-Id: <20251105-openwrt-one-network-v3-9-008e2cab38d1@collabora.com>
+References: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+In-Reply-To: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>,
+  Matthias Brugger <matthias.bgg@gmail.com>,
+  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+  Ryder Lee <ryder.lee@mediatek.com>,
+  Jianjun Wang <jianjun.wang@mediatek.com>,
+  Bjorn Helgaas <bhelgaas@google.com>,
+  Lorenzo Pieralisi <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy?=
+	=?utf-8?q?=C5=84ski?= <kwilczynski@kernel.org>,
+  Manivannan Sadhasivam <mani@kernel.org>,
+  Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+  Kishon Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>,
+  Andrew Lunn <andrew+netdev@lunn.ch>,
+  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+  Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+ Daniel Golle <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>,
+ Sjoerd Simons <sjoerd@collabora.com>
+X-Mailer: b4 0.14.3
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251105_131842_314327_85CB8EE5 
+X-CRM114-Status: GOOD (  13.34  )
+X-BeenThere: linux-mediatek@lists.infradead.org
+X-Mailman-Version: 2.1.34
+Precedence: list
+List-Id: <linux-mediatek.lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek@lists.infradead.org>
+List-Help: <mailto:linux-mediatek-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces@lists.infradead.org>
+Errors-To: 
+ linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org
+
+Add device tree nodes for the Ethernet subsystem on MT7981B SoC,
+including:
+- Ethernet MAC controller with dual GMAC support
+- Wireless Ethernet Dispatch (WED)
+- SGMII PHY controllers for high-speed Ethernet interfaces
+- Reserved memory regions for WiFi offload processor
+
+Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+---
+V1 -> V2: Don't add unneeded interrupt-parent
+---
+ arch/arm64/boot/dts/mediatek/mt7981b.dtsi | 133 +++++++++++++++++++++++++++++-
+ 1 file changed, 132 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+index d3f37413413e2..6be588be3761a 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+@@ -2,6 +2,7 @@
+ 
+ #include <dt-bindings/clock/mediatek,mt7981-clk.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/leds/common.h>
+ #include <dt-bindings/phy/phy.h>
+ #include <dt-bindings/reset/mt7986-resets.h>
+ 
+@@ -47,11 +48,36 @@ reserved-memory {
+ 		#size-cells = <2>;
+ 		ranges;
+ 
++		wo_boot: wo-boot@15194000 {
++			reg = <0 0x15194000 0 0x1000>;
++			no-map;
++		};
++
++		wo_ilm0: wo-ilm@151e0000 {
++			reg = <0 0x151e0000 0 0x8000>;
++			no-map;
++		};
++
++		wo_dlm0: wo-dlm@151e8000 {
++			reg = <0 0x151e8000 0 0x2000>;
++			no-map;
++		};
++
+ 		/* 192 KiB reserved for ARM Trusted Firmware (BL31) */
+ 		secmon_reserved: secmon@43000000 {
+ 			reg = <0 0x43000000 0 0x30000>;
+ 			no-map;
+ 		};
++
++		wo_emi0: wo-emi@47d80000 {
++			reg = <0 0x47d80000 0 0x40000>;
++			no-map;
++		};
++
++		wo_data: wo-data@47dc0000 {
++			reg = <0 0x47dc0000 0 0x240000>;
++			no-map;
++		};
+ 	};
+ 
+ 	soc {
+@@ -107,6 +133,18 @@ pwm: pwm@10048000 {
+ 			#pwm-cells = <2>;
+ 		};
+ 
++		sgmiisys0: syscon@10060000 {
++			compatible = "mediatek,mt7981-sgmiisys_0", "syscon";
++			reg = <0 0x10060000 0 0x1000>;
++			#clock-cells = <1>;
++		};
++
++		sgmiisys1: syscon@10070000 {
++			compatible = "mediatek,mt7981-sgmiisys_1", "syscon";
++			reg = <0 0x10070000 0 0x1000>;
++			#clock-cells = <1>;
++		};
++
+ 		uart0: serial@11002000 {
+ 			compatible = "mediatek,mt7981-uart", "mediatek,mt6577-uart";
+ 			reg = <0 0x11002000 0 0x100>;
+@@ -345,15 +383,108 @@ soc-uuid@140 {
+ 			thermal_calibration: thermal-calib@274 {
+ 				reg = <0x274 0xc>;
+ 			};
++
++			phy_calibration: phy-calib@8dc {
++				reg = <0x8dc 0x10>;
++			};
+ 		};
+ 
+-		clock-controller@15000000 {
++		ethsys: clock-controller@15000000 {
+ 			compatible = "mediatek,mt7981-ethsys", "syscon";
+ 			reg = <0 0x15000000 0 0x1000>;
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+ 		};
+ 
++		wed: wed@15010000 {
++			compatible = "mediatek,mt7981-wed",
++				     "syscon";
++			reg = <0 0x15010000 0 0x1000>;
++			interrupts = <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>;
++			memory-region = <&wo_emi0>, <&wo_ilm0>, <&wo_dlm0>,
++					<&wo_data>, <&wo_boot>;
++			memory-region-names = "wo-emi", "wo-ilm", "wo-dlm",
++					      "wo-data", "wo-boot";
++			mediatek,wo-ccif = <&wo_ccif0>;
++		};
++
++		eth: ethernet@15100000 {
++			compatible = "mediatek,mt7981-eth";
++			reg = <0 0x15100000 0 0x40000>;
++			assigned-clocks = <&topckgen CLK_TOP_NETSYS_2X_SEL>,
++					  <&topckgen CLK_TOP_SGM_325M_SEL>;
++			assigned-clock-parents = <&topckgen CLK_TOP_CB_NET2_800M>,
++						 <&topckgen CLK_TOP_CB_SGM_325M>;
++			clocks = <&ethsys CLK_ETH_FE_EN>,
++				 <&ethsys CLK_ETH_GP2_EN>,
++				 <&ethsys CLK_ETH_GP1_EN>,
++				 <&ethsys CLK_ETH_WOCPU0_EN>,
++				 <&topckgen CLK_TOP_SGM_REG>,
++				 <&sgmiisys0 CLK_SGM0_TX_EN>,
++				 <&sgmiisys0 CLK_SGM0_RX_EN>,
++				 <&sgmiisys0 CLK_SGM0_CK0_EN>,
++				 <&sgmiisys0 CLK_SGM0_CDR_CK0_EN>,
++				 <&sgmiisys1 CLK_SGM1_TX_EN>,
++				 <&sgmiisys1 CLK_SGM1_RX_EN>,
++				 <&sgmiisys1 CLK_SGM1_CK1_EN>,
++				 <&sgmiisys1 CLK_SGM1_CDR_CK1_EN>,
++				 <&topckgen CLK_TOP_NETSYS_SEL>,
++				 <&topckgen CLK_TOP_NETSYS_500M_SEL>;
++			clock-names = "fe", "gp2", "gp1", "wocpu0",
++				      "sgmii_ck",
++				      "sgmii_tx250m", "sgmii_rx250m",
++				      "sgmii_cdr_ref", "sgmii_cdr_fb",
++				      "sgmii2_tx250m", "sgmii2_rx250m",
++				      "sgmii2_cdr_ref", "sgmii2_cdr_fb",
++				      "netsys0", "netsys1";
++			interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "fe0", "fe1", "fe2", "fe3", "pdma0",
++					  "pdma1", "pdma2", "pdma3";
++			sram = <&eth_sram>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			mediatek,ethsys = <&ethsys>;
++			mediatek,sgmiisys = <&sgmiisys0>, <&sgmiisys1>;
++			mediatek,infracfg = <&topmisc>;
++			mediatek,wed = <&wed>;
++			status = "disabled";
++
++			mdio_bus: mdio-bus {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				int_gbe_phy: ethernet-phy@0 {
++					compatible = "ethernet-phy-ieee802.3-c22";
++					reg = <0>;
++					phy-mode = "gmii";
++					phy-is-integrated;
++					nvmem-cells = <&phy_calibration>;
++					nvmem-cell-names = "phy-cal-data";
++				};
++			};
++		};
++
++		eth_sram: sram@15140000 {
++			compatible = "mmio-sram";
++			reg = <0 0x15140000 0 0x40000>;
++			ranges = <0 0x15140000 0 0x40000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++		};
++
++		wo_ccif0: syscon@151a5000 {
++			compatible = "mediatek,mt7986-wo-ccif", "syscon";
++			reg = <0 0x151a5000 0 0x1000>;
++			interrupts = <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
+ 		wifi@18000000 {
+ 			compatible = "mediatek,mt7981-wmac";
+ 			reg = <0 0x18000000 0 0x1000000>,
+
+From patchwork Wed Nov  5 21:18:05 2025
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Sjoerd Simons <sjoerd@collabora.com>
+X-Patchwork-Id: 14300881
+Return-Path: 
+ <linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0C278CCFA0D
+	for <linux-mediatek@archiver.kernel.org>;
+ Wed,  5 Nov 2025 21:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=VGCX3mgdLYE3ZtU21iczIBrppRvsmuNEB9MXEkOTjzE=; b=vwuFO9rp4k3Jzt7q1sPWRB5CPb
+	QEUY+zTxr5r7y0khdN18kt0qP0XyiCYfwKjL4Ud+lhyRQ6asf5RVVQgi+3DjAJcXsg2foGiAu1w8c
+	83G2UpXXeWjSoVb6RhL2IDxiibl1EioKC18NeU5NPgzQ1in8oRuZQPJBJqJH0Nuv6+TYcattdfdoE
+	9sMmuYoxqw8kgr+zgp7Pk5HwFN2MwBzE3/1xTYfuv9JeYOposIx65HjchoulcRkLyAD2boK9EVPib
+	1a9mNgXVo34a/bqIiLYsrtRf+gXgf+BGAQMBSe/eieTg8ik2d2H8gul5GOgtNJGAn0SOYHZz0NTOY
+	p2BeDGoA==;
+Received: from localhost ([::1] helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGkuJ-0000000EUas-2SQB;
+	Wed, 05 Nov 2025 21:19:07 +0000
+Received: from bali.collaboradmins.com ([148.251.105.195])
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGktu-0000000ETzZ-10Ek;
+	Wed, 05 Nov 2025 21:18:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1762377515;
+	bh=8iJNPpI85EcL2zA7omSQYgyHFc03BY1+Hwd6GqmpZ7c=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=bhcUswclG/V7+nJL9BrqpvNYkBM0psesnDqRq4okPos7i3GdGONTy0afA68KlTBYl
+	 zpMIv8lqWjOkFGB3cGxu5HSPs4wGpRySiOTO6Rc3Zaz3r+M/Xmasu82dcfGbvYc0za
+	 DS59SGV8KrRBldu6YfMedk/I+R3jD5xdRQwb5RWuwM52ePJZCjHxyJnlN7lc7F7oej
+	 YKuwFLLB2CaQPDm4h67Kqrd6o+IkWXx61A0SevTi6yc4fDg5Z7k393cfyU++BRjjdE
+	 /w2GvFBsr6KtHHMcS+sog8i4wMR48Uw2+7jiNyhYttvT82m0pxA32Vbotz4MPtu175
+	 eAxrkt5hWJEBQ==
+Received: from beast.luon.net (simons.connected.by.freedominter.net
+ [45.83.240.172])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: sjoerd)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8797817E1416;
+	Wed,  5 Nov 2025 22:18:35 +0100 (CET)
+Received: by beast.luon.net (Postfix, from userid 1000)
+	id C315110F352ED; Wed, 05 Nov 2025 22:18:34 +0100 (CET)
+From: Sjoerd Simons <sjoerd@collabora.com>
+Date: Wed, 05 Nov 2025 22:18:05 +0100
+Subject: [PATCH v3 10/13] arm64: dts: mediatek: mt7981b-openwrt-one: Enable
+ Ethernet
+MIME-Version: 1.0
+Message-Id: <20251105-openwrt-one-network-v3-10-008e2cab38d1@collabora.com>
+References: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+In-Reply-To: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>,
+  Matthias Brugger <matthias.bgg@gmail.com>,
+  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+  Ryder Lee <ryder.lee@mediatek.com>,
+  Jianjun Wang <jianjun.wang@mediatek.com>,
+  Bjorn Helgaas <bhelgaas@google.com>,
+  Lorenzo Pieralisi <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy?=
+	=?utf-8?q?=C5=84ski?= <kwilczynski@kernel.org>,
+  Manivannan Sadhasivam <mani@kernel.org>,
+  Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+  Kishon Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>,
+  Andrew Lunn <andrew+netdev@lunn.ch>,
+  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+  Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+ Daniel Golle <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>,
+ Sjoerd Simons <sjoerd@collabora.com>
+X-Mailer: b4 0.14.3
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251105_131842_555266_32BA2742 
+X-CRM114-Status: GOOD (  12.02  )
+X-BeenThere: linux-mediatek@lists.infradead.org
+X-Mailman-Version: 2.1.34
+Precedence: list
+List-Id: <linux-mediatek.lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek@lists.infradead.org>
+List-Help: <mailto:linux-mediatek-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces@lists.infradead.org>
+Errors-To: 
+ linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org
+
+Enable the Ethernet subsystem on OpenWrt One board with dual-MAC
+configuration:
+- GMAC0: Connected to external Airoha EN8811H 2.5GbE PHY via SGMII
+  (2500base-x mode) for WAN connectivity with LED indicators
+- GMAC1: Connected to internal MT7981 1GbE PHY (GMII mode) for LAN
+
+Ethernet aliases are defined to provide consistent network interface
+naming (ethernet0 = LAN, ethernet1 = WAN).
+
+Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+---
+V1 -> V2:
+  - Switch gmac0 phy irq to Level
+  - Update mac nvmem label name
+---
+ .../boot/dts/mediatek/mt7981b-openwrt-one.dts      | 58 ++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+index 7382599cfea29..2aea899006453 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+@@ -12,6 +12,8 @@ / {
+ 	model = "OpenWrt One";
+ 
+ 	aliases {
++		ethernet0 = &gmac1;
++		ethernet1 = &gmac0;
+ 		serial0 = &uart0;
+ 	};
+ 
+@@ -87,6 +89,58 @@ reg_5v: regulator-5v {
+ 	};
+ };
+ 
++&eth {
++	status = "okay";
++
++	/* WAN interface */
++	gmac0: mac@0 {
++		compatible = "mediatek,eth-mac";
++		reg = <0>;
++		nvmem-cells = <&wan_factory_mac 0>;
++		nvmem-cell-names = "mac-address";
++		phy-mode = "2500base-x";
++		phy-handle = <&phy15>;
++	};
++
++	/* LAN interface */
++	gmac1: mac@1 {
++		compatible = "mediatek,eth-mac";
++		reg = <1>;
++		phy-mode = "gmii";
++		phy-handle = <&int_gbe_phy>;
++	};
++};
++
++&mdio_bus {
++	phy15: ethernet-phy@f {
++		compatible = "ethernet-phy-id03a2.a411";
++		reg = <0xf>;
++		interrupt-parent = <&pio>;
++		interrupts = <38 IRQ_TYPE_LEVEL_LOW>;
++		reset-gpios = <&pio 39 GPIO_ACTIVE_LOW>;
++		reset-assert-us = <10000>;
++		reset-deassert-us = <20000>;
++		airoha,pnswap-rx;
++
++		leds {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			led@0 {
++				reg = <0>;
++				function = LED_FUNCTION_WAN;
++				color = <LED_COLOR_ID_AMBER>;
++			};
++
++			led@1 {
++				reg = <1>;
++				function = LED_FUNCTION_WAN;
++				color = <LED_COLOR_ID_GREEN>;
++			};
++		};
++	};
++};
++
+ &pcie {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pcie_pins>;
+@@ -191,6 +245,10 @@ partition@180000 {
+ 	};
+ };
+ 
++&sgmiisys0 {
++	mediatek,pnswap;
++};
++
+ &uart0 {
+ 	status = "okay";
+ };
+
+From patchwork Wed Nov  5 21:18:06 2025
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Sjoerd Simons <sjoerd@collabora.com>
+X-Patchwork-Id: 14300877
+Return-Path: 
+ <linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2E87CCCFA1A
+	for <linux-mediatek@archiver.kernel.org>;
+ Wed,  5 Nov 2025 21:18:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=dp/5wNhrbtwapW+ZRZXWBO5in38eZanyORlRgzGBhBc=; b=HDpGPrRFhEkMZcqEdHJx+Vn1M2
+	TkwKEG4kr3h94GIgzaEjizmXEWjtODFNgDp5TEvYipzUeVYIzoMSkYwpDj7d5lVb6K3afrMhJx+f8
+	jwamxSICsK2lCglepocgq8ZhCM4AkGfIzaMtPFRS+YD9gahvAwA3YNb8bn+VCMODpHc8MV8WRMyJ2
+	DezENNKuVapHl29K0UYDDYFM85KA8pquvksKYCvK1uF3ma0Ik6wggwMvwkAlHie6+nlOI8HmpZrEA
+	7g49saKBuKAc+Exloy/lK+tB6FKwHWy+ckCJrPG554fXYRgFKBrkMEzRvD94JnfZuzO+n8qbdplAY
+	pvOoLKCg==;
+Received: from localhost ([::1] helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGku5-0000000EUIM-3LQQ;
+	Wed, 05 Nov 2025 21:18:53 +0000
+Received: from bali.collaboradmins.com ([2a01:4f8:201:9162::2])
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGktu-0000000ETzX-0JYf;
+	Wed, 05 Nov 2025 21:18:44 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1762377515;
+	bh=haXHZnrCQw87Hh0XlwT4Nqlq0lDr5SGoeyDsPgAcJ6c=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=N1qA/7AmkMt4wN9yHy1phEnePp5ToltlmZwi7UCQxXJhlXCL6boQBVdmwpoNtT8KS
+	 1X9s51SEPTLvco84Ou9mu/1q7X9ITJ4rv9QHS1yryzpoUpFuSCo/fOTVZq8ISh6Krx
+	 kSMG98HfMijUn/ebXM+RRkEg5wOX6HPEg09mKH//uRLukU2lb/Mi4AnOqXIlIpgD8e
+	 l9PVEOccMc5Mt25cBc+GBXKeuDbglnliEVbfnq/ctRiishATKfBCbtrXO+OtmOaATJ
+	 DRXagBcQDZ/Ww8oM9BTwO4aphu2lcOX1lSnzmWSMOud08FP0ecqwbQ7Sa0UvpvhoKH
+	 whKx1JPflZ1mA==
+Received: from beast.luon.net (unknown [IPv6:2a10:3781:2531::8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: sjoerd)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8654D17E1402;
+	Wed,  5 Nov 2025 22:18:35 +0100 (CET)
+Received: by beast.luon.net (Postfix, from userid 1000)
+	id C8D3810F352EF; Wed, 05 Nov 2025 22:18:34 +0100 (CET)
+From: Sjoerd Simons <sjoerd@collabora.com>
+Date: Wed, 05 Nov 2025 22:18:06 +0100
+Subject: [PATCH v3 11/13] arm64: dts: mediatek: mt7981b: Disable wifi by
+ default
+MIME-Version: 1.0
+Message-Id: <20251105-openwrt-one-network-v3-11-008e2cab38d1@collabora.com>
+References: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+In-Reply-To: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>,
+  Matthias Brugger <matthias.bgg@gmail.com>,
+  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+  Ryder Lee <ryder.lee@mediatek.com>,
+  Jianjun Wang <jianjun.wang@mediatek.com>,
+  Bjorn Helgaas <bhelgaas@google.com>,
+  Lorenzo Pieralisi <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy?=
+	=?utf-8?q?=C5=84ski?= <kwilczynski@kernel.org>,
+  Manivannan Sadhasivam <mani@kernel.org>,
+  Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+  Kishon Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>,
+  Andrew Lunn <andrew+netdev@lunn.ch>,
+  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+  Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+ Daniel Golle <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>,
+ Sjoerd Simons <sjoerd@collabora.com>
+X-Mailer: b4 0.14.3
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251105_131842_292326_8E07EA97 
+X-CRM114-Status: GOOD (  10.46  )
+X-BeenThere: linux-mediatek@lists.infradead.org
+X-Mailman-Version: 2.1.34
+Precedence: list
+List-Id: <linux-mediatek.lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek@lists.infradead.org>
+List-Help: <mailto:linux-mediatek-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces@lists.infradead.org>
+Errors-To: 
+ linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org
+
+Disable the wifi block by default as it won't function properly without
+at least pin muxing.
+
+This doesn't enable wifi on any of the existing mt7981b devices as a
+required memory-region property is missing, causing the driver to fail
+probing anyway.
+
+Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+---
+V2: Newly introduced patch
+---
+ arch/arm64/boot/dts/mediatek/mt7981b.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+index 6be588be3761a..1f4c114354660 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+@@ -499,6 +499,7 @@ wifi@18000000 {
+ 			clock-names = "mcu", "ap2conn";
+ 			resets = <&watchdog MT7986_TOPRGU_CONSYS_SW_RST>;
+ 			reset-names = "consys";
++			status = "disabled";
+ 		};
+ 	};
+ 
+
+From patchwork Wed Nov  5 21:18:07 2025
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Sjoerd Simons <sjoerd@collabora.com>
+X-Patchwork-Id: 14300884
+Return-Path: 
+ <linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B140FCCFA1A
+	for <linux-mediatek@archiver.kernel.org>;
+ Wed,  5 Nov 2025 21:19:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=nah67Wz58HCqfn8dBCUyWhoscQpKpdn3omH+G+6PS0A=; b=rwXtntNHwuvdukJCDC6Up7uSd8
+	qSMngpRBUThJUYoIU+X/SdqchVcj1mAbnCWCcsIBs3BeKRQYdDwc0OliYwD77KRZ3Lb8TTQaFxDvN
+	CMmFNeb+9fPK5KRu7XMtRilC5OQr9TJLSbEIs66DVWDo7glxNu1sJtyl5l+6sleidO24iztDkk8s3
+	5mxEOyZToooppfVbldmIKV+kHmjpzWboIl/+ANmR8vX9NPRhL3rBDQ031N5gd0qqh7hFtha5I4VS9
+	+CAOU1vvXXbkM7X8wWNv3WixPw+qMGtGKjnRqbaeIuIgIKTPYRJF2VvxhK1bGMvBC1N44KT/Q+gUe
+	RGunAF9w==;
+Received: from localhost ([::1] helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGkuL-0000000EUfc-2xLB;
+	Wed, 05 Nov 2025 21:19:09 +0000
+Received: from bali.collaboradmins.com ([148.251.105.195])
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGktx-0000000EU5D-3EZ4;
+	Wed, 05 Nov 2025 21:18:47 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1762377520;
+	bh=HT2YugA6R+JpQglGJhQu+r3GtnpE3Srg2faLNwIOQZE=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=pX5785XeaN9MSnSwL2CJEFah8vNhRL8O3uSgIa5IIUsi0dsVKQvFHNPboZ1/t6VGy
+	 HYMGlF/jafIWUIBCk3xUfon2NPBc/8iS7yAe6TOMu+7np1x2bdtprDcNn2WTGFcX5c
+	 t9YD1NdO/D97DTeU+AuNZeMagJIob4P/4RUTgI0pyfPYexY505AVtR4IYod4lwE/iD
+	 14zbJi4IQ7nOQq2nXVZRLfsFZOl8Se0bc8bOiGCKbU7u2hCgO/MHEZmy7Tp5lOFOO+
+	 arFcHIVGSPsrSCy0aGHPYhJxu8F2xT+eBJsfmFn39sWISuHJXg3lY64C/eh1tAKFqu
+	 /M/mfIOF6ApyQ==
+Received: from beast.luon.net (unknown [IPv6:2a10:3781:2531::8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: sjoerd)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6F62117E156C;
+	Wed,  5 Nov 2025 22:18:40 +0100 (CET)
+Received: by beast.luon.net (Postfix, from userid 1000)
+	id CC1B810F352F1; Wed, 05 Nov 2025 22:18:34 +0100 (CET)
+From: Sjoerd Simons <sjoerd@collabora.com>
+Date: Wed, 05 Nov 2025 22:18:07 +0100
+Subject: [PATCH v3 12/13] arm64: dts: mediatek: mt7981b: Add wifi memory
+ region
+MIME-Version: 1.0
+Message-Id: <20251105-openwrt-one-network-v3-12-008e2cab38d1@collabora.com>
+References: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+In-Reply-To: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>,
+  Matthias Brugger <matthias.bgg@gmail.com>,
+  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+  Ryder Lee <ryder.lee@mediatek.com>,
+  Jianjun Wang <jianjun.wang@mediatek.com>,
+  Bjorn Helgaas <bhelgaas@google.com>,
+  Lorenzo Pieralisi <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy?=
+	=?utf-8?q?=C5=84ski?= <kwilczynski@kernel.org>,
+  Manivannan Sadhasivam <mani@kernel.org>,
+  Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+  Kishon Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>,
+  Andrew Lunn <andrew+netdev@lunn.ch>,
+  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+  Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+ Daniel Golle <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>,
+ Sjoerd Simons <sjoerd@collabora.com>
+X-Mailer: b4 0.14.3
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251105_131846_015183_8582BEB8 
+X-CRM114-Status: GOOD (  10.43  )
+X-BeenThere: linux-mediatek@lists.infradead.org
+X-Mailman-Version: 2.1.34
+Precedence: list
+List-Id: <linux-mediatek.lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek@lists.infradead.org>
+List-Help: <mailto:linux-mediatek-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces@lists.infradead.org>
+Errors-To: 
+ linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org
+
+Add required memory region for the builtin wifi block.
+
+Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+---
+V1 -> V2: Don't set status to in this patch
+---
+ arch/arm64/boot/dts/mediatek/mt7981b.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+index 1f4c114354660..a7be3670e0059 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+@@ -69,6 +69,11 @@ secmon_reserved: secmon@43000000 {
+ 			no-map;
+ 		};
+ 
++		wmcpu_emi: wmcpu-reserved@47c80000 {
++			reg = <0 0x47c80000 0 0x100000>;
++			no-map;
++		};
++
+ 		wo_emi0: wo-emi@47d80000 {
+ 			reg = <0 0x47d80000 0 0x40000>;
+ 			no-map;
+@@ -497,6 +502,7 @@ wifi@18000000 {
+ 			clocks = <&topckgen CLK_TOP_NETSYS_MCU_SEL>,
+ 				 <&topckgen CLK_TOP_AP2CNN_HOST_SEL>;
+ 			clock-names = "mcu", "ap2conn";
++			memory-region = <&wmcpu_emi>;
+ 			resets = <&watchdog MT7986_TOPRGU_CONSYS_SW_RST>;
+ 			reset-names = "consys";
+ 			status = "disabled";
+
+From patchwork Wed Nov  5 21:18:08 2025
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Sjoerd Simons <sjoerd@collabora.com>
+X-Patchwork-Id: 14300878
+Return-Path: 
+ <linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DE387CCFA0D
+	for <linux-mediatek@archiver.kernel.org>;
+ Wed,  5 Nov 2025 21:18:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=AX63OyLy843bMJU2Vw7R714gkAf6ineUAbu3ZUG0cdE=; b=ZRKcM6HIodlVbEC70EorBJAyJh
+	552RX6pkev2+tNToWznPyVIos9AboxUUd2sjhhfhx0aqynRHDDHY2Qt/9ewZB3GYWcjaIvW0uR+Vp
+	7Vmvv07L5TqUdlzWnr1/py76XtK4Ggp8FDQk/xV8s2DiF9iD73X6A+rDfDdL2gNZTe7oHkBaWomp6
+	lTDZXCF4u8YCKTRI5Nqss4g3RGRguSeXKvnfMGtNdsIQM/pRbcyitz09k0PELWP6rbnTqctF7W5So
+	q2F4WLeM/N319Jsfx026hbrW3QApgxD/jjhirAw3lm/E7KYAL66g9BUfWJQdsuKFeKBFIbgS89bqC
+	9jRkNpqw==;
+Received: from localhost ([::1] helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGku6-0000000EUJE-1gzs;
+	Wed, 05 Nov 2025 21:18:54 +0000
+Received: from bali.collaboradmins.com ([2a01:4f8:201:9162::2])
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vGktu-0000000ETzx-2I9Z;
+	Wed, 05 Nov 2025 21:18:44 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1762377516;
+	bh=l3tEWhRqP4lk80hQap0vJX2rjpGnZh5LT9KfShignVs=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=RZt8bfUA3x1BMPbp6nkMXKDVBZsmSqC8Cr6yQf9Bmt2Dn+/fwoSYvUgfRuREfi7tC
+	 Q/Q8f7iMK8cG1uT2ybpCwmTx6q0+56XFN+FUXpTwPkiJMlqFbUFh6CDhq3d/Sb3pYd
+	 0khH4Qat4TIVxrmiUAmDbJPZJT6v44l65FEstFParsZO2eah/zNv3Ok8LrSTZFrPLT
+	 QOlF3l0Ffm4b5G93+j/mYrVhX1W2ZC5PZDl3BBzk01fwCQCSA3FY8u3Pgkmvk7bXAF
+	 cQY9ji73EbfDjeSbnSNsBMHmBoCAp688kMuyKVrKb17vGX9Deq5zuP796vQziSjtIf
+	 lHPsXdw8w/mGw==
+Received: from beast.luon.net (unknown [IPv6:2a10:3781:2531::8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: sjoerd)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3395417E14FF;
+	Wed,  5 Nov 2025 22:18:36 +0100 (CET)
+Received: by beast.luon.net (Postfix, from userid 1000)
+	id D51B210F352F3; Wed, 05 Nov 2025 22:18:34 +0100 (CET)
+From: Sjoerd Simons <sjoerd@collabora.com>
+Date: Wed, 05 Nov 2025 22:18:08 +0100
+Subject: [PATCH v3 13/13] arm64: dts: mediatek: mt7981b-openwrt-one: Enable
+ wifi
+MIME-Version: 1.0
+Message-Id: <20251105-openwrt-one-network-v3-13-008e2cab38d1@collabora.com>
+References: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+In-Reply-To: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>,
+  Matthias Brugger <matthias.bgg@gmail.com>,
+  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+  Ryder Lee <ryder.lee@mediatek.com>,
+  Jianjun Wang <jianjun.wang@mediatek.com>,
+  Bjorn Helgaas <bhelgaas@google.com>,
+  Lorenzo Pieralisi <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy?=
+	=?utf-8?q?=C5=84ski?= <kwilczynski@kernel.org>,
+  Manivannan Sadhasivam <mani@kernel.org>,
+  Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+  Kishon Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>,
+  Andrew Lunn <andrew+netdev@lunn.ch>,
+  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+  Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+ Daniel Golle <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>,
+ Sjoerd Simons <sjoerd@collabora.com>
+X-Mailer: b4 0.14.3
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251105_131842_784749_B7C916F9 
+X-CRM114-Status: GOOD (  12.16  )
+X-BeenThere: linux-mediatek@lists.infradead.org
+X-Mailman-Version: 2.1.34
+Precedence: list
+List-Id: <linux-mediatek.lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek@lists.infradead.org>
+List-Help: <mailto:linux-mediatek-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces@lists.infradead.org>
+Errors-To: 
+ linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org
+
+Enable Dual-band WiFI 6 functionality on the Openwrt One
+
+Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+---
+V2 -> V3: replace MTK_DRIVE_4mA with direct value
+V1 -> V2: Update eeprom node label
+---
+ .../boot/dts/mediatek/mt7981b-openwrt-one.dts      | 24 ++++++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt7981b.dtsi          |  2 +-
+ 2 files changed, 25 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+index 2aea899006453..3de368c73bc81 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+@@ -180,6 +180,22 @@ conf-pd {
+ 			pins = "SPI2_CLK", "SPI2_MOSI", "SPI2_MISO";
+ 		};
+ 	};
++
++	wifi_dbdc_pins: wifi-dbdc-pins {
++		mux {
++			function = "eth";
++			groups = "wf0_mode1";
++		};
++
++		conf {
++			pins = "WF_HB1", "WF_HB2", "WF_HB3", "WF_HB4",
++			       "WF_HB0", "WF_HB0_B", "WF_HB5", "WF_HB6",
++			       "WF_HB7", "WF_HB8", "WF_HB9", "WF_HB10",
++			       "WF_TOP_CLK", "WF_TOP_DATA", "WF_XO_REQ",
++			       "WF_CBA_RESETB", "WF_DIG_RESETB";
++			drive-strength = <4>;
++		};
++	};
+ };
+ 
+ &pwm {
+@@ -257,6 +273,14 @@ &usb_phy {
+ 	status = "okay";
+ };
+ 
++&wifi {
++	nvmem-cells = <&wifi_factory_calibration>;
++	nvmem-cell-names = "eeprom";
++	pinctrl-names = "dbdc";
++	pinctrl-0 = <&wifi_dbdc_pins>;
++	status = "okay";
++};
++
+ &xhci {
+ 	phys = <&u2port0 PHY_TYPE_USB2>;
+ 	vusb33-supply = <&reg_3p3v>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+index a7be3670e0059..66d89495bac52 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+@@ -490,7 +490,7 @@ wo_ccif0: syscon@151a5000 {
+ 			interrupts = <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
+-		wifi@18000000 {
++		wifi: wifi@18000000 {
+ 			compatible = "mediatek,mt7981-wmac";
+ 			reg = <0 0x18000000 0 0x1000000>,
+ 			      <0 0x10003000 0 0x1000>,

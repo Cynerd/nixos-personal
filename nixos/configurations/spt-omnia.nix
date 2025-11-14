@@ -15,7 +15,6 @@ in {
       lanIP = hosts.omnia;
       staticLeases = {
         "a8:a1:59:10:32:c4" = hosts.errol;
-        "70:85:c2:4a:59:f2" = hosts.ridcully;
         "7c:b0:c2:bb:9c:ca" = hosts.albert;
         "4c:d5:77:0d:85:d9" = hosts.binky;
         "b8:27:eb:57:a2:31" = hosts.mpd;

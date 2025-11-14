@@ -178,7 +178,7 @@ in {
 
     services.resolved = {
       enable = true;
-      dnssec = "true";
+      #dnssec = "true";
       fallbackDns = ["1.1.1.1" "8.8.8.8"];
       extraConfig = ''
         DNSStubListenerExtra=${cnf.lanIP}

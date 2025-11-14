@@ -38,7 +38,7 @@ in {
       kernelParams = ["boot.shell_on_fail"];
     };
     hardware.enableAllFirmware = mkDefault true;
-    services.fwupd.enable = mkDefault (pkgs.system == "x86_64-linux");
+    services.fwupd.enable = mkDefault (pkgs.stdenv.hostPlatform.system == "x86_64-linux");
     systemd.oomd.enable = false;
 
     networking = {

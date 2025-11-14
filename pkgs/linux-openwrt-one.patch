@@ -1,0 +1,2508 @@
+From 9c7cb0b21491ba7fd804f669b969418e33270142 Mon Sep 17 00:00:00 2001
+From: Daniel Golle <daniel@makrotopia.org>
+Date: Wed, 28 Dec 2022 23:44:42 +0000
+Subject: [PATCH 01/12] complete mt7981 dts
+
+working:
+ * Ethernet (fully working incl. ppe)
+ * UART
+ * SPI-NAND flash
+ * thermal sensors (SoC and mxl-gpy)
+ * random number generator via SMC
+ * USB 1.1, 2.0 and 3.0
+ * WiFi with MT7976C 2.4G+5G DBDC incl. WED offloading
+ * PWM
+---
+ arch/arm64/boot/dts/mediatek/mt7981b.dtsi | 566 +++++++++++++++++++++-
+ 1 file changed, 554 insertions(+), 12 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+index 5cbea9cd411f..6a816e5c1f46 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+@@ -1,7 +1,14 @@
+ // SPDX-License-Identifier: GPL-2.0-only OR MIT
+ 
+ #include <dt-bindings/clock/mediatek,mt7981-clk.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/linux-event-codes.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/leds/common.h>
++#include <dt-bindings/mux/mux.h>
++#include <dt-bindings/pinctrl/mt65xx.h>
++#include <dt-bindings/phy/phy.h>
+ #include <dt-bindings/reset/mt7986-resets.h>
+ 
+ / {
+@@ -41,6 +48,57 @@ psci {
+ 		method = "smc";
+ 	};
+ 
++	fan: pwm-fan {
++		compatible = "pwm-fan";
++		/* cooling level (0, 1, 2, 3) : (0% duty, 50% duty, 75% duty, 100% duty) */
++		cooling-levels = <0 128 192 255>;
++		#cooling-cells = <2>;
++		status = "disabled";
++	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		/* 64 KiB reserved for ramoops/pstore */
++		ramoops@42ff0000 {
++			compatible = "ramoops";
++			reg = <0 0x42ff0000 0 0x10000>;
++			record-size = <0x1000>;
++		};
++
++		/* 192 KiB reserved for ARM Trusted Firmware (BL31) */
++		secmon_reserved: secmon@43000000 {
++			reg = <0 0x43000000 0 0x30000>;
++			no-map;
++		};
++
++		wmcpu_emi: wmcpu-reserved@47c80000 {
++			reg = <0 0x47c80000 0 0x100000>;
++			no-map;
++		};
++
++		wo_emi0: wo-emi@47d80000 {
++			reg = <0 0x47d80000 0 0x40000>;
++			no-map;
++		};
++
++		wo_data: wo-data@47dc0000 {
++			reg = <0 0x47dc0000 0 0x240000>;
++			no-map;
++		};
++	};
++
+ 	soc {
+ 		compatible = "simple-bus";
+ 		ranges;
+@@ -76,13 +134,13 @@ watchdog: watchdog@1001c000 {
+ 			#reset-cells = <1>;
+ 		};
+ 
+-		clock-controller@1001e000 {
+-			compatible = "mediatek,mt7981-apmixedsys";
++		apmixedsys: clock-controller@1001e000 {
++			compatible = "mediatek,mt7981-apmixedsys", "syscon";
+ 			reg = <0 0x1001e000 0 0x1000>;
+ 			#clock-cells = <1>;
+ 		};
+ 
+-		pwm@10048000 {
++		pwm: pwm@10048000 {
+ 			compatible = "mediatek,mt7981-pwm";
+ 			reg = <0 0x10048000 0 0x1000>;
+ 			clocks = <&infracfg CLK_INFRA_PWM_STA>,
+@@ -94,7 +152,21 @@ pwm@10048000 {
+ 			#pwm-cells = <2>;
+ 		};
+ 
+-		serial@11002000 {
++		crypto: crypto@10320000 {
++			compatible = "inside-secure,safexcel-eip97";
++			reg = <0 0x10320000 0 0x40000>;
++			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "ring0", "ring1", "ring2", "ring3";
++			clocks = <&topckgen CLK_TOP_EIP97B>;
++			clock-names = "top_eip97_ck";
++			assigned-clocks = <&topckgen CLK_TOP_EIP97B_SEL>;
++			assigned-clock-parents = <&topckgen CLK_TOP_CB_NET1_D5>;
++		};
++
++		uart0: serial@11002000 {
+ 			compatible = "mediatek,mt7981-uart", "mediatek,mt6577-uart";
+ 			reg = <0 0x11002000 0 0x100>;
+ 			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
+@@ -105,7 +177,7 @@ serial@11002000 {
+ 			status = "disabled";
+ 		};
+ 
+-		serial@11003000 {
++		uart1: serial@11003000 {
+ 			compatible = "mediatek,mt7981-uart", "mediatek,mt6577-uart";
+ 			reg = <0 0x11003000 0 0x100>;
+ 			interrupts = <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>;
+@@ -116,7 +188,7 @@ serial@11003000 {
+ 			status = "disabled";
+ 		};
+ 
+-		serial@11004000 {
++		uart2: serial@11004000 {
+ 			compatible = "mediatek,mt7981-uart", "mediatek,mt6577-uart";
+ 			reg = <0 0x11004000 0 0x100>;
+ 			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
+@@ -127,11 +199,12 @@ serial@11004000 {
+ 			status = "disabled";
+ 		};
+ 
+-		i2c@11007000 {
++		i2c0: i2c@11007000 {
+ 			compatible = "mediatek,mt7981-i2c";
+ 			reg = <0 0x11007000 0 0x1000>,
+ 			      <0 0x10217080 0 0x80>;
+ 			interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
++			clock-div = <1>;
+ 			clocks = <&infracfg CLK_INFRA_I2C0_CK>,
+ 				 <&infracfg CLK_INFRA_AP_DMA_CK>,
+ 				 <&infracfg CLK_INFRA_I2C_MCK_CK>,
+@@ -142,7 +215,32 @@ i2c@11007000 {
+ 			status = "disabled";
+ 		};
+ 
+-		spi@11009000 {
++		thermal: thermal@1100c800 {
++			#thermal-sensor-cells = <1>;
++			compatible = "mediatek,mt7981-thermal", "mediatek,mt7986-thermal";
++			reg = <0 0x1100c800 0 0x800>;
++			interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&infracfg CLK_INFRA_THERM_CK>,
++				 <&infracfg CLK_INFRA_ADC_26M_CK>;
++			clock-names = "therm", "auxadc";
++			mediatek,auxadc = <&auxadc>;
++			mediatek,apmixedsys = <&apmixedsys>;
++			nvmem-cells = <&thermal_calibration>;
++			nvmem-cell-names = "calibration-data";
++		};
++
++		auxadc: adc@1100d000 {
++			compatible = "mediatek,mt7981-auxadc",
++				     "mediatek,mt7986-auxadc",
++				     "mediatek,mt7622-auxadc";
++			reg = <0 0x1100d000 0 0x1000>;
++			clocks = <&infracfg CLK_INFRA_ADC_26M_CK>,
++				 <&infracfg CLK_INFRA_ADC_FRC_CK>;
++			clock-names = "main", "32k";
++			#io-channel-cells = <1>;
++		};
++
++		spi2: spi@11009000 {
+ 			compatible = "mediatek,mt7981-spi-ipm", "mediatek,spi-ipm";
+ 			reg = <0 0x11009000 0 0x1000>;
+ 			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>;
+@@ -156,7 +254,7 @@ spi@11009000 {
+ 			status = "disabled";
+ 		};
+ 
+-		spi@1100a000 {
++		spi0: spi@1100a000 {
+ 			compatible = "mediatek,mt7981-spi-ipm", "mediatek,spi-ipm";
+ 			reg = <0 0x1100a000 0 0x1000>;
+ 			interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
+@@ -170,7 +268,7 @@ spi@1100a000 {
+ 			status = "disabled";
+ 		};
+ 
+-		spi@1100b000 {
++		spi1: spi@1100b000 {
+ 			compatible = "mediatek,mt7981-spi-ipm", "mediatek,spi-ipm";
+ 			reg = <0 0x1100b000 0 0x1000>;
+ 			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
+@@ -184,6 +282,41 @@ spi@1100b000 {
+ 			status = "disabled";
+ 		};
+ 
++		pcie: pcie@11280000 {
++			compatible = "mediatek,mt7981-pcie",
++				     "mediatek,mt8192-pcie";
++			device_type = "pci";
++			reg = <0 0x11280000 0 0x4000>;
++			reg-names = "pcie-mac";
++			#address-cells = <3>;
++			#size-cells = <2>;
++			interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
++			bus-range = <0x00 0xff>;
++			ranges = <0x82000000 0 0x20000000
++				  0x0 0x20000000 0 0x10000000>;
++			status = "disabled";
++
++			clocks = <&infracfg CLK_INFRA_IPCIE_CK>,
++				 <&infracfg CLK_INFRA_IPCIE_PIPE_CK>,
++				 <&infracfg CLK_INFRA_IPCIER_CK>,
++				 <&infracfg CLK_INFRA_IPCIEB_CK>;
++
++			phys = <&u3port0 PHY_TYPE_PCIE>;
++			phy-names = "pcie-phy";
++
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 7>;
++			interrupt-map = <0 0 0 1 &pcie_intc 0>,
++					<0 0 0 2 &pcie_intc 1>,
++					<0 0 0 3 &pcie_intc 2>,
++					<0 0 0 4 &pcie_intc 3>;
++			pcie_intc: interrupt-controller {
++				interrupt-controller;
++				#address-cells = <0>;
++				#interrupt-cells = <1>;
++			};
++		};
++
+ 		pio: pinctrl@11d00000 {
+ 			compatible = "mediatek,mt7981-pinctrl";
+ 			reg = <0 0x11d00000 0 0x1000>,
+@@ -204,6 +337,49 @@ pio: pinctrl@11d00000 {
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			#interrupt-cells = <2>;
++
++			mdio_pins: mdc-mdio-pins {
++				mux {
++					function = "eth";
++					groups = "smi_mdc_mdio";
++				};
++			};
++
++			uart0_pins: uart0-pins {
++				mux {
++					function = "uart";
++					groups = "uart0";
++				};
++			};
++
++			wifi_dbdc_pins: wifi-dbdc-pins {
++				mux {
++					function = "eth";
++					groups = "wf0_mode1";
++				};
++				conf {
++					pins = "WF_HB1", "WF_HB2", "WF_HB3", "WF_HB4",
++					       "WF_HB0", "WF_HB0_B", "WF_HB5", "WF_HB6",
++					       "WF_HB7", "WF_HB8", "WF_HB9", "WF_HB10",
++					       "WF_TOP_CLK", "WF_TOP_DATA", "WF_XO_REQ",
++					       "WF_CBA_RESETB", "WF_DIG_RESETB";
++					drive-strength = <MTK_DRIVE_4mA>;
++				};
++			};
++
++			gbe_led0_pins: gbe-led0-pins {
++				mux {
++					function = "led";
++					groups = "gbe_led0";
++				};
++			};
++
++			gbe_led1_pins: gbe-led1-pins {
++				mux {
++					function = "led";
++					groups = "gbe_led1";
++				};
++			};
+ 		};
+ 
+ 		efuse@11f20000 {
+@@ -211,17 +387,318 @@ efuse@11f20000 {
+ 			reg = <0 0x11f20000 0 0x1000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
++
++			thermal_calibration: thermal-calib@274 {
++				reg = <0x274 0xc>;
++			};
++
++			phy_calibration: phy-calib@8dc {
++				reg = <0x8dc 0x10>;
++			};
++
++			comb_rx_imp_p0: usb3-rx-imp@8c8 {
++				reg = <0x8c8 1>;
++				bits = <0 5>;
++			};
++
++			comb_tx_imp_p0: usb3-tx-imp@8c8 {
++				reg = <0x8c8 2>;
++				bits = <5 5>;
++			};
++
++			comb_intr_p0: usb3-intr@8c9 {
++				reg = <0x8c9 1>;
++				bits = <2 6>;
++			};
+ 		};
+ 
+-		clock-controller@15000000 {
++		ethsys: clock-controller@15000000 {
+ 			compatible = "mediatek,mt7981-ethsys", "syscon";
+ 			reg = <0 0x15000000 0 0x1000>;
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+ 		};
+ 
+-		wifi@18000000 {
++		wed: wed@15010000 {
++			compatible = "mediatek,mt7981-wed",
++				     "mediatek,mt7986-wed",
++				     "syscon";
++			reg = <0 0x15010000 0 0x1000>;
++			interrupt-parent = <&gic>;
++			interrupts = <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>;
++			memory-region = <&wo_emi0>, <&wo_data>;
++			memory-region-names = "wo-emi", "wo-data";
++			mediatek,wo-ccif = <&wo_ccif0>;
++			mediatek,wo-ilm = <&wo_ilm0>;
++			mediatek,wo-dlm = <&wo_dlm0>;
++			mediatek,wo-cpuboot = <&wo_cpuboot>;
++		};
++
++		eth: ethernet@15100000 {
++			compatible = "mediatek,mt7981-eth";
++			reg = <0 0x15100000 0 0x80000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ethsys CLK_ETH_FE_EN>,
++				<&ethsys CLK_ETH_GP2_EN>,
++				<&ethsys CLK_ETH_GP1_EN>,
++				<&ethsys CLK_ETH_WOCPU0_EN>,
++				<&sgmiisys0 CLK_SGM0_TX_EN>,
++				<&sgmiisys0 CLK_SGM0_RX_EN>,
++				<&sgmiisys0 CLK_SGM0_CK0_EN>,
++				<&sgmiisys0 CLK_SGM0_CDR_CK0_EN>,
++				<&sgmiisys1 CLK_SGM1_TX_EN>,
++				<&sgmiisys1 CLK_SGM1_RX_EN>,
++				<&sgmiisys1 CLK_SGM1_CK1_EN>,
++				<&sgmiisys1 CLK_SGM1_CDR_CK1_EN>,
++				<&topckgen CLK_TOP_SGM_REG>,
++				<&topckgen CLK_TOP_NETSYS_SEL>,
++				<&topckgen CLK_TOP_NETSYS_500M_SEL>;
++			clock-names = "fe", "gp2", "gp1", "wocpu0",
++						"sgmii_tx250m", "sgmii_rx250m",
++						"sgmii_cdr_ref", "sgmii_cdr_fb",
++						"sgmii2_tx250m", "sgmii2_rx250m",
++						"sgmii2_cdr_ref", "sgmii2_cdr_fb",
++						"sgmii_ck", "netsys0", "netsys1";
++			assigned-clocks = <&topckgen CLK_TOP_NETSYS_2X_SEL>,
++					  <&topckgen CLK_TOP_SGM_325M_SEL>;
++			assigned-clock-parents = <&topckgen CLK_TOP_CB_NET2_800M>,
++						 <&topckgen CLK_TOP_CB_SGM_325M>;
++			mediatek,ethsys = <&ethsys>;
++			mediatek,sgmiisys = <&sgmiisys0>, <&sgmiisys1>;
++			mediatek,infracfg = <&topmisc>;
++			mediatek,wed = <&wed>;
++			status = "disabled";
++
++			mdio_bus: mdio-bus {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				int_gbe_phy: ethernet-phy@0 {
++					reg = <0>;
++					compatible = "ethernet-phy-ieee802.3-c22";
++					phy-mode = "gmii";
++					phy-is-integrated;
++					nvmem-cells = <&phy_calibration>;
++					nvmem-cell-names = "phy-cal-data";
++
++					leds {
++						#address-cells = <1>;
++						#size-cells = <0>;
++
++						int_gbe_phy_led0: int-gbe-phy-led0@0 {
++							reg = <0>;
++							function = LED_FUNCTION_LAN;
++							pinctrl-0 = <&gbe_led0_pins>;
++							pinctrl-names = "default";
++							status = "disabled";
++						};
++
++						int_gbe_phy_led1: int-gbe-phy-led1@1 {
++							reg = <1>;
++							function = LED_FUNCTION_LAN;
++							pinctrl-0 = <&gbe_led1_pins>;
++							pinctrl-names = "default";
++							status = "disabled";
++						};
++					};
++				};
++			};
++		};
++
++		wdma: wdma@15104800 {
++			compatible = "mediatek,wed-wdma";
++			reg = <0 0x15104800 0 0x400>,
++			      <0 0x15104c00 0 0x400>;
++		};
++
++		ap2woccif: ap2woccif@151a5000 {
++			compatible = "mediatek,ap2woccif";
++			reg = <0 0x151a5000 0 0x1000>,
++			      <0 0x151ad000 0 0x1000>;
++			interrupt-parent = <&gic>;
++			interrupts = <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		wo_dlm0: syscon@151e8000 {
++			compatible = "mediatek,mt7986-wo-dlm", "syscon";
++			reg = <0 0x151e8000 0 0x2000>;
++		};
++
++		wo_ilm0: syscon@151e0000 {
++			compatible = "mediatek,mt7986-wo-ilm", "syscon";
++			reg = <0 0x151e0000 0 0x8000>;
++		};
++
++		wo_cpuboot: syscon@15194000 {
++			compatible = "mediatek,mt7986-wo-cpuboot", "syscon";
++			reg = <0 0x15194000 0 0x1000>;
++		};
++
++		wo_ccif0: syscon@151a5000 {
++			compatible = "mediatek,mt7986-wo-ccif", "syscon";
++			reg = <0 0x151a5000 0 0x1000>;
++			interrupt-parent = <&gic>;
++			interrupts = <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		sgmiisys0: syscon@10060000 {
++			compatible = "mediatek,mt7981-sgmiisys_0", "mediatek,mt7986-sgmiisys_0", "syscon";
++			reg = <0 0x10060000 0 0x1000>;
++			mediatek,pnswap;
++			#clock-cells = <1>;
++		};
++
++		sgmiisys1: syscon@10070000 {
++			compatible = "mediatek,mt7981-sgmiisys_1", "mediatek,mt7986-sgmiisys_1", "syscon";
++			reg = <0 0x10070000 0 0x1000>;
++			#clock-cells = <1>;
++		};
++
++		topmisc: topmisc@11d10000 {
++			compatible = "mediatek,mt7981-topmisc", "syscon";
++			reg = <0 0x11d10000 0 0x10000>;
++			#clock-cells = <1>;
++		};
++
++		snand: snfi@11005000 {
++			compatible = "mediatek,mt7986-snand";
++			reg = <0 0x11005000 0 0x1000>, <0 0x11006000 0 0x1000>;
++			reg-names = "nfi", "ecc";
++			interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&infracfg CLK_INFRA_SPINFI1_CK>,
++				 <&infracfg CLK_INFRA_NFI1_CK>,
++				 <&infracfg CLK_INFRA_NFI_HCK_CK>;
++			clock-names = "pad_clk", "nfi_clk", "nfi_hclk";
++			assigned-clocks = <&topckgen CLK_TOP_SPINFI_SEL>,
++					  <&topckgen CLK_TOP_NFI1X_SEL>;
++			assigned-clock-parents = <&topckgen CLK_TOP_CB_M_D8>,
++						 <&topckgen CLK_TOP_CB_M_D8>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		mmc0: mmc@11230000 {
++			compatible = "mediatek,mt7986-mmc",
++						"mediatek,mt7981-mmc";
++			reg = <0 0x11230000 0 0x1000>, <0 0x11c20000 0 0x1000>;
++			interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&infracfg CLK_INFRA_MSDC_CK>,
++				 <&infracfg CLK_INFRA_MSDC_HCK_CK>,
++				 <&infracfg CLK_INFRA_MSDC_66M_CK>,
++				 <&infracfg CLK_INFRA_MSDC_133M_CK>;
++			assigned-clocks = <&topckgen CLK_TOP_EMMC_208M_SEL>,
++					  <&topckgen CLK_TOP_EMMC_400M_SEL>;
++			assigned-clock-parents = <&topckgen CLK_TOP_CB_M_D2>,
++						 <&topckgen CLK_TOP_CB_NET2_D2>;
++			clock-names = "source", "hclk", "axi_cg", "ahb_cg";
++			status = "disabled";
++		};
++
++		wed_pcie: wed_pcie@10003000 {
++			compatible = "mediatek,wed_pcie";
++			reg = <0 0x10003000 0 0x10>;
++		};
++
++		consys: consys@10000000 {
++			compatible = "mediatek,mt7981-consys";
++			reg = <0 0x10000000 0 0x8600000>;
++			memory-region = <&wmcpu_emi>;
++		};
++
++		xhci: usb@11200000 {
++			compatible = "mediatek,mt7986-xhci",
++				     "mediatek,mtk-xhci";
++			reg = <0 0x11200000 0 0x2e00>,
++			      <0 0x11203e00 0 0x0100>;
++			reg-names = "mac", "ippc";
++			interrupts = <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&infracfg CLK_INFRA_IUSB_SYS_CK>,
++				 <&infracfg CLK_INFRA_IUSB_CK>,
++				 <&infracfg CLK_INFRA_IUSB_133_CK>,
++				 <&infracfg CLK_INFRA_IUSB_66M_CK>,
++				 <&topckgen CLK_TOP_U2U3_XHCI_SEL>;
++			clock-names = "sys_ck",
++				      "ref_ck",
++				      "mcu_ck",
++				      "dma_ck",
++				      "xhci_ck";
++			phys = <&u2port0 PHY_TYPE_USB2>,
++			       <&u3port0 PHY_TYPE_USB3>;
++			vusb33-supply = <&reg_3p3v>;
++			status = "disabled";
++		};
++
++		usb_phy: usb-phy@11e10000 {
++			compatible = "mediatek,mt7981",
++				     "mediatek,generic-tphy-v2";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0 0x11e10000 0x1700>;
++			status = "disabled";
++
++			u2port0: usb-phy@0 {
++				reg = <0x0 0x700>;
++				clocks = <&topckgen CLK_TOP_USB_FRMCNT_SEL>;
++				clock-names = "ref";
++				#phy-cells = <1>;
++			};
++
++			u3port0: usb-phy@700 {
++				reg = <0x700 0x900>;
++				clocks = <&topckgen CLK_TOP_USB3_PHY_SEL>;
++				clock-names = "ref";
++				#phy-cells = <1>;
++				mediatek,syscon-type = <&topmisc 0x218 0>;
++				status = "okay";
++			};
++		};
++
++
++		afe: audio-controller@11210000 {
++			compatible = "mediatek,mt79xx-audio";
++			reg = <0 0x11210000 0 0x9000>;
++			interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&infracfg CLK_INFRA_AUD_BUS_CK>,
++				 <&infracfg CLK_INFRA_AUD_26M_CK>,
++				 <&infracfg CLK_INFRA_AUD_L_CK>,
++				 <&infracfg CLK_INFRA_AUD_AUD_CK>,
++				 <&infracfg CLK_INFRA_AUD_EG2_CK>,
++				 <&topckgen CLK_TOP_AUD_SEL>;
++			clock-names = "aud_bus_ck",
++				      "aud_26m_ck",
++				      "aud_l_ck",
++				      "aud_aud_ck",
++				      "aud_eg2_ck",
++				      "aud_sel";
++			assigned-clocks = <&topckgen CLK_TOP_AUD_SEL>,
++					  <&topckgen CLK_TOP_A1SYS_SEL>,
++					  <&topckgen CLK_TOP_AUD_L_SEL>,
++					  <&topckgen CLK_TOP_A_TUNER_SEL>;
++			assigned-clock-parents = <&topckgen CLK_TOP_CB_APLL2_196M>,
++						 <&topckgen CLK_TOP_APLL2_D4>,
++						 <&topckgen CLK_TOP_CB_APLL2_196M>,
++						 <&topckgen CLK_TOP_APLL2_D4>;
++			status = "disabled";
++		};
++
++		ice: ice_debug {
++			compatible = "mediatek,mt7981-ice_debug",
++				   "mediatek,mt2701-ice_debug";
++			clocks = <&infracfg CLK_INFRA_DBG_CK>;
++			clock-names = "ice_dbg";
++		};
++
++		wifi: wifi@18000000 {
+ 			compatible = "mediatek,mt7981-wmac";
++			pinctrl-0 = <&wifi_dbdc_pins>;
++			pinctrl-names = "dbdc";
+ 			reg = <0 0x18000000 0 0x1000000>,
+ 			      <0 0x10003000 0 0x1000>,
+ 			      <0 0x11d10000 0 0x1000>;
+@@ -234,6 +711,67 @@ wifi@18000000 {
+ 			clock-names = "mcu", "ap2conn";
+ 			resets = <&watchdog MT7986_TOPRGU_CONSYS_SW_RST>;
+ 			reset-names = "consys";
++			memory-region = <&wmcpu_emi>;
++			status = "disabled";
++		};
++	};
++
++	thermal-zones {
++		cpu_thermal: cpu-thermal {
++			polling-delay-passive = <1000>;
++			polling-delay = <1000>;
++			thermal-sensors = <&thermal 0>;
++			trips {
++				cpu_trip_crit: crit {
++					temperature = <125000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++
++				cpu_trip_hot: hot {
++					temperature = <120000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				cpu_trip_active_high: active-high {
++					temperature = <115000>;
++					hysteresis = <2000>;
++					type = "active";
++				};
++
++				cpu_trip_active_med: active-med {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "active";
++				};
++
++				cpu_trip_active_low: active-low {
++					temperature = <60000>;
++					hysteresis = <2000>;
++					type = "active";
++				};
++			};
++
++			cooling-maps {
++				cpu-active-high {
++					/* active: set fan to cooling level 3 */
++					cooling-device = <&fan 3 3>;
++					trip = <&cpu_trip_active_high>;
++				};
++
++				cpu-active-med {
++					/* active: set fan to cooling level 2 */
++					cooling-device = <&fan 2 2>;
++					trip = <&cpu_trip_active_med>;
++				};
++
++				cpu-active-low {
++					/* passive: set fan to cooling level 1 */
++					cooling-device = <&fan 1 1>;
++					trip = <&cpu_trip_active_low>;
++				};
++			};
+ 		};
+ 	};
+ 
+@@ -245,4 +783,8 @@ timer {
+ 			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+ 			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+ 	};
++
++	trng {
++		compatible = "mediatek,mt7981-rng";
++	};
+ };
+-- 
+2.51.0
+
+
+From c99275204c5709fa159c2cbbdc6dd25bad49f882 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Karel=20Ko=C4=8D=C3=AD?= <cynerd@email.cz>
+Date: Thu, 2 Oct 2025 11:54:23 +0200
+Subject: [PATCH 02/12] Pull OpenWrt One device tree from OpenWrt master
+
+The commit used: 915a57ccd9086db88ee74cfa531ff13f8652a447
+---
+ .../boot/dts/mediatek/mt7981b-openwrt-one.dts | 460 +++++++++++++++++-
+ 1 file changed, 457 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+index 4f6cbb491287..5f54506b2cba 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+@@ -1,15 +1,469 @@
+-// SPDX-License-Identifier: GPL-2.0-only OR MIT
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ 
+ /dts-v1/;
+-
+ #include "mt7981b.dtsi"
+ 
+ / {
+-	compatible = "openwrt,one", "mediatek,mt7981b";
+ 	model = "OpenWrt One";
++	compatible = "openwrt,one", "mediatek,mt7981";
++
++	aliases {
++		ethernet0 = &gmac1;
++		label-mac-device = &gmac0;
++		led-boot = &led_status_white;
++		led-failsafe = &led_status_red;
++		led-running = &led_status_green;
++		led-upgrade = &led_status_green;
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++		rootdisk = <&ubi_fit_volume>;
++	};
+ 
+ 	memory@40000000 {
+ 		reg = <0 0x40000000 0 0x40000000>;
+ 		device_type = "memory";
+ 	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	reg_5v: regulator-5v {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-5V";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		user {
++			label = "user";
++			linux,code = <BTN_0>;
++			gpios = <&pio 0 GPIO_ACTIVE_LOW>;
++		};
++
++		reset {
++			label = "reset";
++			linux,code = <KEY_RESTART>;
++			gpios = <&pio 1 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	pwm-leds {
++		compatible = "pwm-leds";
++
++		led_status_white: led-0 {
++			color = <LED_COLOR_ID_WHITE>;
++			function = LED_FUNCTION_STATUS;
++			pwms = <&pwm 0 10000>;
++			linux,default-trigger = "pattern";
++			led-pattern = <0 500 25 500>;
++		};
++
++		led_status_green: led-1 {
++			color = <LED_COLOR_ID_GREEN>;
++			function = LED_FUNCTION_STATUS;
++			pwms = <&pwm 1 10000>;
++		};
++	};
++
++	gpio-leds {
++		compatible = "gpio-leds";
++
++		led_status_red: led-0 {
++			color = <LED_COLOR_ID_RED>;
++			function = LED_FUNCTION_STATUS;
++			gpios = <&pio 9 GPIO_ACTIVE_HIGH>;
++		};
++
++		led-1 {
++			function = LED_FUNCTION_LAN;
++			color = <LED_COLOR_ID_AMBER>;
++			gpios = <&pio 34 GPIO_ACTIVE_LOW>;
++		};
++
++		led-2 {
++			function = LED_FUNCTION_LAN;
++			color = <LED_COLOR_ID_GREEN>;
++			gpios = <&pio 35 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	gpio-export {
++		compatible = "gpio-export";
++
++		 gpio-0 {
++			gpio-export,name = "mikrobus-reset";
++			gpio-export,output = <1>;
++			gpios = <&pio 2 GPIO_ACTIVE_HIGH>;
++		};
++
++		gpio-1 {
++			gpio-export,name = "watchdog-enable";
++			gpio-export,output = <1>;
++			gpios = <&pio 11 GPIO_ACTIVE_HIGH>;
++		};
++
++		gpio-2 {
++			gpio-export,name = "usb-enable";
++			gpio-export,output = <1>;
++			gpios = <&pio 14 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	gpio-watchdog {
++		compatible = "linux,wdt-gpio";
++		gpios = <&pio 8 GPIO_ACTIVE_LOW>;
++		hw_algo = "toggle";
++		hw_margin_ms = <25000>;
++		always-running;
++	};
++};
++
++&eth {
++	status = "okay";
++
++	gmac0: mac@0 {
++		compatible = "mediatek,eth-mac";
++		reg = <0>;
++		phy-handle = <&phy15>;
++		phy-mode = "2500base-x";
++		nvmem-cell-names = "mac-address";
++		nvmem-cells = <&macaddr_factory_24>;
++	};
++
++	gmac1: mac@1 {
++		compatible = "mediatek,eth-mac";
++		reg = <1>;
++		phy-mode = "gmii";
++		phy-handle = <&int_gbe_phy>;
++	};
++};
++
++&mdio_bus {
++	phy15: phy@f {
++		reg = <0xf>;
++
++		airoha,pnswap-rx;
++
++		interrupt-parent = <&pio>;
++		interrupts = <38 IRQ_TYPE_EDGE_FALLING>;
++		reset-gpios = <&pio 39 GPIO_ACTIVE_LOW>;
++		reset-assert-us = <10000>;
++		reset-deassert-us = <20000>;
++
++		phy-mode = "2500base-x";
++		full-duplex;
++		pause;
++
++		leds {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			led@0 {
++				reg = <0>;
++				function = LED_FUNCTION_WAN;
++				color = <LED_COLOR_ID_AMBER>;
++			};
++
++			led@1 {
++				reg = <1>;
++				function = LED_FUNCTION_WAN;
++				color = <LED_COLOR_ID_GREEN>;
++			};
++		};
++	};
++};
++
++&crypto {
++	status = "okay";
++};
++
++&pio {
++	spi0_flash_pins: spi0-pins {
++		mux {
++			function = "spi";
++			groups = "spi0", "spi0_wp_hold";
++		};
++
++		conf-pu {
++			pins = "SPI0_CS", "SPI0_HOLD", "SPI0_WP";
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-up = <MTK_PUPD_SET_R1R0_11>;
++		};
++
++		conf-pd {
++			pins = "SPI0_CLK", "SPI0_MOSI", "SPI0_MISO";
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-down = <MTK_PUPD_SET_R1R0_11>;
++		};
++	};
++
++	spi1_flash_pins: spi1-pins {
++		mux {
++			function = "spi";
++			groups = "spi1_1";
++		};
++
++		conf-pu {
++			pins = "SPI1_CS";
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-up = <MTK_PUPD_SET_R1R0_11>;
++		};
++
++		conf-pd {
++			pins = "SPI1_CLK", "SPI1_MOSI", "SPI1_MISO";
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-down = <MTK_PUPD_SET_R1R0_11>;
++		};
++	};
++
++	spi2_flash_pins: spi2-pins {
++		mux {
++			function = "spi";
++			groups = "spi2";
++		};
++
++		conf-pu {
++			pins = "SPI2_CS", "SPI2_WP";
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-up = <MTK_PUPD_SET_R1R0_11>;
++		};
++
++		conf-pd {
++			pins = "SPI2_CLK", "SPI2_MOSI", "SPI2_MISO";
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-down = <MTK_PUPD_SET_R1R0_11>;
++		};
++	};
++
++	i2c_pins: i2c-pins {
++		mux {
++			function = "i2c";
++			groups = "i2c0_0";
++		};
++	};
++
++	uart2_pins: uart2-pins {
++		mux {
++			function = "uart";
++			groups = "uart2_0_tx_rx";
++		};
++	};
++
++	pwm_pins: pwm-pins {
++		mux {
++			function = "pwm";
++			groups = "pwm0_0", "pwm1_1";
++		};
++	};
++
++	pcie_pins: pcie-pins {
++		mux {
++			function = "pcie";
++			groups = "pcie_pereset";
++		};
++	};
++};
++
++&pwm {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm_pins>;
++	status = "okay";
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c_pins>;
++	status = "okay";
++
++	rtc@51 {
++		compatible = "nxp,pcf8563";
++		reg = <0x51>;
++	};
++};
++
++&spi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi0_flash_pins>;
++	cs-gpios = <0>, <0>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "okay";
++
++	flash@1 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spi-nand";
++		reg = <1>;
++		spi-max-frequency = <52000000>;
++
++		spi-cal-enable;
++		spi-cal-mode = "read-data";
++		spi-cal-datalen = <7>;
++		spi-cal-data = /bits/ 8 <0x53 0x50 0x49 0x4E 0x41 0x4E 0x44>;
++		spi-cal-addrlen = <5>;
++		spi-cal-addr = /bits/ 32 <0x0 0x0 0x0 0x0 0x0>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "bl2";
++				reg = <0x0 0x100000>;
++				read-only;
++			};
++
++			partition@580000 {
++				label = "ubi";
++				reg = <0x100000 0xFF00000>;
++				compatible = "linux,ubi";
++
++				volumes {
++					ubi_fit_volume: ubi-volume-fit {
++						volname = "fit";
++					};
++				};
++			};
++		};
++	};
++};
++
++&spi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi1_flash_pins>;
++	status = "okay";
++};
++
++&spi2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi2_flash_pins>;
++	status = "okay";
++
++	flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++
++		spi-max-frequency = <52000000>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "bl2-nor";
++				reg = <0x00000 0x40000>;
++			};
++
++			partition@40000 {
++				label = "factory";
++				reg = <0x40000 0xc0000>;
++				read-only;
++
++				nvmem-layout {
++					compatible = "fixed-layout";
++					#address-cells = <1>;
++					#size-cells = <1>;
++
++					eeprom_factory_0: eeprom@0 {
++						reg = <0x0 0x1000>;
++					};
++
++					macaddr_factory_4: macaddr@4 {
++						reg = <0x4 0x6>;
++						compatible = "mac-base";
++						#nvmem-cell-cells = <1>;
++					};
++
++					macaddr_factory_24: macaddr@24 {
++						reg = <0x24 0x6>;
++						compatible = "mac-base";
++					};
++				};
++			};
++
++			partition@100000 {
++				label = "fip-nor";
++				reg = <0x100000 0x80000>;
++			};
++
++			partition@180000 {
++				label = "recovery";
++				reg = <0x180000 0xc80000>;
++			};
++		};
++	};
++};
++
++&xhci {
++	phys = <&u2port0 PHY_TYPE_USB2>;
++	vusb33-supply = <&reg_3p3v>;
++	vbus-supply = <&reg_5v>;
++	mediatek,u3p-dis-msk = <0x01>;
++	status = "okay";
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart2_pins>;
++	status = "okay";
++};
++
++&usb_phy {
++	status = "okay";
++};
++
++&watchdog {
++	status = "okay";
++};
++
++&wifi {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	nvmem-cells = <&eeprom_factory_0>;
++	nvmem-cell-names = "eeprom";
++	status = "okay";
++
++	band@0 {
++		reg = <0>;
++		nvmem-cells = <&macaddr_factory_4 0>;
++		nvmem-cell-names = "mac-address";
++	};
++
++	band@1 {
++		reg = <1>;
++		nvmem-cells = <&macaddr_factory_4 7>;
++		nvmem-cell-names = "mac-address";
++	};
++};
++
++&pcie {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie_pins>;
++	status = "okay";
++};
++
++&sgmiisys0 {
++	/delete-node/ mediatek,pnswap;
+ };
+-- 
+2.51.0
+
+
+From faeb104b5fbd6383664672f1324d74eef55507b5 Mon Sep 17 00:00:00 2001
+From: Felix Fietkau <nbd@nbd.name>
+Date: Thu, 27 Oct 2022 23:39:52 +0200
+Subject: [PATCH 03/12] net: ethernet: mtk_eth_soc: compile out netsys v2 code
+ on mt7621
+
+Avoid some branches in the hot path on low-end devices with limited CPU power,
+and reduce code size
+
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.h | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+index 0168e2fbc619..2f89a06471e3 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+@@ -1383,6 +1383,22 @@ struct mtk_mac {
+ /* the struct describing the SoC. these are declared in the soc_xyz.c files */
+ extern const struct of_device_id of_mtk_match[];
+ 
++#ifdef CONFIG_SOC_MT7621
++static inline bool mtk_is_netsys_v1(struct mtk_eth *eth)
++{
++	return true;
++}
++
++static inline bool mtk_is_netsys_v2_or_greater(struct mtk_eth *eth)
++{
++	return false;
++}
++
++static inline bool mtk_is_netsys_v3_or_greater(struct mtk_eth *eth)
++{
++	return false;
++}
++#else
+ static inline bool mtk_is_netsys_v1(struct mtk_eth *eth)
+ {
+ 	return eth->soc->version == 1;
+@@ -1397,6 +1413,7 @@ static inline bool mtk_is_netsys_v3_or_greater(struct mtk_eth *eth)
+ {
+ 	return eth->soc->version > 2;
+ }
++#endif
+ 
+ static inline struct mtk_foe_entry *
+ mtk_foe_get_entry(struct mtk_ppe *ppe, u16 hash)
+-- 
+2.51.0
+
+
+From 6e848e9de009eeafe0d970f0914c3d6441c843bb Mon Sep 17 00:00:00 2001
+From: Felix Fietkau <nbd@nbd.name>
+Date: Thu, 3 Nov 2022 12:38:49 +0100
+Subject: [PATCH 04/12] net: ethernet: mtk_eth_soc: work around issue with
+ sending small fragments
+
+When lots of frames are sent with a number of very small fragments, an
+internal FIFO can overflow, causing the DMA engine to lock up lock up and
+transmit attempts time out.
+
+Fix this on MT7986 by increasing the reserved FIFO space.
+Fix this on older chips by detecting the presence of small fragments and use
+skb_gso_segment + skb_linearize to deal with them.
+
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 39 +++++++++++++++++++--
+ drivers/net/ethernet/mediatek/mtk_eth_soc.h |  2 +-
+ 2 files changed, 38 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index e68997a29191..2931376785f2 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -26,6 +26,7 @@
+ #include <linux/bitfield.h>
+ #include <net/dsa.h>
+ #include <net/dst_metadata.h>
++#include <net/gso.h>
+ #include <net/page_pool/helpers.h>
+ #include <linux/genalloc.h>
+ 
+@@ -1752,12 +1753,28 @@ static void mtk_wake_queue(struct mtk_eth *eth)
+ 	}
+ }
+ 
++static bool mtk_skb_has_small_frag(struct sk_buff *skb)
++{
++	int min_size = 16;
++	int i;
++
++	if (skb_headlen(skb) < min_size)
++		return true;
++
++	for (i = 0; i < skb_shinfo(skb)->nr_frags; i++)
++		if (skb_frag_size(&skb_shinfo(skb)->frags[i]) < min_size)
++			return true;
++
++	return false;
++}
++
+ static netdev_tx_t mtk_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct mtk_mac *mac = netdev_priv(dev);
+ 	struct mtk_eth *eth = mac->hw;
+ 	struct mtk_tx_ring *ring = &eth->tx_ring;
+ 	struct net_device_stats *stats = &dev->stats;
++	struct sk_buff *segs, *next;
+ 	bool gso = false;
+ 	int tx_num;
+ 
+@@ -1786,6 +1803,18 @@ static netdev_tx_t mtk_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 		return NETDEV_TX_BUSY;
+ 	}
+ 
++	if (mtk_is_netsys_v1(eth) &&
++	    skb_is_gso(skb) && mtk_skb_has_small_frag(skb)) {
++		segs = skb_gso_segment(skb, dev->features & ~NETIF_F_ALL_TSO);
++		if (IS_ERR(segs))
++			goto drop;
++
++		if (segs) {
++			consume_skb(skb);
++			skb = segs;
++		}
++	}
++
+ 	/* TSO: fill MSS info in tcp checksum field */
+ 	if (skb_is_gso(skb)) {
+ 		if (skb_cow_head(skb, 0)) {
+@@ -1801,8 +1830,14 @@ static netdev_tx_t mtk_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 		}
+ 	}
+ 
+-	if (mtk_tx_map(skb, dev, tx_num, ring, gso) < 0)
+-		goto drop;
++	skb_list_walk_safe(skb, skb, next) {
++		if ((mtk_is_netsys_v1(eth) &&
++		     mtk_skb_has_small_frag(skb) && skb_linearize(skb)) ||
++		    mtk_tx_map(skb, dev, tx_num, ring, gso) < 0) {
++				stats->tx_dropped++;
++				dev_kfree_skb_any(skb);
++		}
++	}
+ 
+ 	if (unlikely(atomic_read(&ring->free_count) <= ring->thresh))
+ 		netif_tx_stop_all_queues(dev);
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+index 2f89a06471e3..ee7bb3b7b93a 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+@@ -280,7 +280,7 @@
+ #define MTK_CHK_DDONE_EN	BIT(28)
+ #define MTK_DMAD_WR_WDONE	BIT(26)
+ #define MTK_WCOMP_EN		BIT(24)
+-#define MTK_RESV_BUF		(0x40 << 16)
++#define MTK_RESV_BUF		(0x80 << 16)
+ #define MTK_MUTLI_CNT		(0x4 << 12)
+ #define MTK_LEAKY_BUCKET_EN	BIT(11)
+ 
+-- 
+2.51.0
+
+
+From 0cdfa5eb67e05aeb2b35960db1b797a945902091 Mon Sep 17 00:00:00 2001
+From: Felix Fietkau <nbd@nbd.name>
+Date: Mon, 14 Jul 2025 10:52:59 +0200
+Subject: [PATCH 05/12] net: ethernet: mtk_eth_soc: shrink struct mtk_tx_buf
+
+There is no need to track the difference between dma_map_page
+and dma_map_single, since they're unmapped in exactly the same way.
+Also reorder fields in order to avoid padding.
+
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 42 ++++++---------------
+ drivers/net/ethernet/mediatek/mtk_eth_soc.h | 13 +------
+ 2 files changed, 14 insertions(+), 41 deletions(-)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index 2931376785f2..3b81ea22bbea 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -1386,32 +1386,19 @@ static int txd_to_idx(struct mtk_tx_ring *ring, void *dma, u32 txd_size)
+ static void mtk_tx_unmap(struct mtk_eth *eth, struct mtk_tx_buf *tx_buf,
+ 			 struct xdp_frame_bulk *bq, bool napi)
+ {
+-	if (MTK_HAS_CAPS(eth->soc->caps, MTK_QDMA)) {
+-		if (tx_buf->flags & MTK_TX_FLAGS_SINGLE0) {
+-			dma_unmap_single(eth->dma_dev,
+-					 dma_unmap_addr(tx_buf, dma_addr0),
+-					 dma_unmap_len(tx_buf, dma_len0),
+-					 DMA_TO_DEVICE);
+-		} else if (tx_buf->flags & MTK_TX_FLAGS_PAGE0) {
+-			dma_unmap_page(eth->dma_dev,
+-				       dma_unmap_addr(tx_buf, dma_addr0),
+-				       dma_unmap_len(tx_buf, dma_len0),
+-				       DMA_TO_DEVICE);
+-		}
+-	} else {
+-		if (dma_unmap_len(tx_buf, dma_len0)) {
+-			dma_unmap_page(eth->dma_dev,
+-				       dma_unmap_addr(tx_buf, dma_addr0),
+-				       dma_unmap_len(tx_buf, dma_len0),
+-				       DMA_TO_DEVICE);
+-		}
++	if (dma_unmap_len(tx_buf, dma_len0)) {
++		dma_unmap_page(eth->dma_dev,
++			       dma_unmap_addr(tx_buf, dma_addr0),
++			       dma_unmap_len(tx_buf, dma_len0),
++			       DMA_TO_DEVICE);
++	}
+ 
+-		if (dma_unmap_len(tx_buf, dma_len1)) {
+-			dma_unmap_page(eth->dma_dev,
+-				       dma_unmap_addr(tx_buf, dma_addr1),
+-				       dma_unmap_len(tx_buf, dma_len1),
+-				       DMA_TO_DEVICE);
+-		}
++	if (!MTK_HAS_CAPS(eth->soc->caps, MTK_QDMA) &&
++	    dma_unmap_len(tx_buf, dma_len1)) {
++		dma_unmap_page(eth->dma_dev,
++			       dma_unmap_addr(tx_buf, dma_addr1),
++			       dma_unmap_len(tx_buf, dma_len1),
++			       DMA_TO_DEVICE);
+ 	}
+ 
+ 	if (tx_buf->data && tx_buf->data != (void *)MTK_DMA_DUMMY_DESC) {
+@@ -1433,7 +1420,6 @@ static void mtk_tx_unmap(struct mtk_eth *eth, struct mtk_tx_buf *tx_buf,
+ 				xdp_return_frame(xdpf);
+ 		}
+ 	}
+-	tx_buf->flags = 0;
+ 	tx_buf->data = NULL;
+ }
+ 
+@@ -1598,7 +1584,6 @@ static int mtk_tx_map(struct sk_buff *skb, struct net_device *dev,
+ 
+ 	mtk_tx_set_dma_desc(dev, itxd, &txd_info);
+ 
+-	itx_buf->flags |= MTK_TX_FLAGS_SINGLE0;
+ 	itx_buf->mac_id = mac->id;
+ 	setup_tx_buf(eth, itx_buf, itxd_pdma, txd_info.addr, txd_info.size,
+ 		     k++);
+@@ -1646,7 +1631,6 @@ static int mtk_tx_map(struct sk_buff *skb, struct net_device *dev,
+ 			if (new_desc)
+ 				memset(tx_buf, 0, sizeof(*tx_buf));
+ 			tx_buf->data = (void *)MTK_DMA_DUMMY_DESC;
+-			tx_buf->flags |= MTK_TX_FLAGS_PAGE0;
+ 			tx_buf->mac_id = mac->id;
+ 
+ 			setup_tx_buf(eth, tx_buf, txd_pdma, txd_info.addr,
+@@ -1979,8 +1963,6 @@ static int mtk_xdp_frame_map(struct mtk_eth *eth, struct net_device *dev,
+ 						txd_info->size, DMA_TO_DEVICE);
+ 		if (unlikely(dma_mapping_error(eth->dma_dev, txd_info->addr)))
+ 			return -ENOMEM;
+-
+-		tx_buf->flags |= MTK_TX_FLAGS_SINGLE0;
+ 	} else {
+ 		struct page *page = virt_to_head_page(data);
+ 
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+index ee7bb3b7b93a..19381abcdfc6 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+@@ -728,14 +728,6 @@ struct mtk_hw_stats {
+ 	struct u64_stats_sync	syncp;
+ };
+ 
+-enum mtk_tx_flags {
+-	/* PDMA descriptor can point at 1-2 segments. This enum allows us to
+-	 * track how memory was allocated so that it can be freed properly.
+-	 */
+-	MTK_TX_FLAGS_SINGLE0	= 0x01,
+-	MTK_TX_FLAGS_PAGE0	= 0x02,
+-};
+-
+ /* This enum allows us to identify how the clock is defined on the array of the
+  * clock in the order
+  */
+@@ -908,13 +900,12 @@ enum mtk_tx_buf_type {
+  */
+ struct mtk_tx_buf {
+ 	enum mtk_tx_buf_type type;
++	u16 mac_id;
+ 	void *data;
+ 
+-	u16 mac_id;
+-	u16 flags;
+ 	DEFINE_DMA_UNMAP_ADDR(dma_addr0);
+-	DEFINE_DMA_UNMAP_LEN(dma_len0);
+ 	DEFINE_DMA_UNMAP_ADDR(dma_addr1);
++	DEFINE_DMA_UNMAP_LEN(dma_len0);
+ 	DEFINE_DMA_UNMAP_LEN(dma_len1);
+ };
+ 
+-- 
+2.51.0
+
+
+From 498cd003f1c801ad2e11f51dddf9aa075f412477 Mon Sep 17 00:00:00 2001
+From: Felix Fietkau <nbd@nbd.name>
+Date: Thu, 22 Aug 2024 18:02:17 +0200
+Subject: [PATCH 06/12] net: bridge: fix switchdev host mdb entry updates
+
+When a mdb entry is removed, the bridge switchdev code can issue a
+switchdev_port_obj_del call for a port that was not offloaded.
+
+This leads to an imbalance in switchdev_port_obj_add/del calls, since
+br_switchdev_mdb_replay has not been called for the port before.
+
+This can lead to potential multicast forwarding issues and messages such as:
+mt7915e 0000:01:00.0 wl1-ap0: Failed to del Host Multicast Database entry
+	(object id=3) with error: -ENOENT (-2).
+
+Fix this issue by checking the port offload status when iterating over
+lower devs.
+
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+---
+ net/bridge/br_switchdev.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/net/bridge/br_switchdev.c b/net/bridge/br_switchdev.c
+index fe3f7bbe86ee..b898e1a4b5ff 100644
+--- a/net/bridge/br_switchdev.c
++++ b/net/bridge/br_switchdev.c
+@@ -576,10 +576,18 @@ static void br_switchdev_host_mdb(struct net_device *dev,
+ 				  struct net_bridge_mdb_entry *mp, int type)
+ {
+ 	struct net_device *lower_dev;
++	struct net_bridge_port *port;
+ 	struct list_head *iter;
+ 
+-	netdev_for_each_lower_dev(dev, lower_dev, iter)
++	rcu_read_lock();
++	netdev_for_each_lower_dev(dev, lower_dev, iter) {
++		port = br_port_get_rcu(lower_dev);
++		if (!port || !port->offload_count)
++			continue;
++
+ 		br_switchdev_host_mdb_one(dev, lower_dev, mp, type);
++	}
++	rcu_read_unlock();
+ }
+ 
+ static int
+-- 
+2.51.0
+
+
+From 96b0666b743311a15d8e01016462d7cf57764f62 Mon Sep 17 00:00:00 2001
+From: Felix Fietkau <nbd@nbd.name>
+Date: Mon, 21 Mar 2022 20:39:59 +0100
+Subject: [PATCH 07/12] net: ethernet: mtk_eth_soc: enable threaded NAPI
+
+This can improve performance under load by ensuring that NAPI processing is
+not pinned on CPU 0.
+
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index 3b81ea22bbea..a5586bd06490 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -5306,6 +5306,8 @@ static int mtk_probe(struct platform_device *pdev)
+ 		dev_err(eth->dev, "failed to allocated dummy device\n");
+ 		goto err_unreg_netdev;
+ 	}
++	eth->dummy_dev->threaded = 1;
++	strcpy(eth->dummy_dev->name, "mtk_eth");
+ 	netif_napi_add(eth->dummy_dev, &eth->tx_napi, mtk_napi_tx);
+ 	netif_napi_add(eth->dummy_dev, &eth->rx_napi, mtk_napi_rx);
+ 
+-- 
+2.51.0
+
+
+From 0666439429f6983cde79712125d76e21fea034f8 Mon Sep 17 00:00:00 2001
+From: Chad Monroe <chad@monroe.io>
+Date: Mon, 16 Sep 2024 19:29:03 -0700
+Subject: [PATCH 08/12] net: ethernet: mediatek: increase QDMA RESV_BUF size
+
+Increase QDMA RESV_BUF from 2K to 3K for netsys v2 to match Mediatek SDK[1].
+This helps reduce the possibility of Ethernet transmit timeouts.
+
+[1]: https://git01.mediatek.com/plugins/gitiles/openwrt/feeds/mtk-openwrt-feeds/+/19d8456c3051e5f6dabf42fa770916a2126ea4bf
+
+Signed-off-by: Chad Monroe <chad@monroe.io>
+---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 6 ++++--
+ drivers/net/ethernet/mediatek/mtk_eth_soc.h | 1 +
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index a5586bd06490..9d6f395f73dc 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -3487,12 +3487,14 @@ static int mtk_start_dma(struct mtk_eth *eth)
+ 		       MTK_TX_BT_32DWORDS | MTK_NDP_CO_PRO |
+ 		       MTK_RX_2B_OFFSET | MTK_TX_WB_DDONE;
+ 
+-		if (mtk_is_netsys_v2_or_greater(eth))
++		if (mtk_is_netsys_v2_or_greater(eth)) {
++			val &= ~MTK_RESV_BUF_MASK;
+ 			val |= MTK_MUTLI_CNT | MTK_RESV_BUF |
+ 			       MTK_WCOMP_EN | MTK_DMAD_WR_WDONE |
+ 			       MTK_CHK_DDONE_EN;
+-		else
++		} else {
+ 			val |= MTK_RX_BT_32DWORDS;
++		}
+ 		mtk_w32(eth, val, reg_map->qdma.glo_cfg);
+ 
+ 		mtk_w32(eth,
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+index 19381abcdfc6..b9da762fcc70 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+@@ -282,6 +282,7 @@
+ #define MTK_WCOMP_EN		BIT(24)
+ #define MTK_RESV_BUF		(0x80 << 16)
+ #define MTK_MUTLI_CNT		(0x4 << 12)
++#define MTK_RESV_BUF_MASK	(0xff << 16)
+ #define MTK_LEAKY_BUCKET_EN	BIT(11)
+ 
+ /* QDMA Flow Control Register */
+-- 
+2.51.0
+
+
+From 80b5de03406650271a4a5fafb06d06dbe4fd8846 Mon Sep 17 00:00:00 2001
+From: Felix Fietkau <nbd@nbd.name>
+Date: Thu, 23 Mar 2023 10:24:11 +0100
+Subject: [PATCH 09/12] net: ethernet: mtk_eth_soc: improve keeping track of
+ offloaded flows
+
+Unify tracking of L2 and L3 flows. Use the generic list field in struct
+mtk_foe_entry for tracking L2 subflows. Preparation for improving
+flow accounting support.
+
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+---
+ drivers/net/ethernet/mediatek/mtk_ppe.c | 162 ++++++++++++------------
+ drivers/net/ethernet/mediatek/mtk_ppe.h |  15 +--
+ 2 files changed, 86 insertions(+), 91 deletions(-)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_ppe.c b/drivers/net/ethernet/mediatek/mtk_ppe.c
+index ada852adc5f7..5b352ab64ef7 100644
+--- a/drivers/net/ethernet/mediatek/mtk_ppe.c
++++ b/drivers/net/ethernet/mediatek/mtk_ppe.c
+@@ -479,42 +479,43 @@ int mtk_foe_entry_set_queue(struct mtk_eth *eth, struct mtk_foe_entry *entry,
+ 	return 0;
+ }
+ 
++static int
++mtk_flow_entry_match_len(struct mtk_eth *eth, struct mtk_foe_entry *entry)
++{
++	int type = mtk_get_ib1_pkt_type(eth, entry->ib1);
++
++	if (type > MTK_PPE_PKT_TYPE_IPV4_DSLITE)
++		return offsetof(struct mtk_foe_entry, ipv6._rsv);
++	else
++		return offsetof(struct mtk_foe_entry, ipv4.ib2);
++}
++
+ static bool
+ mtk_flow_entry_match(struct mtk_eth *eth, struct mtk_flow_entry *entry,
+-		     struct mtk_foe_entry *data)
++		     struct mtk_foe_entry *data, int len)
+ {
+-	int type, len;
+-
+ 	if ((data->ib1 ^ entry->data.ib1) & MTK_FOE_IB1_UDP)
+ 		return false;
+ 
+-	type = mtk_get_ib1_pkt_type(eth, entry->data.ib1);
+-	if (type > MTK_PPE_PKT_TYPE_IPV4_DSLITE)
+-		len = offsetof(struct mtk_foe_entry, ipv6._rsv);
+-	else
+-		len = offsetof(struct mtk_foe_entry, ipv4.ib2);
+-
+ 	return !memcmp(&entry->data.data, &data->data, len - 4);
+ }
+ 
+ static void
+-__mtk_foe_entry_clear(struct mtk_ppe *ppe, struct mtk_flow_entry *entry)
++__mtk_foe_entry_clear(struct mtk_ppe *ppe, struct mtk_flow_entry *entry,
++		      bool set_state)
+ {
+-	struct hlist_head *head;
+ 	struct hlist_node *tmp;
+ 
+ 	if (entry->type == MTK_FLOW_TYPE_L2) {
+ 		rhashtable_remove_fast(&ppe->l2_flows, &entry->l2_node,
+ 				       mtk_flow_l2_ht_params);
+ 
+-		head = &entry->l2_flows;
+-		hlist_for_each_entry_safe(entry, tmp, head, l2_data.list)
+-			__mtk_foe_entry_clear(ppe, entry);
++		hlist_for_each_entry_safe(entry, tmp, &entry->l2_flows, l2_list)
++			__mtk_foe_entry_clear(ppe, entry, set_state);
+ 		return;
+ 	}
+ 
+-	hlist_del_init(&entry->list);
+-	if (entry->hash != 0xffff) {
++	if (entry->hash != 0xffff && set_state) {
+ 		struct mtk_foe_entry *hwe = mtk_foe_get_entry(ppe, entry->hash);
+ 
+ 		hwe->ib1 &= ~MTK_FOE_IB1_STATE;
+@@ -535,7 +536,8 @@ __mtk_foe_entry_clear(struct mtk_ppe *ppe, struct mtk_flow_entry *entry)
+ 	if (entry->type != MTK_FLOW_TYPE_L2_SUBFLOW)
+ 		return;
+ 
+-	hlist_del_init(&entry->l2_data.list);
++	hlist_del_init(&entry->l2_list);
++	hlist_del_init(&entry->list);
+ 	kfree(entry);
+ }
+ 
+@@ -551,68 +553,57 @@ static int __mtk_foe_entry_idle_time(struct mtk_ppe *ppe, u32 ib1)
+ 		return now - timestamp;
+ }
+ 
++static bool
++mtk_flow_entry_update(struct mtk_ppe *ppe, struct mtk_flow_entry *entry)
++{
++	struct mtk_foe_entry foe = {};
++	struct mtk_foe_entry *hwe;
++	u16 hash = entry->hash;
++	int len;
++
++	if (hash == 0xffff)
++		return false;
++
++	hwe = mtk_foe_get_entry(ppe, hash);
++	len = mtk_flow_entry_match_len(ppe->eth, &entry->data);
++	memcpy(&foe, hwe, len);
++
++	if (!mtk_flow_entry_match(ppe->eth, entry, &foe, len) ||
++	    FIELD_GET(MTK_FOE_IB1_STATE, foe.ib1) != MTK_FOE_STATE_BIND)
++		return false;
++
++	entry->data.ib1 = foe.ib1;
++
++	return true;
++}
++
+ static void
+ mtk_flow_entry_update_l2(struct mtk_ppe *ppe, struct mtk_flow_entry *entry)
+ {
+ 	u32 ib1_ts_mask = mtk_get_ib1_ts_mask(ppe->eth);
+ 	struct mtk_flow_entry *cur;
+-	struct mtk_foe_entry *hwe;
+ 	struct hlist_node *tmp;
+ 	int idle;
+ 
+ 	idle = __mtk_foe_entry_idle_time(ppe, entry->data.ib1);
+-	hlist_for_each_entry_safe(cur, tmp, &entry->l2_flows, l2_data.list) {
++	hlist_for_each_entry_safe(cur, tmp, &entry->l2_flows, l2_list) {
+ 		int cur_idle;
+-		u32 ib1;
+-
+-		hwe = mtk_foe_get_entry(ppe, cur->hash);
+-		ib1 = READ_ONCE(hwe->ib1);
+ 
+-		if (FIELD_GET(MTK_FOE_IB1_STATE, ib1) != MTK_FOE_STATE_BIND) {
+-			cur->hash = 0xffff;
+-			__mtk_foe_entry_clear(ppe, cur);
++		if (!mtk_flow_entry_update(ppe, cur)) {
++			__mtk_foe_entry_clear(ppe, entry, false);
+ 			continue;
+ 		}
+ 
+-		cur_idle = __mtk_foe_entry_idle_time(ppe, ib1);
++		cur_idle = __mtk_foe_entry_idle_time(ppe, cur->data.ib1);
+ 		if (cur_idle >= idle)
+ 			continue;
+ 
+ 		idle = cur_idle;
+ 		entry->data.ib1 &= ~ib1_ts_mask;
+-		entry->data.ib1 |= ib1 & ib1_ts_mask;
++		entry->data.ib1 |= cur->data.ib1 & ib1_ts_mask;
+ 	}
+ }
+ 
+-static void
+-mtk_flow_entry_update(struct mtk_ppe *ppe, struct mtk_flow_entry *entry)
+-{
+-	struct mtk_foe_entry foe = {};
+-	struct mtk_foe_entry *hwe;
+-
+-	spin_lock_bh(&ppe_lock);
+-
+-	if (entry->type == MTK_FLOW_TYPE_L2) {
+-		mtk_flow_entry_update_l2(ppe, entry);
+-		goto out;
+-	}
+-
+-	if (entry->hash == 0xffff)
+-		goto out;
+-
+-	hwe = mtk_foe_get_entry(ppe, entry->hash);
+-	memcpy(&foe, hwe, ppe->eth->soc->foe_entry_size);
+-	if (!mtk_flow_entry_match(ppe->eth, entry, &foe)) {
+-		entry->hash = 0xffff;
+-		goto out;
+-	}
+-
+-	entry->data.ib1 = foe.ib1;
+-
+-out:
+-	spin_unlock_bh(&ppe_lock);
+-}
+-
+ static void
+ __mtk_foe_entry_commit(struct mtk_ppe *ppe, struct mtk_foe_entry *entry,
+ 		       u16 hash)
+@@ -653,7 +644,8 @@ __mtk_foe_entry_commit(struct mtk_ppe *ppe, struct mtk_foe_entry *entry,
+ void mtk_foe_entry_clear(struct mtk_ppe *ppe, struct mtk_flow_entry *entry)
+ {
+ 	spin_lock_bh(&ppe_lock);
+-	__mtk_foe_entry_clear(ppe, entry);
++	__mtk_foe_entry_clear(ppe, entry, true);
++	hlist_del_init(&entry->list);
+ 	spin_unlock_bh(&ppe_lock);
+ }
+ 
+@@ -700,8 +692,8 @@ mtk_foe_entry_commit_subflow(struct mtk_ppe *ppe, struct mtk_flow_entry *entry,
+ {
+ 	const struct mtk_soc_data *soc = ppe->eth->soc;
+ 	struct mtk_flow_entry *flow_info;
+-	struct mtk_foe_entry foe = {}, *hwe;
+ 	struct mtk_foe_mac_info *l2;
++	struct mtk_foe_entry *hwe;
+ 	u32 ib1_mask = mtk_get_ib1_pkt_type_mask(ppe->eth) | MTK_FOE_IB1_UDP;
+ 	int type;
+ 
+@@ -709,30 +701,30 @@ mtk_foe_entry_commit_subflow(struct mtk_ppe *ppe, struct mtk_flow_entry *entry,
+ 	if (!flow_info)
+ 		return;
+ 
+-	flow_info->l2_data.base_flow = entry;
+ 	flow_info->type = MTK_FLOW_TYPE_L2_SUBFLOW;
+ 	flow_info->hash = hash;
+ 	hlist_add_head(&flow_info->list,
+ 		       &ppe->foe_flow[hash / soc->hash_offset]);
+-	hlist_add_head(&flow_info->l2_data.list, &entry->l2_flows);
++	hlist_add_head(&flow_info->l2_list, &entry->l2_flows);
+ 
+ 	hwe = mtk_foe_get_entry(ppe, hash);
+-	memcpy(&foe, hwe, soc->foe_entry_size);
+-	foe.ib1 &= ib1_mask;
+-	foe.ib1 |= entry->data.ib1 & ~ib1_mask;
++	memcpy(&flow_info->data, hwe, soc->foe_entry_size);
++	flow_info->data.ib1 &= ib1_mask;
++	flow_info->data.ib1 |= entry->data.ib1 & ~ib1_mask;
+ 
+-	l2 = mtk_foe_entry_l2(ppe->eth, &foe);
++	l2 = mtk_foe_entry_l2(ppe->eth, &flow_info->data);
+ 	memcpy(l2, &entry->data.bridge.l2, sizeof(*l2));
+ 
+-	type = mtk_get_ib1_pkt_type(ppe->eth, foe.ib1);
++	type = mtk_get_ib1_pkt_type(ppe->eth, flow_info->data.ib1);
+ 	if (type == MTK_PPE_PKT_TYPE_IPV4_HNAPT)
+-		memcpy(&foe.ipv4.new, &foe.ipv4.orig, sizeof(foe.ipv4.new));
++		memcpy(&flow_info->data.ipv4.new, &flow_info->data.ipv4.orig,
++		       sizeof(flow_info->data.ipv4.new));
+ 	else if (type >= MTK_PPE_PKT_TYPE_IPV6_ROUTE_3T && l2->etype == ETH_P_IP)
+ 		l2->etype = ETH_P_IPV6;
+ 
+-	*mtk_foe_entry_ib2(ppe->eth, &foe) = entry->data.bridge.ib2;
++	*mtk_foe_entry_ib2(ppe->eth, &flow_info->data) = entry->data.bridge.ib2;
+ 
+-	__mtk_foe_entry_commit(ppe, &foe, hash);
++	__mtk_foe_entry_commit(ppe, &flow_info->data, hash);
+ }
+ 
+ void __mtk_ppe_check_skb(struct mtk_ppe *ppe, struct sk_buff *skb, u16 hash)
+@@ -742,9 +734,11 @@ void __mtk_ppe_check_skb(struct mtk_ppe *ppe, struct sk_buff *skb, u16 hash)
+ 	struct mtk_foe_entry *hwe = mtk_foe_get_entry(ppe, hash);
+ 	struct mtk_flow_entry *entry;
+ 	struct mtk_foe_bridge key = {};
++	struct mtk_foe_entry foe = {};
+ 	struct hlist_node *n;
+ 	struct ethhdr *eh;
+ 	bool found = false;
++	int entry_len;
+ 	u8 *tag;
+ 
+ 	spin_lock_bh(&ppe_lock);
+@@ -752,20 +746,14 @@ void __mtk_ppe_check_skb(struct mtk_ppe *ppe, struct sk_buff *skb, u16 hash)
+ 	if (FIELD_GET(MTK_FOE_IB1_STATE, hwe->ib1) == MTK_FOE_STATE_BIND)
+ 		goto out;
+ 
+-	hlist_for_each_entry_safe(entry, n, head, list) {
+-		if (entry->type == MTK_FLOW_TYPE_L2_SUBFLOW) {
+-			if (unlikely(FIELD_GET(MTK_FOE_IB1_STATE, hwe->ib1) ==
+-				     MTK_FOE_STATE_BIND))
+-				continue;
+-
+-			entry->hash = 0xffff;
+-			__mtk_foe_entry_clear(ppe, entry);
+-			continue;
+-		}
++	entry_len = mtk_flow_entry_match_len(ppe->eth, hwe);
++	memcpy(&foe, hwe, entry_len);
+ 
+-		if (found || !mtk_flow_entry_match(ppe->eth, entry, hwe)) {
++	hlist_for_each_entry_safe(entry, n, head, list) {
++		if (found ||
++		    !mtk_flow_entry_match(ppe->eth, entry, &foe, entry_len)) {
+ 			if (entry->hash != 0xffff)
+-				entry->hash = 0xffff;
++				__mtk_foe_entry_clear(ppe, entry, false);
+ 			continue;
+ 		}
+ 
+@@ -816,9 +804,17 @@ void __mtk_ppe_check_skb(struct mtk_ppe *ppe, struct sk_buff *skb, u16 hash)
+ 
+ int mtk_foe_entry_idle_time(struct mtk_ppe *ppe, struct mtk_flow_entry *entry)
+ {
+-	mtk_flow_entry_update(ppe, entry);
++	int idle;
++
++	spin_lock_bh(&ppe_lock);
++	if (entry->type == MTK_FLOW_TYPE_L2)
++		mtk_flow_entry_update_l2(ppe, entry);
++	else
++		mtk_flow_entry_update(ppe, entry);
++	idle = __mtk_foe_entry_idle_time(ppe, entry->data.ib1);
++	spin_unlock_bh(&ppe_lock);
+ 
+-	return __mtk_foe_entry_idle_time(ppe, entry->data.ib1);
++	return idle;
+ }
+ 
+ int mtk_ppe_prepare_reset(struct mtk_ppe *ppe)
+diff --git a/drivers/net/ethernet/mediatek/mtk_ppe.h b/drivers/net/ethernet/mediatek/mtk_ppe.h
+index 223f709e2704..aa0799c1ce95 100644
+--- a/drivers/net/ethernet/mediatek/mtk_ppe.h
++++ b/drivers/net/ethernet/mediatek/mtk_ppe.h
+@@ -286,7 +286,12 @@ enum {
+ 
+ struct mtk_flow_entry {
+ 	union {
+-		struct hlist_node list;
++		/* regular flows + L2 subflows */
++		struct {
++			struct hlist_node list;
++			struct hlist_node l2_list;
++		};
++		/* L2 flows */
+ 		struct {
+ 			struct rhash_head l2_node;
+ 			struct hlist_head l2_flows;
+@@ -296,13 +301,7 @@ struct mtk_flow_entry {
+ 	s8 wed_index;
+ 	u8 ppe_index;
+ 	u16 hash;
+-	union {
+-		struct mtk_foe_entry data;
+-		struct {
+-			struct mtk_flow_entry *base_flow;
+-			struct hlist_node list;
+-		} l2_data;
+-	};
++	struct mtk_foe_entry data;
+ 	struct rhash_head node;
+ 	unsigned long cookie;
+ };
+-- 
+2.51.0
+
+
+From ecc4b72e231898cf8e61dd3dac99b8a36224cd41 Mon Sep 17 00:00:00 2001
+From: Felix Fietkau <nbd@nbd.name>
+Date: Thu, 23 Mar 2023 11:05:22 +0100
+Subject: [PATCH 10/12] net: ethernet: mediatek: fix ppe flow accounting for L2
+ flows
+
+For L2 flows, the packet/byte counters should report the sum of the
+counters of their subflows, both current and expired.
+In order to make this work, change the way that accounting data is tracked.
+Reset counters when a flow enters bind. Once it expires (or enters unbind),
+store the last counter value in struct mtk_flow_entry.
+
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+---
+ drivers/net/ethernet/mediatek/mtk_ppe.c       | 140 ++++++++++--------
+ drivers/net/ethernet/mediatek/mtk_ppe.h       |   8 +-
+ .../net/ethernet/mediatek/mtk_ppe_debugfs.c   |   2 +-
+ .../net/ethernet/mediatek/mtk_ppe_offload.c   |  17 +--
+ 4 files changed, 89 insertions(+), 78 deletions(-)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_ppe.c b/drivers/net/ethernet/mediatek/mtk_ppe.c
+index 5b352ab64ef7..96365a75b198 100644
+--- a/drivers/net/ethernet/mediatek/mtk_ppe.c
++++ b/drivers/net/ethernet/mediatek/mtk_ppe.c
+@@ -83,9 +83,9 @@ static int mtk_ppe_mib_wait_busy(struct mtk_ppe *ppe)
+ 	int ret;
+ 	u32 val;
+ 
+-	ret = readl_poll_timeout(ppe->base + MTK_PPE_MIB_SER_CR, val,
+-				 !(val & MTK_PPE_MIB_SER_CR_ST),
+-				 20, MTK_PPE_WAIT_TIMEOUT_US);
++	ret = readl_poll_timeout_atomic(ppe->base + MTK_PPE_MIB_SER_CR, val,
++					!(val & MTK_PPE_MIB_SER_CR_ST),
++					20, MTK_PPE_WAIT_TIMEOUT_US);
+ 
+ 	if (ret)
+ 		dev_err(ppe->dev, "MIB table busy");
+@@ -93,17 +93,31 @@ static int mtk_ppe_mib_wait_busy(struct mtk_ppe *ppe)
+ 	return ret;
+ }
+ 
+-static int mtk_mib_entry_read(struct mtk_ppe *ppe, u16 index, u64 *bytes, u64 *packets)
++static inline struct mtk_foe_accounting *
++mtk_ppe_acct_data(struct mtk_ppe *ppe, u16 index)
++{
++	if (!ppe->acct_table)
++		return NULL;
++
++	return ppe->acct_table + index * sizeof(struct mtk_foe_accounting);
++}
++
++struct mtk_foe_accounting *mtk_ppe_mib_entry_read(struct mtk_ppe *ppe, u16 index)
+ {
+ 	u32 val, cnt_r0, cnt_r1, cnt_r2;
++	struct mtk_foe_accounting *acct;
+ 	int ret;
+ 
+ 	val = FIELD_PREP(MTK_PPE_MIB_SER_CR_ADDR, index) | MTK_PPE_MIB_SER_CR_ST;
+ 	ppe_w32(ppe, MTK_PPE_MIB_SER_CR, val);
+ 
++	acct = mtk_ppe_acct_data(ppe, index);
++	if (!acct)
++		return NULL;
++
+ 	ret = mtk_ppe_mib_wait_busy(ppe);
+ 	if (ret)
+-		return ret;
++		return acct;
+ 
+ 	cnt_r0 = readl(ppe->base + MTK_PPE_MIB_SER_R0);
+ 	cnt_r1 = readl(ppe->base + MTK_PPE_MIB_SER_R1);
+@@ -112,19 +126,19 @@ static int mtk_mib_entry_read(struct mtk_ppe *ppe, u16 index, u64 *bytes, u64 *p
+ 	if (mtk_is_netsys_v3_or_greater(ppe->eth)) {
+ 		/* 64 bit for each counter */
+ 		u32 cnt_r3 = readl(ppe->base + MTK_PPE_MIB_SER_R3);
+-		*bytes = ((u64)cnt_r1 << 32) | cnt_r0;
+-		*packets = ((u64)cnt_r3 << 32) | cnt_r2;
++		acct->bytes += ((u64)cnt_r1 << 32) | cnt_r0;
++		acct->packets += ((u64)cnt_r3 << 32) | cnt_r2;
+ 	} else {
+ 		/* 48 bit byte counter, 40 bit packet counter */
+ 		u32 byte_cnt_low = FIELD_GET(MTK_PPE_MIB_SER_R0_BYTE_CNT_LOW, cnt_r0);
+ 		u32 byte_cnt_high = FIELD_GET(MTK_PPE_MIB_SER_R1_BYTE_CNT_HIGH, cnt_r1);
+ 		u32 pkt_cnt_low = FIELD_GET(MTK_PPE_MIB_SER_R1_PKT_CNT_LOW, cnt_r1);
+ 		u32 pkt_cnt_high = FIELD_GET(MTK_PPE_MIB_SER_R2_PKT_CNT_HIGH, cnt_r2);
+-		*bytes = ((u64)byte_cnt_high << 32) | byte_cnt_low;
+-		*packets = ((u64)pkt_cnt_high << 16) | pkt_cnt_low;
++		acct->bytes += ((u64)byte_cnt_high << 32) | byte_cnt_low;
++		acct->packets += ((u64)pkt_cnt_high << 16) | pkt_cnt_low;
+ 	}
+ 
+-	return 0;
++	return acct;
+ }
+ 
+ static void mtk_ppe_cache_clear(struct mtk_ppe *ppe)
+@@ -522,14 +536,6 @@ __mtk_foe_entry_clear(struct mtk_ppe *ppe, struct mtk_flow_entry *entry,
+ 		hwe->ib1 |= FIELD_PREP(MTK_FOE_IB1_STATE, MTK_FOE_STATE_INVALID);
+ 		dma_wmb();
+ 		mtk_ppe_cache_clear(ppe);
+-
+-		if (ppe->accounting) {
+-			struct mtk_foe_accounting *acct;
+-
+-			acct = ppe->acct_table + entry->hash * sizeof(*acct);
+-			acct->packets = 0;
+-			acct->bytes = 0;
+-		}
+ 	}
+ 	entry->hash = 0xffff;
+ 
+@@ -554,11 +560,14 @@ static int __mtk_foe_entry_idle_time(struct mtk_ppe *ppe, u32 ib1)
+ }
+ 
+ static bool
+-mtk_flow_entry_update(struct mtk_ppe *ppe, struct mtk_flow_entry *entry)
++mtk_flow_entry_update(struct mtk_ppe *ppe, struct mtk_flow_entry *entry,
++		      u64 *packets, u64 *bytes)
+ {
++	struct mtk_foe_accounting *acct;
+ 	struct mtk_foe_entry foe = {};
+ 	struct mtk_foe_entry *hwe;
+ 	u16 hash = entry->hash;
++	bool ret = false;
+ 	int len;
+ 
+ 	if (hash == 0xffff)
+@@ -569,18 +578,35 @@ mtk_flow_entry_update(struct mtk_ppe *ppe, struct mtk_flow_entry *entry)
+ 	memcpy(&foe, hwe, len);
+ 
+ 	if (!mtk_flow_entry_match(ppe->eth, entry, &foe, len) ||
+-	    FIELD_GET(MTK_FOE_IB1_STATE, foe.ib1) != MTK_FOE_STATE_BIND)
+-		return false;
++	    FIELD_GET(MTK_FOE_IB1_STATE, foe.ib1) != MTK_FOE_STATE_BIND) {
++		acct = mtk_ppe_acct_data(ppe, hash);
++		if (acct) {
++			entry->prev_packets += acct->packets;
++			entry->prev_bytes += acct->bytes;
++		}
++
++		goto out;
++	}
+ 
+ 	entry->data.ib1 = foe.ib1;
++	acct = mtk_ppe_mib_entry_read(ppe, hash);
++	ret = true;
++
++out:
++	if (acct) {
++		*packets += acct->packets;
++		*bytes += acct->bytes;
++	}
+ 
+-	return true;
++	return ret;
+ }
+ 
+ static void
+ mtk_flow_entry_update_l2(struct mtk_ppe *ppe, struct mtk_flow_entry *entry)
+ {
+ 	u32 ib1_ts_mask = mtk_get_ib1_ts_mask(ppe->eth);
++	u64 *packets = &entry->packets;
++	u64 *bytes = &entry->bytes;
+ 	struct mtk_flow_entry *cur;
+ 	struct hlist_node *tmp;
+ 	int idle;
+@@ -589,7 +615,9 @@ mtk_flow_entry_update_l2(struct mtk_ppe *ppe, struct mtk_flow_entry *entry)
+ 	hlist_for_each_entry_safe(cur, tmp, &entry->l2_flows, l2_list) {
+ 		int cur_idle;
+ 
+-		if (!mtk_flow_entry_update(ppe, cur)) {
++		if (!mtk_flow_entry_update(ppe, cur, packets, bytes)) {
++			entry->prev_packets += cur->prev_packets;
++			entry->prev_bytes += cur->prev_bytes;
+ 			__mtk_foe_entry_clear(ppe, entry, false);
+ 			continue;
+ 		}
+@@ -604,10 +632,29 @@ mtk_flow_entry_update_l2(struct mtk_ppe *ppe, struct mtk_flow_entry *entry)
+ 	}
+ }
+ 
++void mtk_foe_entry_get_stats(struct mtk_ppe *ppe, struct mtk_flow_entry *entry,
++			     int *idle)
++{
++	entry->packets = entry->prev_packets;
++	entry->bytes = entry->prev_bytes;
++
++	spin_lock_bh(&ppe_lock);
++
++	if (entry->type == MTK_FLOW_TYPE_L2)
++		mtk_flow_entry_update_l2(ppe, entry);
++	else
++		mtk_flow_entry_update(ppe, entry, &entry->packets, &entry->bytes);
++
++	*idle = __mtk_foe_entry_idle_time(ppe, entry->data.ib1);
++
++	spin_unlock_bh(&ppe_lock);
++}
++
+ static void
+ __mtk_foe_entry_commit(struct mtk_ppe *ppe, struct mtk_foe_entry *entry,
+ 		       u16 hash)
+ {
++	struct mtk_foe_accounting *acct;
+ 	struct mtk_eth *eth = ppe->eth;
+ 	u16 timestamp = mtk_eth_timestamp(eth);
+ 	struct mtk_foe_entry *hwe;
+@@ -638,6 +685,12 @@ __mtk_foe_entry_commit(struct mtk_ppe *ppe, struct mtk_foe_entry *entry,
+ 
+ 	dma_wmb();
+ 
++	acct = mtk_ppe_mib_entry_read(ppe, hash);
++	if (acct) {
++		acct->packets = 0;
++		acct->bytes = 0;
++	}
++
+ 	mtk_ppe_cache_clear(ppe);
+ }
+ 
+@@ -802,21 +855,6 @@ void __mtk_ppe_check_skb(struct mtk_ppe *ppe, struct sk_buff *skb, u16 hash)
+ 	spin_unlock_bh(&ppe_lock);
+ }
+ 
+-int mtk_foe_entry_idle_time(struct mtk_ppe *ppe, struct mtk_flow_entry *entry)
+-{
+-	int idle;
+-
+-	spin_lock_bh(&ppe_lock);
+-	if (entry->type == MTK_FLOW_TYPE_L2)
+-		mtk_flow_entry_update_l2(ppe, entry);
+-	else
+-		mtk_flow_entry_update(ppe, entry);
+-	idle = __mtk_foe_entry_idle_time(ppe, entry->data.ib1);
+-	spin_unlock_bh(&ppe_lock);
+-
+-	return idle;
+-}
+-
+ int mtk_ppe_prepare_reset(struct mtk_ppe *ppe)
+ {
+ 	if (!ppe)
+@@ -844,32 +882,6 @@ int mtk_ppe_prepare_reset(struct mtk_ppe *ppe)
+ 	return mtk_ppe_wait_busy(ppe);
+ }
+ 
+-struct mtk_foe_accounting *mtk_foe_entry_get_mib(struct mtk_ppe *ppe, u32 index,
+-						 struct mtk_foe_accounting *diff)
+-{
+-	struct mtk_foe_accounting *acct;
+-	int size = sizeof(struct mtk_foe_accounting);
+-	u64 bytes, packets;
+-
+-	if (!ppe->accounting)
+-		return NULL;
+-
+-	if (mtk_mib_entry_read(ppe, index, &bytes, &packets))
+-		return NULL;
+-
+-	acct = ppe->acct_table + index * size;
+-
+-	acct->bytes += bytes;
+-	acct->packets += packets;
+-
+-	if (diff) {
+-		diff->bytes = bytes;
+-		diff->packets = packets;
+-	}
+-
+-	return acct;
+-}
+-
+ struct mtk_ppe *mtk_ppe_init(struct mtk_eth *eth, void __iomem *base, int index)
+ {
+ 	bool accounting = eth->soc->has_accounting;
+diff --git a/drivers/net/ethernet/mediatek/mtk_ppe.h b/drivers/net/ethernet/mediatek/mtk_ppe.h
+index aa0799c1ce95..9a4990aa5fa5 100644
+--- a/drivers/net/ethernet/mediatek/mtk_ppe.h
++++ b/drivers/net/ethernet/mediatek/mtk_ppe.h
+@@ -304,6 +304,8 @@ struct mtk_flow_entry {
+ 	struct mtk_foe_entry data;
+ 	struct rhash_head node;
+ 	unsigned long cookie;
++	u64 prev_packets, prev_bytes;
++	u64 packets, bytes;
+ };
+ 
+ struct mtk_mib_entry {
+@@ -348,6 +350,7 @@ void mtk_ppe_deinit(struct mtk_eth *eth);
+ void mtk_ppe_start(struct mtk_ppe *ppe);
+ int mtk_ppe_stop(struct mtk_ppe *ppe);
+ int mtk_ppe_prepare_reset(struct mtk_ppe *ppe);
++struct mtk_foe_accounting *mtk_ppe_mib_entry_read(struct mtk_ppe *ppe, u16 index);
+ 
+ void __mtk_ppe_check_skb(struct mtk_ppe *ppe, struct sk_buff *skb, u16 hash);
+ 
+@@ -397,9 +400,8 @@ int mtk_foe_entry_set_queue(struct mtk_eth *eth, struct mtk_foe_entry *entry,
+ 			    unsigned int queue);
+ int mtk_foe_entry_commit(struct mtk_ppe *ppe, struct mtk_flow_entry *entry);
+ void mtk_foe_entry_clear(struct mtk_ppe *ppe, struct mtk_flow_entry *entry);
+-int mtk_foe_entry_idle_time(struct mtk_ppe *ppe, struct mtk_flow_entry *entry);
+ int mtk_ppe_debugfs_init(struct mtk_ppe *ppe, int index);
+-struct mtk_foe_accounting *mtk_foe_entry_get_mib(struct mtk_ppe *ppe, u32 index,
+-						 struct mtk_foe_accounting *diff);
++void mtk_foe_entry_get_stats(struct mtk_ppe *ppe, struct mtk_flow_entry *entry,
++			     int *idle);
+ 
+ #endif
+diff --git a/drivers/net/ethernet/mediatek/mtk_ppe_debugfs.c b/drivers/net/ethernet/mediatek/mtk_ppe_debugfs.c
+index 570ebf91f693..9259d0925b88 100644
+--- a/drivers/net/ethernet/mediatek/mtk_ppe_debugfs.c
++++ b/drivers/net/ethernet/mediatek/mtk_ppe_debugfs.c
+@@ -97,7 +97,7 @@ mtk_ppe_debugfs_foe_show(struct seq_file *m, void *private, bool bind)
+ 		if (bind && state != MTK_FOE_STATE_BIND)
+ 			continue;
+ 
+-		acct = mtk_foe_entry_get_mib(ppe, i, NULL);
++		acct = mtk_ppe_mib_entry_read(ppe, i);
+ 
+ 		type = mtk_get_ib1_pkt_type(ppe->eth, entry->ib1);
+ 		seq_printf(m, "%05x %s %7s", i,
+diff --git a/drivers/net/ethernet/mediatek/mtk_ppe_offload.c b/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
+index e9bd32741983..af8e0107fb93 100644
+--- a/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
++++ b/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
+@@ -522,24 +522,21 @@ static int
+ mtk_flow_offload_stats(struct mtk_eth *eth, struct flow_cls_offload *f)
+ {
+ 	struct mtk_flow_entry *entry;
+-	struct mtk_foe_accounting diff;
+-	u32 idle;
++	u64 packets, bytes;
++	int idle;
+ 
+ 	entry = rhashtable_lookup(&eth->flow_table, &f->cookie,
+ 				  mtk_flow_ht_params);
+ 	if (!entry)
+ 		return -ENOENT;
+ 
+-	idle = mtk_foe_entry_idle_time(eth->ppe[entry->ppe_index], entry);
++	packets = entry->packets;
++	bytes = entry->bytes;
++	mtk_foe_entry_get_stats(eth->ppe[entry->ppe_index], entry, &idle);
++	f->stats.pkts += entry->packets - packets;
++	f->stats.bytes += entry->bytes - bytes;
+ 	f->stats.lastused = jiffies - idle * HZ;
+ 
+-	if (entry->hash != 0xFFFF &&
+-	    mtk_foe_entry_get_mib(eth->ppe[entry->ppe_index], entry->hash,
+-				  &diff)) {
+-		f->stats.pkts += diff.packets;
+-		f->stats.bytes += diff.bytes;
+-	}
+-
+ 	return 0;
+ }
+ 
+-- 
+2.51.0
+
+
+From 0d9be0a839c47582a77b1c63164b2e93a48973ac Mon Sep 17 00:00:00 2001
+From: Felix Fietkau <nbd@nbd.name>
+Date: Fri, 12 Sep 2025 14:18:14 +0200
+Subject: [PATCH 11/12] net: ethernet: mtk_eth_soc: zero initialize PPE flow
+ table
+
+Avoid picking up flows from last boot or other invalid data
+
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+---
+ drivers/net/ethernet/mediatek/mtk_ppe.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_ppe.c b/drivers/net/ethernet/mediatek/mtk_ppe.c
+index 96365a75b198..cb08d132bad9 100644
+--- a/drivers/net/ethernet/mediatek/mtk_ppe.c
++++ b/drivers/net/ethernet/mediatek/mtk_ppe.c
+@@ -914,6 +914,7 @@ struct mtk_ppe *mtk_ppe_init(struct mtk_eth *eth, void __iomem *base, int index)
+ 	if (!foe)
+ 		goto err_free_l2_flows;
+ 
++	memset(foe, 0, MTK_PPE_ENTRIES * soc->foe_entry_size);
+ 	ppe->foe_table = foe;
+ 
+ 	foe_flow_size = (MTK_PPE_ENTRIES / soc->hash_offset) *
+@@ -928,6 +929,7 @@ struct mtk_ppe *mtk_ppe_init(struct mtk_eth *eth, void __iomem *base, int index)
+ 		if (!mib)
+ 			return NULL;
+ 
++		memset(mib, 0, MTK_PPE_ENTRIES * sizeof(*mib));
+ 		ppe->mib_table = mib;
+ 
+ 		acct = devm_kzalloc(dev, MTK_PPE_ENTRIES * sizeof(*acct),
+-- 
+2.51.0
+
+
+From 3b613fe4850f9bbb32417ef3c2c48c5f65f0111d Mon Sep 17 00:00:00 2001
+From: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
+Date: Wed, 27 Nov 2024 13:36:49 +0800
+Subject: [PATCH 12/12] net: ethernet: mtk_eth_soc: add hw dump for forced
+ reset
+
+Without this patch, the ETH driver is unable to dump the registers
+before triggering a forced reset.
+
+Signed-off-by: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
+---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 55 +++++++++++++++++++++
+ drivers/net/ethernet/mediatek/mtk_eth_soc.h |  1 +
+ 2 files changed, 56 insertions(+)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index 9d6f395f73dc..110dac8248df 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -65,6 +65,7 @@ static const struct mtk_reg_map mtk_reg_map = {
+ 		.rx_ptr		= 0x1900,
+ 		.rx_cnt_cfg	= 0x1904,
+ 		.qcrx_ptr	= 0x1908,
++		.page		= 0x19f0,
+ 		.glo_cfg	= 0x1a04,
+ 		.rst_idx	= 0x1a08,
+ 		.delay_irq	= 0x1a0c,
+@@ -131,6 +132,7 @@ static const struct mtk_reg_map mt7986_reg_map = {
+ 		.rx_ptr		= 0x4500,
+ 		.rx_cnt_cfg	= 0x4504,
+ 		.qcrx_ptr	= 0x4508,
++		.page		= 0x45f0,
+ 		.glo_cfg	= 0x4604,
+ 		.rst_idx	= 0x4608,
+ 		.delay_irq	= 0x460c,
+@@ -182,6 +184,7 @@ static const struct mtk_reg_map mt7988_reg_map = {
+ 		.rx_ptr		= 0x4500,
+ 		.rx_cnt_cfg	= 0x4504,
+ 		.qcrx_ptr	= 0x4508,
++		.page		= 0x45f0,
+ 		.glo_cfg	= 0x4604,
+ 		.rst_idx	= 0x4608,
+ 		.delay_irq	= 0x460c,
+@@ -3913,6 +3916,56 @@ static void mtk_set_mcr_max_rx(struct mtk_mac *mac, u32 val)
+ 		mtk_w32(mac->hw, mcr_new, MTK_MAC_MCR(mac->id));
+ }
+ 
++static void mtk_hw_dump_reg(struct mtk_eth *eth, char *name, u32 offset, u32 range)
++{
++	u32 cur = offset;
++
++	pr_info("\n==================== %s ====================\n", name);
++	while (cur < offset + range) {
++		pr_info("0x%08x: %08x %08x %08x %08x\n",
++			cur, mtk_r32(eth, cur), mtk_r32(eth, cur + 0x4),
++			mtk_r32(eth, cur + 0x8), mtk_r32(eth, cur + 0xc));
++		cur += 0x10;
++	}
++}
++
++static void mtk_hw_dump(struct mtk_eth *eth)
++{
++	const struct mtk_reg_map *reg_map = eth->soc->reg_map;
++	u32 id;
++
++	mtk_hw_dump_reg(eth, "FE", 0x0, 0x600);
++	mtk_hw_dump_reg(eth, "FE", 0x1400, 0x300);
++	mtk_hw_dump_reg(eth, "ADMA", reg_map->pdma.rx_ptr, 0x300);
++	if (MTK_HAS_CAPS(eth->soc->caps, MTK_QDMA)) {
++		for (id = 0; id < MTK_QDMA_NUM_QUEUES / 16; id++) {
++			mtk_w32(eth, id, reg_map->qdma.page);
++			pr_info("\nQDMA PAGE:%x ", mtk_r32(eth, reg_map->qdma.page));
++			mtk_hw_dump_reg(eth, "QDMA", reg_map->qdma.qtx_cfg, 0x100);
++			mtk_w32(eth, 0, reg_map->qdma.page);
++		}
++		mtk_hw_dump_reg(eth, "QDMA", reg_map->qdma.rx_ptr, 0x300);
++	}
++	if (!MTK_HAS_CAPS(eth->soc->caps, MTK_SOC_MT7628)) {
++		mtk_hw_dump_reg(eth, "WDMA0", reg_map->wdma_base[0], 0x400);
++		mtk_hw_dump_reg(eth, "WDMA1", reg_map->wdma_base[1], 0x400);
++		if (mtk_is_netsys_v3_or_greater(eth))
++			mtk_hw_dump_reg(eth, "WDMA2", reg_map->wdma_base[2], 0x400);
++	}
++	mtk_hw_dump_reg(eth, "PPE0", reg_map->ppe_base + 0x200, 0x200);
++	if (!mtk_is_netsys_v1(eth))
++		mtk_hw_dump_reg(eth, "PPE1", reg_map->ppe_base + 0x600, 0x200);
++	if (mtk_is_netsys_v3_or_greater(eth))
++		mtk_hw_dump_reg(eth, "PPE2", reg_map->ppe_base + 0xE00, 0x200);
++	mtk_hw_dump_reg(eth, "GMAC", 0x10000, 0x300);
++	if (mtk_is_netsys_v3_or_greater(eth))
++		mtk_hw_dump_reg(eth, "GMAC", 0x10300, 0x100);
++	if (mtk_is_netsys_v3_or_greater(eth)) {
++		mtk_hw_dump_reg(eth, "XGMAC0", 0x12000, 0x300);
++		mtk_hw_dump_reg(eth, "XGMAC1", 0x13000, 0x300);
++	}
++}
++
+ static void mtk_hw_reset(struct mtk_eth *eth)
+ {
+ 	u32 val;
+@@ -4392,6 +4445,8 @@ static void mtk_pending_work(struct work_struct *work)
+ 	rtnl_lock();
+ 	set_bit(MTK_RESETTING, &eth->state);
+ 
++	mtk_hw_dump(eth);
++
+ 	mtk_prepare_for_reset(eth);
+ 	mtk_wed_fe_reset();
+ 	/* Run again reset preliminary configuration in order to avoid any
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+index b9da762fcc70..64b94b21b493 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+@@ -1152,6 +1152,7 @@ struct mtk_reg_map {
+ 		u32	rx_ptr;		/* rx base pointer */
+ 		u32	rx_cnt_cfg;	/* rx max count configuration */
+ 		u32	qcrx_ptr;	/* rx cpu pointer */
++		u32	page;		/* page configuration */
+ 		u32	glo_cfg;	/* global configuration */
+ 		u32	rst_idx;	/* reset index */
+ 		u32	delay_irq;	/* delay interrupt */
+-- 
+2.51.0
+

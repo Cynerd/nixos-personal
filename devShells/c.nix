@@ -1,61 +1,60 @@
-pkgs:
+pkgs: extra:
 pkgs.mkShell {
-  packages = with pkgs; [
-    clang-tools
-    ctags
-    gcc
-    gdb
-    pkg-config
+  packages = with pkgs;
+    [
+      clang-tools
+      ctags
+      pkg-config
 
-    autoconf
-    automake
-    libtool
+      autoconf
+      automake
+      libtool
 
-    gnumake
-    bear
-    meson
-    ninja
-    cmake
+      gnumake
+      bear
+      meson
+      ninja
+      cmake
 
-    valgrind
-    lcov
-    massif-visualizer
-    cppcheck
-    flawfinder
+      valgrind
+      lcov
+      cppcheck
+      flawfinder
 
-    check
-    curl
-    ncurses
-    flex
-    bison
-    gperf
-    gobject-introspection
-    gtk3
-    gtk4
+      check
+      curl
+      ncurses
+      flex
+      bison
+      gperf
+      gobject-introspection
+      gtk3
+      gtk4
 
-    # Various libraries
-    openssl.dev
-    zlib.dev
-    curl.dev
-    libconfig
-    czmq
-    libevent.dev
+      # Various libraries
+      openssl.dev
+      zlib.dev
+      curl.dev
+      libconfig
+      czmq
+      libevent.dev
 
-    # LVGL
-    SDL2
-    libffi.dev
+      # LVGL
+      SDL2
+      libffi.dev
 
-    # Qt
-    qt6.qttools
-    qt6.qtbase
-    qt6.qttranslations
-    qt6.qtserialport
-    qt6.qtwebsockets
-    qt6.qtcharts
-    qt6.qtsvg
-    qt6.qtnetworkauth
-    qt6.qtwayland
-    qt6.wrapQtAppsHook
-  ];
+      # Qt
+      qt6.qttools
+      qt6.qtbase
+      qt6.qttranslations
+      qt6.qtserialport
+      qt6.qtwebsockets
+      qt6.qtcharts
+      qt6.qtsvg
+      qt6.qtnetworkauth
+      qt6.qtwayland
+      qt6.wrapQtAppsHook
+    ]
+    ++ extra;
   meta.platforms = pkgs.lib.platforms.linux;
 }

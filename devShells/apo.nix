@@ -1,6 +1,6 @@
 pkgs: c: let
   riscvPkgs = import pkgs.path {
-    localSystem = pkgs.buildPlatform.system;
+    localSystem = pkgs.stdenv.buildPlatform.system;
     crossSystem = {
       config = "riscv32-none-elf";
       libc = "newlib";

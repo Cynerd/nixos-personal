@@ -37,6 +37,7 @@ final: prev: {
     filesToInstall = ["build/${platform}/release/bl2.bin" "build/${platform}/release/bl31.bin"];
   };
   ubootOpenWrtOne =
+    # ubiupdatevol /dev/ubi0_2 u-boot.fip
     (final.buildUBoot {
       defconfig = "mt7981_openwrt-one-spi-nand_defconfig";
       extraMeta.platforms = ["aarch64-linux"];
@@ -50,12 +51,15 @@ final: prev: {
         CONFIG_PCI=y
         CONFIG_PCIE_MEDIATEK_GEN3=y
         CONFIG_PCI_DEBUG=y
-        CONFIG_DM_DEBUG=y
+        CONFIG_DM_REGULATOR=y
         CONFIG_NVME=y
         CONFIG_NVME_PCI=y
         CONFIG_CMD_NVME=y
-        #CONFIG_FS_BTRFS=y
-        #CONFIG_CMD_BTRFS=y
+        CONFIG_EFI_PARTITION=y
+
+        CONFIG_CMD_SYSBOOT=y
+        CONFIG_SUPPORT_RAW_INITRD=y
+
         CONFIG_BOARD_LATE_INIT=n
       '';
       postBuild = ''
@@ -67,6 +71,21 @@ final: prev: {
     }).overrideAttrs (oldAttrs: {
       nativeBuildInputs = [final.buildPackages.unixtools.xxd] ++ oldAttrs.nativeBuildInputs;
     });
+  linuxOpenWrtOne = final.buildLinux {
+    version = "6.18.0-rc1";
+    src = final.buildPackages.fetchgit {
+      url = "git://git.kernel.org/pub/scm/linux/kernel/git/mediatek/linux.git";
+      rev = "d7d7ac9af8cb72e3e3816ae9da3d9ee1bdfa4f9b";
+      hash = "sha256-h1DwHDHQ4LfqVYkp/e36c3NLnhbg1ozmjtrtAk5AzZE=";
+    };
+    kernelPatches = [
+      {
+        name = "openwrt-one";
+        patch = ./linux-openwrt-one-mediatek.patch;
+        #patch = ./linux-openwrt-one.patch;
+      }
+    ];
+  };
 
   # nixpkgs patches
   ubootRaspberryPi3_btrfs = prev.buildUBoot {
@@ -91,7 +110,7 @@ final: prev: {
   });
 
   gvproxy =
-    if prev.hostPlatform.is32bit
+    if prev.stdenv.hostPlatform.is32bit
     then
       # Downgrade to get 32bit support working
       prev.gvproxy.overrideAttrs (oldAttrs: {

@@ -6,7 +6,7 @@
 }: let
   inherit (lib) any all mkEnableOption mkIf mapAttrsToList optional optionals optionalAttrs filterAttrs;
   inherit (config.networking) hostName;
-  endpoints = ["lipwig" "spt-omnia" "adm-omnia"];
+  endpoints = ["lipwig" "spt-omnia" "adm-omnia" "zd-mox"];
   is_endpoint = any (v: v == hostName) endpoints;
 in {
   options = {
@@ -53,6 +53,15 @@ in {
                 PublicKey = config.secrets.wireguardPubs.adm-omnia;
               }
               // (optionalAttrs (!is_endpoint) {PersistentKeepalive = 25;}))
+            ({
+                Endpoint = "zd.cynerd.cz:51820";
+                AllowedIPs = [
+                  "${config.cynerd.hosts.wg.zd-mox}/32"
+                  "10.8.0.0/24"
+                ];
+                PublicKey = config.secrets.wireguardPubs.zd-mox;
+              }
+              // (optionalAttrs (!is_endpoint) {PersistentKeepalive = 25;}))
           ]
           ++ (optionals is_endpoint (mapAttrsToList (n: v: {
             AllowedIPs = "${config.cynerd.hosts.wg."${n}"}/32";
@@ -76,6 +85,12 @@ in {
             # ADM network
             Gateway = config.cynerd.hosts.wg.adm-omnia;
             Destination = "10.8.3.0/24";
+            Metric = 2048;
+          })
+          ++ (optional (hostName != "zd-mox") {
+            # ZD network
+            Gateway = config.cynerd.hosts.wg.zd-mox;
+            Destination = "10.8.0.0/24";
             Metric = 2048;
           });
       };

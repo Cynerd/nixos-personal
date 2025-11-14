@@ -73,62 +73,64 @@
     ];
 
     # Web ######################################################################
-    services.nginx = {
-      enable = true;
-      virtualHosts = {
-        "cynerd.cz" = {
-          forceSSL = true;
-          enableACME = true;
-          locations = {
-            "/".root = ../../web;
-            "/radicale/" = {
-              proxyPass = "http://127.0.0.1:5232/";
-              extraConfig = ''
-                proxy_set_header  X-Script-Name /radicale;
-                proxy_pass_header Authorization;
-              '';
+    services = {
+      nginx = {
+        enable = true;
+        virtualHosts = {
+          "cynerd.cz" = {
+            forceSSL = true;
+            enableACME = true;
+            locations = {
+              "/".root = ../../web;
+              "/radicale/" = {
+                proxyPass = "http://127.0.0.1:5232/";
+                extraConfig = ''
+                  proxy_set_header  X-Script-Name /radicale;
+                  proxy_pass_header Authorization;
+                '';
+              };
             };
           };
-        };
-        "git.cynerd.cz" = {
-          forceSSL = true;
-          useACMEHost = "cynerd.cz";
-          root = "${pkgs.cgit}/cgit";
-          locations."/".tryFiles = "$uri @cgit";
-          locations."@cgit".extraConfig = ''
-            fastcgi_pass unix:${config.services.fcgiwrap.instances.cgit.socket.address};
-            fastcgi_param SCRIPT_FILENAME ${pkgs.cgit}/cgit/cgit.cgi;
-            fastcgi_param PATH_INFO    $uri;
-            fastcgi_param QUERY_STRING $args;
-            fastcgi_param HTTP_HOST    $server_name;
-          '';
-        };
-        "cloud.cynerd.cz" = {
-          forceSSL = true;
-          useACMEHost = "cynerd.cz";
-        };
-        "grafana.cynerd.cz" = {
-          forceSSL = true;
-          useACMEHost = "cynerd.cz";
-          locations."/" = {
-            proxyPass = "http://localhost:${toString config.services.grafana.settings.server.http_port}";
-            proxyWebsockets = true;
-            recommendedProxySettings = true;
+          "git.cynerd.cz" = {
+            forceSSL = true;
+            useACMEHost = "cynerd.cz";
+            root = "${pkgs.cgit}/cgit";
+            locations."/".tryFiles = "$uri @cgit";
+            locations."@cgit".extraConfig = ''
+              fastcgi_pass unix:${config.services.fcgiwrap.instances.cgit.socket.address};
+              fastcgi_param SCRIPT_FILENAME ${pkgs.cgit}/cgit/cgit.cgi;
+              fastcgi_param PATH_INFO    $uri;
+              fastcgi_param QUERY_STRING $args;
+              fastcgi_param HTTP_HOST    $server_name;
+            '';
+          };
+          "cloud.cynerd.cz" = {
+            forceSSL = true;
+            useACMEHost = "cynerd.cz";
+          };
+          "grafana.cynerd.cz" = {
+            forceSSL = true;
+            useACMEHost = "cynerd.cz";
+            locations."/" = {
+              proxyPass = "http://localhost:${toString config.services.grafana.settings.server.http_port}";
+              proxyWebsockets = true;
+              recommendedProxySettings = true;
+            };
+          };
+          "searx.cynerd.cz" = {
+            forceSSL = true;
+            useACMEHost = "cynerd.cz";
+            locations."/".extraConfig = ''
+              uwsgi_pass "unix:///run/searx/searx.sock";
+              include ${config.services.nginx.package}/conf/uwsgi_params;
+            '';
           };
         };
-        "searx.cynerd.cz" = {
-          forceSSL = true;
-          useACMEHost = "cynerd.cz";
-          locations."/".extraConfig = ''
-            uwsgi_pass "unix:///run/searx/searx.sock";
-            include ${config.services.nginx.package}/conf/uwsgi_params;
-          '';
-        };
       };
-    };
-    services.fcgiwrap.instances.cgit = {
-      process.user = "git";
-      socket = {inherit (config.services.nginx) user group;};
+      fcgiwrap.instances.cgit = {
+        process.user = "git";
+        socket = {inherit (config.services.nginx) user group;};
+      };
     };
     security.acme = {
       acceptTerms = true;
@@ -273,8 +275,8 @@
           license = "agpl3Plus";
         };
         passwords = pkgs.fetchNextcloudApp {
-          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2025.9.0/passwords.tar.gz";
-          hash = "sha256-BMu7TPd6xwa/bSQOgN/wFPnK7AK0KgsUKqSqMatjqqw=";
+          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2025.10.0/passwords-lsr-81.tar.gz";
+          hash = "sha256-6QKbmm804BN5bANcdH1BbG2oy1nBgnLY5CLidPF44Uk=";
           license = "agpl3Plus";
         };
       };

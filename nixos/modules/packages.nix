@@ -1,11 +1,11 @@
 {
-  config,
   lib,
   pkgs,
   ...
 }: let
   inherit (lib) optionals;
-  isNative = config.nixpkgs.hostPlatform == config.nixpkgs.buildPlatform;
+  inherit (pkgs.stdenv.hostPlatform) isx86_64;
+  isNative = pkgs.stdenv.hostPlatform == pkgs.stdenv.buildPlatform;
 in {
   nixpkgs = {
     config.allowUnfree = true;
@@ -63,14 +63,14 @@ in {
       wakeonlan
       speedtest-cli
       librespeed-cli
-      #termshark
+      termshark
       w3m
 
       lm_sensors
     ]
-    ++ optionals (system == "x86_64-linux") [
+    ++ optionals isx86_64 [
       nmap
-      ltrace
+      #ltrace
       pv
       screen
     ]

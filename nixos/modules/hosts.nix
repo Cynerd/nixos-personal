@@ -29,7 +29,12 @@ in {
   config = {
     cynerd.hosts = {
       zd = {
+        # Network
         "mox" = "10.8.0.1";
+        "one0" = "10.8.0.2";
+        # Local
+        "ridcully" = "10.8.0.59";
+        "tc" = "10.8.0.99";
         # Portable
         "binky" = "10.8.0.63";
       };
@@ -53,7 +58,6 @@ in {
         # Local
         "mpd" = "10.8.2.51";
         "errol" = "10.8.2.60";
-        "ridcully" = "10.8.2.59";
         "printer" = "10.8.2.90";
         # Portable
         "albert" = "10.8.2.61";
@@ -76,6 +80,9 @@ in {
     networking.hosts = mkIf cnf.enable {
       # Zd
       "${cnf.zd.mox}" = ["mox.zd"];
+      "${cnf.zd.one0}" = ["one0.zd"];
+      "${cnf.zd.ridcully}" = ["ridcully"];
+      "${cnf.zd.tc}" = ["tc.zd"];
       "${cnf.zd.binky}" = ["binky.zd"];
       # Wireguard
       "${cnf.wg.lipwig}" = ["lipwig.wg"];
@@ -92,7 +99,6 @@ in {
       "10.8.2.4" = ["mi3g.spt"];
       "${cnf.spt.mpd}" = ["mpd.spt"];
       "${cnf.spt.errol}" = ["errol"];
-      "${cnf.spt.ridcully}" = ["ridcully"];
       "${cnf.spt.albert}" = ["albert.spt"];
       "${cnf.spt.binky}" = ["binky.spt"];
       # Adm

@@ -32,6 +32,7 @@ in {
       vim-vint
       nodePackages.vim-language-server
       vale
+      can-utils
 
       # Required for neovim plugins
       editorconfig-checker
@@ -49,6 +50,7 @@ in {
       deadnix
       agenix
       nix-tree
+      nix-output-monitor
 
       # Shell
       dash # Posix shell
@@ -63,7 +65,6 @@ in {
       # C
       clang-tools
       massif-visualizer
-      #qcachegrind
 
       # Python
       (python3.withPackages (pypkgs:
@@ -88,7 +89,7 @@ in {
           pygal
 
           python-gitlab
-          PyGithub
+          pygithub
 
           schema
           jinja2

@@ -101,7 +101,7 @@ in {
 
             pulsemixer
             mpd
-            mpc-cli
+            mpc
             ncmpcpp
             feh
             shotwell
@@ -161,7 +161,7 @@ in {
 
             # Writing
             typst
-            typstfmt
+            typstyle
             typst-live
             tinymist
             vale
@@ -318,9 +318,9 @@ in {
       libertine
       nerd-fonts.hack
       noto-fonts
-      noto-fonts-emoji
+      noto-fonts-color-emoji
       terminus_font_ttf
-      ubuntu_font_family
+      ubuntu-classic
       unifont
     ];
 
