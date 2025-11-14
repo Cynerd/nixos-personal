@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   system.stateVersion = "24.05";
-  nixpkgs.hostPlatform.config = "x86_64-linux";
+  nixpkgs.hostPlatform.system = "x86_64-linux";
   deploy.enable = true;
 
   cynerd = {
@@ -18,6 +18,10 @@
   hardware.cpu.amd.updateMicrocode = true;
   services.hardware.openrgb.motherboard = "amd";
 
+  zramSwap = {
+    enable = true;
+    memoryPercent = 50;
+  };
 
   cynerd.autounlock = {
     "encroot" = "/dev/disk/by-uuid/bc7d2ba4-6e04-4c49-b40c-3aecd1a86c71";
@@ -64,22 +68,17 @@
     wait-online.enable = false;
   };
 
-  environment.systemPackages = with pkgs; [
-    nvtopPackages.amd
-    sbctl
+  environment.systemPackages = [
+    pkgs.nvtopPackages.amd
+    #sbctl
   ];
-
-  services.syncthing = {
-    enable = true;
-    dataDir = "/home/cynerd";
-  };
 
   # Force nix to use less jobs
   nix.settings.max-jobs = 4;
 
-  # Cover case when we are running out of memory
-  zramSwap = {
+  ##############################################################################
+  services.syncthing = {
     enable = true;
-    memoryPercent = 50;
+    dataDir = "/home/cynerd";
   };
 }

@@ -9,6 +9,11 @@
   hardware.cpu.amd.updateMicrocode = true;
   services.hardware.openrgb.motherboard = "amd";
 
+  zramSwap = {
+    enable = true;
+    memoryPercent = 50;
+  };
+
   cynerd.autounlock = {
     "encroot" = "/dev/disk/by-uuid/7c412ae6-6016-45af-8c2a-8fcc394dbbe6";
     "enchdd1" = "/dev/disk/by-uuid/87f16080-5ff6-43dd-89f3-307455a46fbe";

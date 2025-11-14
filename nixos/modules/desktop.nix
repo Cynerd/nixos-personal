@@ -146,7 +146,7 @@ in {
             gimp
             inkscape
             blender
-            tenacity
+            #tenacity
             #kdePackages.kdenlive
 
             # GStreamer
