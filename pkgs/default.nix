@@ -87,7 +87,7 @@ final: prev: {
     ];
   };
 
-  # nixpkgs patches
+  # RaspberryPi
   ubootRaspberryPi3_btrfs = prev.buildUBoot {
     defconfig = "rpi_3_defconfig";
     extraConfig = ''
@@ -97,18 +97,8 @@ final: prev: {
     extraMeta.platforms = ["aarch64-linux"];
     filesToInstall = ["u-boot.bin"];
   };
-  wolfssl = prev.wolfssl.overrideAttrs (oldAttrs: rec {
-    version = "5.8.2";
-    src = oldAttrs.src.override {
-      tag = "v${version}-stable";
-      hash = "sha256-rWBfpI6tdpKvQA/XdazBvU5hzyai5PtKRBpM4iplZDU=";
-    };
-  });
-  bind = prev.bind.overrideAttrs (oldAttrs: {
-    nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [final.buildPackages.protobufc];
-    strictDeps = true;
-  });
 
+  # NixPkgs patches
   gvproxy =
     if prev.stdenv.hostPlatform.is32bit
     then
