@@ -21,6 +21,7 @@ final: prev: {
   bigclown-leds = final.callPackage ./bigclown-leds {};
 
   dodo = final.callPackage ./dodo {};
+  elf-size-analyze = final.callPackage ./elf-size-analyze {};
 
   # OpenWrt One
   armTrustedFirmwareMT7981 = final.callPackage ./mtk-arm-trusted-firmware rec {
@@ -75,14 +76,16 @@ final: prev: {
     version = "6.18.0-rc1";
     src = final.buildPackages.fetchgit {
       url = "git://git.kernel.org/pub/scm/linux/kernel/git/mediatek/linux.git";
-      rev = "d7d7ac9af8cb72e3e3816ae9da3d9ee1bdfa4f9b";
-      hash = "sha256-h1DwHDHQ4LfqVYkp/e36c3NLnhbg1ozmjtrtAk5AzZE=";
+      rev = "67ed5843a67b7ba63d79f2ba3fd21bee151d3138";
+      hash = "sha256-jXBDVZOAk+/vf55cQWMlV4ZhmSwYucqMOuOGDLxSYis=";
     };
     kernelPatches = [
       {
         name = "openwrt-one";
         patch = ./linux-openwrt-one-mediatek.patch;
-        #patch = ./linux-openwrt-one.patch;
+        #structuredExtraConfig = with final.lib.kernel; {
+        #  NET_MEDIATEK_SOC = yes;
+        #};
       }
     ];
   };
@@ -99,6 +102,18 @@ final: prev: {
   };
 
   # NixPkgs patches
+  libcap =
+    if prev.stdenv.hostPlatform != prev.stdenv.buildPlatform
+    then
+      prev.libcap.overrideAttrs {
+        patches = [
+          (final.fetchpatch {
+            url = "https://git.kernel.org/pub/scm/libs/libcap/libcap.git/patch/?id=d628b3bfe40338d4efff6b0ae50f250a0eb884c7";
+            hash = "sha256-Eiv/BOJZkduL+hOEJd8K1LQd9wvOeCKchE2GaLcerVc=";
+          })
+        ];
+      }
+    else prev.libcap;
   gvproxy =
     if prev.stdenv.hostPlatform.is32bit
     then

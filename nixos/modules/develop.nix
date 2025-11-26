@@ -65,6 +65,7 @@ in {
       # C
       clang-tools
       massif-visualizer
+      elf-size-analyze
 
       # Python
       (python3.withPackages (pypkgs:

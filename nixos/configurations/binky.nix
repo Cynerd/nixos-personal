@@ -10,7 +10,7 @@ in {
   deploy = {
     enable = true;
     default = false;
-    ssh.host = "binky.spt";
+    ssh.host = "binky";
   };
 
   cynerd = {
