@@ -277,6 +277,7 @@ in {
           cnijfilter2
         ];
       };
+      saned.enable = true;
       avahi.enable = true;
       samba-wsdd = {
         enable = true;
