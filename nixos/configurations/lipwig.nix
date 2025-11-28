@@ -197,7 +197,7 @@
     # Nextcloud ################################################################
     services.nextcloud = {
       enable = true;
-      package = pkgs.nextcloud31;
+      package = pkgs.nextcloud32;
       https = true;
       hostName = "cloud.cynerd.cz";
       datadir = "/nas/nextcloud";
@@ -243,7 +243,7 @@
           forms
           groupfolders
           impersonate
-          maps
+          #maps
           memories
           notes
           phonetrack
@@ -260,18 +260,18 @@
           license = "agpl3Plus";
         };
         integration_github = pkgs.fetchNextcloudApp {
-          url = "https://github.com/nextcloud-releases/integration_github/releases/download/v3.2.1/integration_github-v3.2.1.tar.gz";
-          hash = "sha256-iBWphFaXmQHNxgoi9qkfV7vCTChwtk6yg0aVr9Lhn4c=";
+          url = "https://github.com/nextcloud-releases/integration_github/releases/download/v3.2.2/integration_github-v3.2.2.tar.gz";
+          hash = "sha256-n7U/es4EdwS0cvegeFLnqhooRhkaSIdiVLwSse8hS3I=";
           license = "agpl3Plus";
         };
         integration_gitlab = pkgs.fetchNextcloudApp {
-          url = "https://github.com/nextcloud-releases/integration_gitlab/releases/download/v3.2.0/integration_gitlab-v3.2.0.tar.gz";
-          hash = "sha256-BDDuqQIDV3pn1mYutjA7Z3L2nib2wW6DlZgyqU46f8Q=";
+          url = "https://github.com/nextcloud-releases/integration_gitlab/releases/download/v4.0.0/integration_gitlab-v4.0.0.tar.gz";
+          hash = "sha256-0CKvAiwdG6Llomo9ROu0KLdUq1xfjAwlO1e1/LYzL4s=";
           license = "agpl3Plus";
         };
         money = pkgs.fetchNextcloudApp {
-          url = "https://github.com/powerpaul17/nc_money/releases/download/v0.30.0/money.tar.gz";
-          hash = "sha256-4gHm6sF9S+1G1naRTr+eR8ZyjCpB3viXTzRCNQFUtF0=";
+          url = "https://github.com/powerpaul17/nc_money/releases/download/v0.31.0/money.tar.gz";
+          hash = "sha256-6RlxWTCw6NP9RquHnfoLLBw/dmAXx21INCzYUcp3E/4=";
           license = "agpl3Plus";
         };
         passwords = pkgs.fetchNextcloudApp {
