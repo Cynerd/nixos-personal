@@ -1,6 +1,7 @@
-lib:
-with builtins;
-with lib; rec {
+lib: let
+  inherit (lib) int2bits toInt splitString flatten bits2int sublist genList zipListsWith;
+  inherit (lib.ipv4) ip2bits bits2ip netmaskBits int2ip ip2int prefix2ip;
+in {
   # Converts string representation of IPv4 address to 32 bits
   ip2bits = ip: let
     perBits = map (x: int2bits 8 (toInt x)) (splitString "." ip);

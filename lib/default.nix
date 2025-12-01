@@ -1,5 +1,6 @@
-final: _:
-with final; {
+final: _: let
+  inherit (final) pow foldl genList id reverseList bitAnd pow2 length add zipListsWith;
+in {
   # Generic power of number
   pow = base: e:
     if e == 0
