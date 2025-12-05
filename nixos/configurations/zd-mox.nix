@@ -1,4 +1,8 @@
-{config, ...}: let
+{
+  config,
+  pkgs,
+  ...
+}: let
   hosts = config.cynerd.hosts.zd;
 in {
   system.stateVersion = "25.05";
@@ -110,9 +114,12 @@ in {
       # user and password added in secrets
     '';
   };
-  systemd.services."pppd-wan" = {
-    after = ["sys-subsystem-net-devices-end0.848.device"];
-    partOf = ["systemd-networkd.service"];
+  systemd.services = {
+    "pppd-wan" = {
+      requires = ["sys-subsystem-net-devices-end0.848.device"];
+      partOf = ["systemd-networkd.service"];
+    };
+    "systemd-networkd".environment.SYSTEMD_LOG_LEVEL = "debug";
   };
   # TODO limit NSS clamping to just pppoe-wan
   networking.firewall.extraForwardRules = ''
@@ -140,4 +147,9 @@ in {
     certs."zd.cynerd.cz" = {};
   };
   networking.firewall.allowedTCPPorts = [80 443];
+
+  environment.systemPackages = with pkgs; [
+    nmap
+    tcpdump
+  ];
 }
