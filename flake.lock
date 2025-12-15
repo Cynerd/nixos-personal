@@ -326,11 +326,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1764517877,
-        "narHash": "sha256-pp3uT4hHijIC8JUK5MEqeAWmParJrgBVzHLNfJDZxg4=",
+        "lastModified": 1765472234,
+        "narHash": "sha256-9VvC20PJPsleGMewwcWYKGzDIyjckEz8uWmT0vCDYK0=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "2d293cbfa5a793b4c50d17c05ef9e385b90edf6c",
+        "rev": "2fbfb1d73d239d2402a8fe03963e37aab15abe8b",
         "type": "github"
       },
       "original": {
@@ -443,11 +443,11 @@
     },
     "personal-secret": {
       "locked": {
-        "lastModified": 1763155218,
-        "narHash": "sha256-mAApX/0fAZgNTF4Pz7drmLxyxqW083G3bhHzi3stbg0=",
+        "lastModified": 1765793712,
+        "narHash": "sha256-51X4iiVhS/yz1WRgs8Du2QeZiydpp3YQt3Oua7hN7j4=",
         "ref": "refs/heads/master",
-        "rev": "25cb969c4fc252a0ca4846fc3e7beefbe084806f",
-        "revCount": 140,
+        "rev": "a1acdc9edf77f615fd99bf0efa27fcc1516d97ef",
+        "revCount": 141,
         "type": "git",
         "url": "ssh://git@cynerd.cz/nixos-personal-secret"
       },
@@ -537,11 +537,11 @@
         "nixpkgs": "nixpkgs_7"
       },
       "locked": {
-        "lastModified": 1756365336,
-        "narHash": "sha256-pqSx0uGuQcHJBYbJiA9gw00zUXBqAjagjjtD/RPcGr4=",
+        "lastModified": 1765193231,
+        "narHash": "sha256-rpOriWkgFOD3h1N/jPaWKn2B0ZRMPMg/iWXZI9fcs6w=",
         "ref": "refs/heads/master",
-        "rev": "748c5894119254a4ead74cb7c85dbbe24c5bc667",
-        "revCount": 117,
+        "rev": "a25793a758a4288c3f4eec39ad9b4309860c6e22",
+        "revCount": 118,
         "type": "git",
         "url": "https://git.cynerd.cz/shellrc"
       },
@@ -768,11 +768,11 @@
     },
     "vpsadminos": {
       "locked": {
-        "lastModified": 1764705427,
-        "narHash": "sha256-SSSYQQ74CsW1NXd0rYZx/YkfmaWXTiPa3GFGrXadsPE=",
+        "lastModified": 1765461733,
+        "narHash": "sha256-D50YXRtbFBrixVFzLj1jBtTcthMgzWVC0BAKOaIUsG4=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "c998f1eec79ce2ce082278ffbd6c58575e95e2c9",
+        "rev": "a93e299f8ca269262646847dc8b57b7e3108f8dd",
         "type": "github"
       },
       "original": {
