@@ -22,7 +22,8 @@ in {
       enable = true;
       networks = config.secrets.wifiNetworks;
       secretsFile = "/run/secrets/wifi.secrets";
-      userControlled.enable = true;
+      userControlled = true;
     };
+    users.users.cynerd.extraGroups = ["wpa_supplicant"];
   };
 }
