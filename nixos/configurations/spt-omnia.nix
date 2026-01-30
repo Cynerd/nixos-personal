@@ -18,7 +18,6 @@ in {
         "7c:b0:c2:bb:9c:ca" = hosts.albert;
         "4c:d5:77:0d:85:d9" = hosts.binky;
         "b8:27:eb:57:a2:31" = hosts.mpd;
-        "74:bf:c0:42:82:19" = hosts.printer;
       };
     };
     wifiAP.spt = {

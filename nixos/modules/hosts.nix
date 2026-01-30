@@ -37,6 +37,7 @@ in {
         # Local
         "ridcully" = "10.8.0.59";
         "tc" = "10.8.0.99";
+        "printer" = "10.8.0.90";
         # Portable
         "binky" = "10.8.0.63";
       };
@@ -60,7 +61,6 @@ in {
         # Local
         "mpd" = "10.8.2.51";
         "errol" = "10.8.2.60";
-        "printer" = "10.8.2.90";
         # Portable
         "albert" = "10.8.2.61";
         "binky" = "10.8.2.63";

@@ -18,9 +18,10 @@ in {
       wan = "pppoe-wan";
       lanIP = hosts.mox;
       staticLeases = {
-        "70:85:c2:4a:59:f2" = hosts.ridcully;
-        "f8:dc:7a:79:00:e6" = hosts.tc;
         "4c:d5:77:0d:85:d9" = hosts.binky;
+        "70:85:c2:4a:59:f2" = hosts.ridcully;
+        "74:bf:c0:42:82:19" = hosts.printer;
+        "f8:dc:7a:79:00:e6" = hosts.tc;
       };
     };
     wireguard = true;
