@@ -2,7 +2,8 @@
   description = "Cynerd's personal flake";
 
   inputs = {
-    nixpkgs.url = "flake:nixpkgs/nixos-unstable";
+    #nixpkgs.url = "flake:nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:cynerd/nixpkgs/patches-nixos-unstable";
     nixos-hardware.url = "nixos-hardware";
     nixosdeploy.url = "gitlab:cynerd/nixosdeploy";
     personal-secret.url = "git+ssh://git@cynerd.cz/nixos-personal-secret";
@@ -59,7 +60,6 @@
         shellrc.overlays.default
         pyshv.overlays.default
         shvcli.overlays.packages
-        shvcli-ell.inputs.ellembimages.overlays.default
         shvcli-ell.overlays.packages
         usbkey.overlays.default
       ];

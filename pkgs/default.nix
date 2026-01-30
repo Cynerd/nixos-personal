@@ -102,6 +102,9 @@ final: prev: {
   };
 
   # NixPkgs patches
+  searxng = prev.searxng.overrideAttrs (oldAttrs: {
+    pythonRelaxDeps = oldAttrs.pythonRelaxDeps ++ ["markdown-it-py"];
+  });
   libcap =
     if prev.stdenv.hostPlatform != prev.stdenv.buildPlatform
     then
