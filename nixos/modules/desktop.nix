@@ -146,8 +146,9 @@ in {
             gimp
             inkscape
             blender
-            #tenacity
+            tenacity
             #kdePackages.kdenlive
+            qrrs
 
             # GStreamer
             gst_all_1.gstreamer
@@ -162,13 +163,12 @@ in {
             # Writing
             typst
             typstyle
-            typst-live
             tinymist
             vale
 
             # CAD
             freecad
-            kicad
+            #kicad
             sweethome3d.application
             qelectrotech
           ]
@@ -274,7 +274,7 @@ in {
         drivers = with pkgs; [
           gutenprint
           gutenprintBin
-          cnijfilter2
+          #cnijfilter2
         ];
       };
       saned.enable = true;
