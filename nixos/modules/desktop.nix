@@ -47,6 +47,7 @@ in {
             waybar
             swaybackground
             myswaylock
+            brightnessctl
 
             alacritty
             nautilus
@@ -67,6 +68,7 @@ in {
             resources
 
             isync
+            davmail
             msmtp
             notmuch
             dodo
@@ -102,7 +104,7 @@ in {
             pulsemixer
             mpd
             mpc
-            ncmpcpp
+            #ncmpcpp
             feh
             shotwell
             id3lib
@@ -147,7 +149,7 @@ in {
             inkscape
             blender
             tenacity
-            #kdePackages.kdenlive
+            kdePackages.kdenlive
             qrrs
 
             # GStreamer
@@ -168,9 +170,10 @@ in {
 
             # CAD
             freecad
-            #kicad
+            kicad
             sweethome3d.application
             qelectrotech
+            super-slicer
           ]
           ++ (optionals cnf.laptop [
             # Power management
@@ -185,11 +188,9 @@ in {
         nativeMessagingHosts.packages = with pkgs; [browserpass];
       };
 
-      light.enable = mkIf cnf.laptop true;
-
       nix-ld = {
         enable = true;
-        libraries = with pkgs; [xorg.libXpm];
+        libraries = with pkgs; [libXpm];
       };
 
       usbkey = {
@@ -204,6 +205,13 @@ in {
         enable = true;
         enableSSHSupport = true;
         enableBrowserSocket = true;
+        pinentryPackage = pkgs.writeShellScriptBin "pinentry-auto" ''
+          if [ -n "$WAYLAND_DISPLAY" ] || [ -n "$DISPLAY" ]; then
+            exec ${pkgs.pinentry-gnome3}/bin/pinentry-gnome3 "$@"
+          else
+            exec ${pkgs.pinentry-gnome3}/bin/pinentry-curses "$@"
+          fi
+        '';
       };
 
       kdeconnect.enable = true;
@@ -274,7 +282,7 @@ in {
         drivers = with pkgs; [
           gutenprint
           gutenprintBin
-          #cnijfilter2
+          cnijfilter2
         ];
       };
       saned.enable = true;
@@ -303,27 +311,30 @@ in {
       allowedUDPPorts = [3702];
     };
 
-    fonts.packages = with pkgs; [
-      arkpandora_ttf
-      corefonts
-      dejavu_fonts
-      fira-code
-      fira-code-symbols
-      fira-math
-      fira-mono
-      fira-sans
-      font-awesome
-      freefont_ttf
-      hack-font
-      liberation_ttf
-      libertine
-      nerd-fonts.hack
-      noto-fonts
-      noto-fonts-color-emoji
-      terminus_font_ttf
-      ubuntu-classic
-      unifont
-    ];
+    fonts = {
+      enableDefaultPackages = true;
+      packages = with pkgs; [
+        arkpandora_ttf
+        corefonts
+        dejavu_fonts
+        fira-code
+        fira-code-symbols
+        fira-math
+        fira-mono
+        fira-sans
+        font-awesome
+        freefont_ttf
+        hack-font
+        liberation_ttf
+        libertine
+        nerd-fonts.hack
+        noto-fonts
+        noto-fonts-color-emoji
+        terminus_font_ttf
+        ubuntu-classic
+        unifont
+      ];
+    };
 
     documentation = {
       enable = true;

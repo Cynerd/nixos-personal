@@ -22,6 +22,7 @@
       };
       wireguard = true;
       borgjobs = {
+        # TODO backup influx
         postgresql.dumpCommand = pkgs.writeScript "postgreqsl-backup.sh" ''
           /run/wrappers/bin/sudo -u postgres /run/current-system/sw/bin/pg_dumpall
         '';
@@ -121,7 +122,7 @@
             forceSSL = true;
             useACMEHost = "cynerd.cz";
             locations."/".extraConfig = ''
-              uwsgi_pass "unix:///run/searx/searx.sock";
+              uwsgi_pass "unix://${config.services.searx.uwsgiConfig.socket}";
               include ${config.services.nginx.package}/conf/uwsgi_params;
             '';
           };
@@ -275,8 +276,8 @@
           license = "agpl3Plus";
         };
         passwords = pkgs.fetchNextcloudApp {
-          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2025.12.1/passwords-lsr-81.tar.gz";
-          hash = "sha256-mOqyVdQ6rRXrAjoCEz5B0/jx1aiM9TYcPJsuhHFR34w=";
+          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2026.3.0/passwords.tar.gz";
+          hash = "sha256-YHilpFaZHNCtqLRvTCDhyVoFWLC85Qkj1mMxp08YCho=";
           license = "agpl3Plus";
         };
       };

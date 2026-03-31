@@ -37,7 +37,7 @@ in {
         extraPkgs = pkgs:
           with pkgs; [
             ncurses
-            xorg.libXpm
+            libxpm
             flac134
             libopus
           ];
@@ -46,7 +46,7 @@ in {
         extraPkgs = pkgs:
           with pkgs; [
             ncurses
-            xorg.libXpm
+            libxpm
             flac134 # For Nebuchadnezzar
             libopus
             SDL
@@ -56,7 +56,7 @@ in {
             SDL_image
             SDL_mixer
             SDL_ttf
-            glew110
+            glew_1_10
             libdrm
             libidn
             tbb

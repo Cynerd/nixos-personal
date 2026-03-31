@@ -178,12 +178,11 @@ in {
 
     services.resolved = {
       enable = true;
-      #dnssec = "true";
-      fallbackDns = ["1.1.1.1" "8.8.8.8"];
-      extraConfig = ''
-        DNSStubListenerExtra=${cnf.lanIP}
-        DNSStubListenerExtra=192.168.1.1
-      '';
+      settings.Resolve = {
+        FallbackDNS = ["1.1.1.1" "8.8.8.8"];
+        DNSStubListenerExtra=[cnf.lanIP "192.168.1.1"];
+        # TODO possibly enforce DNSSEC again
+      };
     };
   };
 }

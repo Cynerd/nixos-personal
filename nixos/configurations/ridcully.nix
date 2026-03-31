@@ -10,6 +10,9 @@
     openvpn = {
       elektroline = true;
     };
+    borgjobs = {
+      hetzner-s3.paths = "/back/hetzner-s3-sync";
+    };
   };
 
   boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod"];
@@ -77,8 +80,44 @@
   nix.settings.max-jobs = 4;
 
   ##############################################################################
-  services.syncthing = {
-    enable = true;
-    dataDir = "/home/cynerd";
+  services = {
+    syncthing = {
+      enable = true;
+      dataDir = "/home/cynerd";
+    };
+
+    octoprint = {
+      enable = true;
+      openFirewall = true;
+    };
+
+    mjpg-streamer = {
+      enable = true;
+      inputPlugin = "input_uvc.so -d /dev/video2 -r 1920x1080 -f 30";
+      outputPlugin = "output_http.so -p 5001 -w @www@";
+    };
+  };
+  networking.firewall.allowedTCPPorts = [5001];
+
+  # Service to synchronize local copy of Hetzner S3
+  systemd = {
+    services."hetzner-sync" = {
+      script = ''
+        /run/current-system/sw/bin/rclone --config /run/secrets/rclone-hetzner.conf \
+          sync hetzner: /back/hetzner-s3-sync
+      '';
+      serviceConfig = {
+        Type = "oneshot";
+        User = "root";
+      };
+    };
+    timers."hetzner-sync" = {
+      wantedBy = ["timers.target"];
+      timerConfig.Unit = "hetzner-sync.service";
+      timerConfig = {
+        OnCalendar = "daily";
+        Persistent = false;
+      };
+    };
   };
 }

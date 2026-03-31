@@ -60,7 +60,6 @@ in {
       kernelParams = [
         "fw_devlink=permissive"
         "clk_ignore_unused"
-        "pcie_aspm=off"
       ];
 
       initrd = {

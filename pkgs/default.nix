@@ -1,4 +1,6 @@
 final: prev: {
+  pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [(import ./python.nix)];
+
   luks-hw-password = final.callPackage ./luks-hw-password {};
   dev = final.callPackage ./dev {
     devShells = import ../devShells final;
@@ -22,6 +24,7 @@ final: prev: {
 
   dodo = final.callPackage ./dodo {};
   elf-size-analyze = final.callPackage ./elf-size-analyze {};
+  docstrfmt = final.callPackage ./docrstfmt {};
 
   # OpenWrt One
   armTrustedFirmwareMT7981 = final.callPackage ./mtk-arm-trusted-firmware rec {
@@ -73,19 +76,16 @@ final: prev: {
       nativeBuildInputs = [final.buildPackages.unixtools.xxd] ++ oldAttrs.nativeBuildInputs;
     });
   linuxOpenWrtOne = final.buildLinux {
-    version = "6.18.0-rc1";
+    version = "6.19.0-rc2";
     src = final.buildPackages.fetchgit {
-      url = "git://git.kernel.org/pub/scm/linux/kernel/git/mediatek/linux.git";
-      rev = "67ed5843a67b7ba63d79f2ba3fd21bee151d3138";
-      hash = "sha256-jXBDVZOAk+/vf55cQWMlV4ZhmSwYucqMOuOGDLxSYis=";
+      url = "git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git";
+      rev = "b927546677c876e26eba308550207c2ddf812a43";
+      hash = "sha256-Ti4No/FUoc2RgHxat908Uy0HnETlnyF/ZAJ4JmxD+jY=";
     };
     kernelPatches = [
       {
         name = "openwrt-one";
-        patch = ./linux-openwrt-one-mediatek.patch;
-        #structuredExtraConfig = with final.lib.kernel; {
-        #  NET_MEDIATEK_SOC = yes;
-        #};
+        patch = ./linux-openwrt-one-6_19.patch;
       }
     ];
   };
@@ -102,9 +102,18 @@ final: prev: {
   };
 
   # NixPkgs patches
-  searxng = prev.searxng.overrideAttrs (oldAttrs: {
-    pythonRelaxDeps = oldAttrs.pythonRelaxDeps ++ ["markdown-it-py"];
-  });
+  gnutls =
+    if prev.stdenv.hostPlatform != prev.stdenv.buildPlatform
+    then
+      prev.gnutls.overrideAttrs (oldAttrs: {
+        configureFlags = oldAttrs.configureFlags ++ ["--disable-doc"];
+        outputs = builtins.filter (v: v != "man" && v != "devdoc") oldAttrs.outputs;
+      })
+    else prev.gnutls;
+  git =
+    if prev.stdenv.hostPlatform != prev.stdenv.buildPlatform
+    then prev.git.override {rustSupport = false;}
+    else prev.git;
   libcap =
     if prev.stdenv.hostPlatform != prev.stdenv.buildPlatform
     then

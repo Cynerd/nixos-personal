@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{
   system.stateVersion = "24.05";
   nixpkgs.hostPlatform.system = "x86_64-linux";
   deploy = {
@@ -85,6 +85,4 @@
     enable = true;
     dataDir = "/home/cynerd";
   };
-
-  environment.systemPackages = [pkgs.heroic];
 }

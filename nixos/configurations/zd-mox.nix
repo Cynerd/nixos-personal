@@ -22,6 +22,7 @@ in {
         "70:85:c2:4a:59:f2" = hosts.ridcully;
         "74:bf:c0:42:82:19" = hosts.printer;
         "f8:dc:7a:79:00:e6" = hosts.tc;
+        "34:94:54:33:6b:48" = hosts.vb;
       };
     };
     wireguard = true;

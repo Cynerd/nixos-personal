@@ -70,7 +70,7 @@ in {
     ]
     ++ optionals isx86_64 [
       nmap
-      #ltrace
+      ltrace
       pv
       screen
     ]

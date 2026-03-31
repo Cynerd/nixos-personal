@@ -85,6 +85,8 @@ in {
       enable = !isArm;
       defaultEditor = !isArm;
       withNodeJs = true;
+      withPython3 = true;
+      withRuby = true;
     };
   };
 

@@ -58,8 +58,8 @@ in {
             devices = allDevices;
             ignorePerms = false;
           };
-          "${baseDir}/pictures" = {
-            label = "Pictures";
+          "${baseDir}/images" = {
+            label = "Images";
             id = "pictures";
             devices = bigStorageDevices;
             ignorePerms = false;

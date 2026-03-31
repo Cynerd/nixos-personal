@@ -14,31 +14,22 @@
   boot = {
     initrd.availableKernelModules = ["nvme" "xhci_pci" "usb_storage" "sd_mod"];
     kernelModules = ["kvm-intel"];
+    kernelParams = ["video=eDP-1:d"]; # Disable internal display for kodi to use HDMI
   };
 
   hardware.cpu.intel.updateMicrocode = true;
 
-  boot.initrd.luks.devices = {
-    "encroot".device = "/dev/disk/by-uuid/b317feb5-d68d-4ec3-a24f-0307c116cac8";
+  cynerd.autounlock = {
+    "encroot" = "/dev/disk/by-uuid/f791f524-0552-487b-9bf9-5c20ca78651b";
   };
   fileSystems = {
     "/" = {
       device = "/dev/mapper/encroot";
       fsType = "btrfs";
-      options = ["compress=lzo" "subvol=@"];
-    };
-    "/nix" = {
-      device = "/dev/mapper/encroot";
-      fsType = "btrfs";
-      options = ["compress=lzo" "subvol=@nix"];
-    };
-    "/home" = {
-      device = "/dev/mapper/encroot";
-      fsType = "btrfs";
-      options = ["compress=lzo" "subvol=@home"];
+      options = ["compress=lzo"];
     };
     "/boot" = {
-      device = "/dev/disk/by-uuid/8F7D-A154";
+      device = "/dev/disk/by-uuid/7143-1EE7";
       fsType = "vfat";
     };
   };
@@ -54,7 +45,7 @@
   systemd.network = {
     networks = {
       "dhcp" = {
-        matchConfig.Name = "enp2s0f0";
+        matchConfig.Name = "enp1s0";
         networkConfig = {
           DHCP = "yes";
           IPv6AcceptRA = "yes";
@@ -62,7 +53,7 @@
         linkConfig.RequiredForOnline = "routable";
       };
       "dhcp-wlan" = {
-        matchConfig.Name = "wlp3s0";
+        matchConfig.Name = "wlp2s0";
         networkConfig = {
           DHCP = "yes";
           IPv6AcceptRA = "yes";
@@ -75,12 +66,44 @@
   };
 
   # Kodi
-  nixpkgs.config.kodi.enableAdvancedLauncher = true;
-  users.extraUsers.kodi.isNormalUser = true;
-  services.cage = {
-    user = "kodi";
-    program = "${pkgs.kodi-wayland}/bin/kodi-standalone";
+  environment.systemPackages = with pkgs; [
+    kodi-gbm
+  ];
+  hardware = {
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+      extraPackages = with pkgs; [
+        intel-media-driver
+        libvdpau-va-gl
+      ];
+    };
+    bluetooth.enable = true;
+  };
+  services.pipewire = {
     enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
+  security.rtkit.enable = true;
+  #nixpkgs.config.kodi.enableAdvancedLauncher = true;
+  users.extraUsers.kodi = {
+    isNormalUser = true;
+    extraGroups = ["audio" "video" "input"];
+  };
+  systemd.services.kodi = {
+    description = "Kodi standalone (GBM)";
+    wantedBy = ["multi-user.target"];
+    conflicts = ["getty@tty1.service"];
+    serviceConfig = {
+      User = "kodi";
+      TTYPath = "/dev/tty1";
+      ExecStart = "${pkgs.kodi-gbm}/bin/kodi-standalone";
+      Restart = "on-abort";
+      StandardInput = "tty";
+      StandardOutput = "journal";
+    };
   };
   networking.firewall = {
     allowedTCPPorts = [8080];

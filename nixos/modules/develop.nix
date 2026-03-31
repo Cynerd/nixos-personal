@@ -44,7 +44,7 @@ in {
       cachix
       nurl
       nil
-      nixfmt-rfc-style
+      nixfmt
       alejandra
       statix
       deadnix
@@ -169,6 +169,9 @@ in {
 
       # Images
       imagemagick
+
+      # S3
+      rclone
     ];
     programs.wireshark = {
       enable = true;
@@ -191,6 +194,8 @@ in {
         SUBSYSTEMS=="usb", ATTRS{idVendor}=="1366", ATTRS{idProduct}=="0105", MODE:="0660", GROUP="develop", SYMLINK+="jlink_%n"
         SUBSYSTEMS=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2111", MODE:="0660", GROUP="develop", SYMLINK+="cmsip_dap_%n"
         SUBSYSTEMS=="usb", ATTRS{idVendor}=="1ab1", ATTRS{idProduct}=="0e11", MODE:="0660", GROUP="develop"
+        SUBSYSTEMS=="usb", ATTRS{idVendor}=="303a", ATTRS{idProduct}=="1001", MODE:="0660", GROUP="develop", TAG+="uaccess"
+        SUBSYSTEMS=="usb", ATTRS{idVendor}=="303a", ATTRS{idProduct}=="1002", MODE:="0660", GROUP="develop", TAG+="uaccess"
       '';
 
       guix.enable = true;
@@ -203,10 +208,6 @@ in {
         autoPrune.enable = true;
         storageDriver = "btrfs";
       };
-      #lxd = {
-      #  enable = true;
-      #  recommendedSysctlSettings = true;
-      #};
       lxc.enable = true;
       libvirtd.enable = true;
       spiceUSBRedirection.enable = true;
