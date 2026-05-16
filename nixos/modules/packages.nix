@@ -63,7 +63,7 @@ in {
       wakeonlan
       speedtest-cli
       librespeed-cli
-      termshark
+      #termshark
       w3m
 
       lm_sensors

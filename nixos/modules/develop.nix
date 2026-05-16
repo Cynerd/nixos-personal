@@ -30,7 +30,7 @@ in {
       openssl
       tio
       vim-vint
-      nodePackages.vim-language-server
+      vim-language-server
       vale
       can-utils
 
@@ -64,7 +64,7 @@ in {
 
       # C
       clang-tools
-      massif-visualizer
+      #massif-visualizer
       elf-size-analyze
 
       # Python
@@ -164,6 +164,9 @@ in {
       linux-manual
       stdmanpages
 
+      # Writing documentation
+      docstrfmt
+
       # SHV
       (shvcli.withPlugins [python3Packages.shvcli-ell])
 
@@ -173,10 +176,10 @@ in {
       # S3
       rclone
     ];
-    programs.wireshark = {
-      enable = true;
-      package = pkgs.wireshark;
-    };
+    #programs.wireshark = {
+    #  enable = true;
+    #  package = pkgs.wireshark;
+    #};
 
     documentation = {
       nixos = {

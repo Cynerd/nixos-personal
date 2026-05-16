@@ -150,6 +150,7 @@ in {
             security = {
               admin_user = "cynerd";
               admin_password = "$__file{/run/secrets/grafana.admin.pass}";
+              secret_key = "SW2YcwTIb9zpOOhoPsMm";
             };
             server = {
               domain = "grafana.cynerd.cz";

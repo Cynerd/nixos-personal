@@ -73,10 +73,8 @@ in {
         "omnia2" = "10.8.3.3";
         # Local
         "3dprint" = "10.8.3.80";
-        "mpd" = "10.8.3.51";
-        "printer" = "192.168.1.20";
+        "printer" = "10.8.3.20";
         # Portable
-        "albert" = "10.8.3.61";
         "binky" = "10.8.3.63";
       };
     };
@@ -109,10 +107,8 @@ in {
       "${cnf.adm.omnia}" = ["omnia.adm"];
       "10.8.3.2" = ["redmi.adm"];
       "${cnf.adm.omnia2}" = ["omnia2.adm"];
-      "${cnf.adm.albert}" = ["albert.adm"];
       "${cnf.adm.binky}" = ["binky.adm"];
-      "${cnf.adm."3dprint"}" = ["3dprint"];
-      "${cnf.adm.mpd}" = ["mpd.adm"];
+      "${cnf.adm.printer}" = ["printer.adm"];
     };
   };
 }

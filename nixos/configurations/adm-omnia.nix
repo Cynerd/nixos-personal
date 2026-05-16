@@ -15,11 +15,7 @@ in {
       wan = "pppoe-wan";
       lanIP = hosts.omnia;
       staticLeases = {
-        "7c:b0:c2:bb:9c:ca" = hosts.albert;
         "4c:d5:77:0d:85:d9" = hosts.binky;
-        "b8:27:eb:49:54:5a" = hosts.mpd;
-      };
-      guestStaticLeases = {
         "f4:a9:97:a4:bd:59" = hosts.printer;
       };
     };
@@ -40,18 +36,20 @@ in {
     monitoring.speedtest = true;
   };
 
-  services.journald.extraConfig = ''
-    SystemMaxUse=8G
-  '';
+  services = {
+    journald.extraConfig = ''
+      SystemMaxUse=8G
+    '';
 
-  services.btrfs.autoScrub = {
-    enable = true;
-    fileSystems = ["/"];
-  };
+    btrfs.autoScrub = {
+      enable = true;
+      fileSystems = ["/"];
+    };
 
-  services.fail2ban = {
-    enable = true;
-    ignoreIP = ["10.8.1.0/24" "10.8.2.0/24"];
+    fail2ban = {
+      enable = true;
+      ignoreIP = ["10.8.0.0/24" "10.8.1.0/24"];
+    };
   };
 
   networking.useDHCP = false;
@@ -82,7 +80,7 @@ in {
         linkConfig.RequiredForOnline = "routable";
       };
       "lan-brlan" = {
-        matchConfig.Name = "lan4";
+        matchConfig.Name = "lan*";
         networkConfig.Bridge = "brlan";
         bridgeVLANs = [
           {
@@ -90,16 +88,6 @@ in {
             PVID = 1;
           }
           {VLAN = 2;}
-        ];
-      };
-      "lan-guest" = {
-        matchConfig.Name = "lan[0-3]";
-        networkConfig.Bridge = "brlan";
-        bridgeVLANs = [
-          {
-            EgressUntagged = 2;
-            PVID = 2;
-          }
         ];
       };
     };
@@ -121,14 +109,21 @@ in {
       password 02
     '';
   };
-  systemd.services."pppd-wan" = {
-    after = ["sys-subsystem-net-devices-end2.device"];
-    partOf = ["systemd-networkd.service"];
+  systemd.services = {
+    "pppd-wan" = {
+      after = ["sys-subsystem-net-devices-end2.device"];
+      partOf = ["systemd-networkd.service"];
+      serviceConfig = {
+        Restart = "always";
+        StartLimitBurst = 0;
+      };
+    };
+    "systemd-networkd".environment.SYSTEMD_LOG_LEVEL = "debug";
   };
   # TODO limit NSS clamping to just pppoe-wan
   networking.firewall.extraForwardRules = ''
     tcp flags syn tcp option maxseg size set rt mtu comment "Needed for PPPoE to fix IPv4"
-    iifname {"home", "wg"} oifname {"home", "wg"} accept
+    iifname "wg" oifname "home" accept
     iifname "home" oifname "guest" accept comment "Allow home to access guest devices"
   '';
 }

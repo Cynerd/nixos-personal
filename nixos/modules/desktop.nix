@@ -172,7 +172,7 @@ in {
             freecad
             kicad
             sweethome3d.application
-            qelectrotech
+            #qelectrotech
             super-slicer
           ]
           ++ (optionals cnf.laptop [
@@ -291,7 +291,7 @@ in {
         enable = true;
         discovery = true;
       };
-      davfs2.enable = true;
+      #davfs2.enable = true; TODO!!!
 
       locate.enable = true;
 

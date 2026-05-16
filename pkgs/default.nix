@@ -24,7 +24,6 @@ final: prev: {
 
   dodo = final.callPackage ./dodo {};
   elf-size-analyze = final.callPackage ./elf-size-analyze {};
-  docstrfmt = final.callPackage ./docrstfmt {};
 
   # OpenWrt One
   armTrustedFirmwareMT7981 = final.callPackage ./mtk-arm-trusted-firmware rec {
@@ -75,20 +74,6 @@ final: prev: {
     }).overrideAttrs (oldAttrs: {
       nativeBuildInputs = [final.buildPackages.unixtools.xxd] ++ oldAttrs.nativeBuildInputs;
     });
-  linuxOpenWrtOne = final.buildLinux {
-    version = "6.19.0-rc2";
-    src = final.buildPackages.fetchgit {
-      url = "git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git";
-      rev = "b927546677c876e26eba308550207c2ddf812a43";
-      hash = "sha256-Ti4No/FUoc2RgHxat908Uy0HnETlnyF/ZAJ4JmxD+jY=";
-    };
-    kernelPatches = [
-      {
-        name = "openwrt-one";
-        patch = ./linux-openwrt-one-6_19.patch;
-      }
-    ];
-  };
 
   # RaspberryPi
   ubootRaspberryPi3_btrfs = prev.buildUBoot {

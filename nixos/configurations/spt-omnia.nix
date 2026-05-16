@@ -119,6 +119,8 @@ in {
       defaultroute6
       #usepeerdns
       maxfail 1
+      #holdoff 5
+      #persist
       user metronet
       password metronet
     '';
@@ -126,6 +128,10 @@ in {
   systemd.services."pppd-wan" = {
     after = ["sys-subsystem-net-devices-end2.848.device"];
     partOf = ["systemd-networkd.service"];
+    serviceConfig = {
+      Restart = "always";
+      StartLimitBurst = 0;
+    };
   };
   # TODO limit NSS clamping to just pppoe-wan
   networking.firewall.extraForwardRules = ''

@@ -16,16 +16,8 @@
         saePasswordsFile = "/run/secrets/hostapd-TurrisAdamkovi.pass";
       };
     };
-    "${cnf."${name}".interface}.nela" = {
-      bssid = elemAt cnf."${name}".bssids 1;
-      ssid = "Nela";
-      authentication = {
-        mode = "wpa2-sha256";
-        wpaPasswordFile = "/run/secrets/hostapd-Nela.pass";
-      };
-    };
     "${cnf."${name}".interface}.milan" = {
-      bssid = elemAt cnf."${name}".bssids 2;
+      bssid = elemAt cnf."${name}".bssids 1;
       ssid = "MILAN-AC";
       authentication = {
         mode = "wpa2-sha1";
@@ -48,23 +40,13 @@
         }
       ];
     };
-    "lan-${cnf."${name}".interface}.nela" = {
-      matchConfig.Name = "${cnf."${name}".interface}-nela";
-      networkConfig.Bridge = "brlan";
-      bridgeVLANs = [
-        {
-          EgressUntagged = 2;
-          PVID = 2;
-        }
-      ];
-    };
     "lan-${cnf."${name}".interface}.milan" = {
       matchConfig.Name = "${cnf."${name}".interface}.milan";
       networkConfig.Bridge = "brlan";
       bridgeVLANs = [
         {
-          EgressUntagged = 2;
-          PVID = 2;
+          EgressUntagged = 1;
+          PVID = 1;
         }
       ];
     };

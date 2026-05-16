@@ -14,7 +14,7 @@ in
       glibc.static
       riscvPkgs.buildPackages.gcc
       pkgsCross.armv7l-hf-multiplatform.buildPackages.gcc
-      pkgsCross.armv7l-hf-multiplatform.glibc.static
+      pkgsCross.armv7l-hf-multiplatform.buildPackages.gcc.libc.static
     ];
     inputsFrom = [c];
     meta.platforms = pkgs.lib.platforms.linux;

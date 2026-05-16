@@ -18,6 +18,7 @@ in {
   config = mkIf (cnf != {}) {
     environment.systemPackages = [pkgs.luks-hw-password];
     boot.initrd = {
+      systemd.enable = false;
       extraFiles."/luks-hw-password".source = pkgs.luks-hw-password;
       luks.devices =
         mapAttrs (name: value: {

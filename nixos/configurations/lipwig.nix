@@ -198,7 +198,7 @@
     # Nextcloud ################################################################
     services.nextcloud = {
       enable = true;
-      package = pkgs.nextcloud32;
+      package = pkgs.nextcloud33;
       https = true;
       hostName = "cloud.cynerd.cz";
       datadir = "/nas/nextcloud";
@@ -266,18 +266,18 @@
           license = "agpl3Plus";
         };
         integration_gitlab = pkgs.fetchNextcloudApp {
-          url = "https://github.com/nextcloud-releases/integration_gitlab/releases/download/v4.0.0/integration_gitlab-v4.0.0.tar.gz";
-          hash = "sha256-0CKvAiwdG6Llomo9ROu0KLdUq1xfjAwlO1e1/LYzL4s=";
+          url = "https://github.com/nextcloud-releases/integration_gitlab/releases/download/v5.0.0/integration_gitlab-v5.0.0.tar.gz";
+          hash = "sha256-f0D9UrlX8bsf4BSTCzb9bN1gYKDlSY9JxmgO6el7HZw=";
           license = "agpl3Plus";
         };
-        money = pkgs.fetchNextcloudApp {
-          url = "https://github.com/powerpaul17/nc_money/releases/download/v0.31.0/money.tar.gz";
-          hash = "sha256-6RlxWTCw6NP9RquHnfoLLBw/dmAXx21INCzYUcp3E/4=";
-          license = "agpl3Plus";
-        };
+        #money = pkgs.fetchNextcloudApp {
+        #  url = "https://github.com/powerpaul17/nc_money/releases/download/v0.31.0/money.tar.gz";
+        #  hash = "sha256-6RlxWTCw6NP9RquHnfoLLBw/dmAXx21INCzYUcp3E/4=";
+        #  license = "agpl3Plus";
+        #};
         passwords = pkgs.fetchNextcloudApp {
-          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2026.3.0/passwords.tar.gz";
-          hash = "sha256-YHilpFaZHNCtqLRvTCDhyVoFWLC85Qkj1mMxp08YCho=";
+          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2026.3.1/passwords-lsr-81.tar.gz";
+          hash = "sha256-NqeGO1iJC98fqgsEE+WZOUiTTI9Du/zRPSw/w5g9e/E=";
           license = "agpl3Plus";
         };
       };

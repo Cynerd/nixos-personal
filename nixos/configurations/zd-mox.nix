@@ -113,6 +113,8 @@ in {
       defaultroute
       defaultroute6
       maxfail 1
+      #holdoff 5
+      #persist
       # user and password added in secrets
     '';
   };
@@ -120,6 +122,10 @@ in {
     "pppd-wan" = {
       requires = ["sys-subsystem-net-devices-end0.848.device"];
       partOf = ["systemd-networkd.service"];
+      serviceConfig = {
+        Restart = "always";
+        StartLimitBurst = 0;
+      };
     };
     "systemd-networkd".environment.SYSTEMD_LOG_LEVEL = "debug";
   };
