@@ -254,15 +254,15 @@
           twofactor_webauthn
           ;
         # Additional modules can be fetched with:
-        # NEXTCLOUD_VERSIONS=32 nix run nixpkgs#nc4nix -- -apps "passwords,money,integration_github,integration_gitlab,fileslibreofficeedit"
+        # NEXTCLOUD_VERSIONS=33 nix run .#nc4nix -- -apps "passwords,money,integration_github,integration_gitlab,fileslibreofficeedit"
         fileslibreofficeedit = pkgs.fetchNextcloudApp {
           url = "https://github.com/allotropia/nextcloud_files_libreoffice_edit/releases/download/v2.0.1/fileslibreofficeedit.tar.gz";
           hash = "sha256-Xqx5snQWintYJG3Q1Crw22TkNw18DdADXkurMQqt3X8=";
           license = "agpl3Plus";
         };
         integration_github = pkgs.fetchNextcloudApp {
-          url = "https://github.com/nextcloud-releases/integration_github/releases/download/v3.2.2/integration_github-v3.2.2.tar.gz";
-          hash = "sha256-n7U/es4EdwS0cvegeFLnqhooRhkaSIdiVLwSse8hS3I=";
+          url = "https://github.com/nextcloud-releases/integration_github/releases/download/v3.2.5/integration_github-v3.2.5.tar.gz";
+          hash = "sha256-QAOKT1Flgsy0kivgP/yoIo1vggb3MwRTGsMaMoEhZEo=";
           license = "agpl3Plus";
         };
         integration_gitlab = pkgs.fetchNextcloudApp {
@@ -276,8 +276,8 @@
         #  license = "agpl3Plus";
         #};
         passwords = pkgs.fetchNextcloudApp {
-          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2026.3.1/passwords-lsr-81.tar.gz";
-          hash = "sha256-NqeGO1iJC98fqgsEE+WZOUiTTI9Du/zRPSw/w5g9e/E=";
+          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2026.5.0/passwords.tar.gz";
+          hash = "sha256-SJh+MhO3PysP/qIgzZuyKVVjmNKgXoh06IdNRF4fSgQ=";
           license = "agpl3Plus";
         };
       };
