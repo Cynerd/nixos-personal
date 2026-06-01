@@ -270,6 +270,7 @@ in {
           '')
         ];
       };
+      playerctld.enable = true;
 
       upower.enable = true;
       hardware.openrgb = {

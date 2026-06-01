@@ -255,6 +255,16 @@
           ;
         # Additional modules can be fetched with:
         # NEXTCLOUD_VERSIONS=33 nix run .#nc4nix -- -apps "passwords,money,integration_github,integration_gitlab,fileslibreofficeedit"
+        analytics = pkgs.fetchNextcloudApp {
+          url = "https://github.com/Rello/analytics/releases/download/6.3.4/analytics.tar.gz";
+          hash = "sha256-t/WJRIVdwfoomkUOTsH6f4MrXdRs+9XdK841I+FSdoE=";
+          license = "agpl3Plus";
+        };
+        flow_notifications = pkgs.fetchNextcloudApp {
+          url = "https://github.com/nextcloud-releases/flow_notifications/releases/download/v4.0.0/flow_notifications-v4.0.0.tar.gz";
+          hash = "sha256-D+eGGb+Eto5JtmEsnGhrLp2dKyI6twek5rwKEJGMSxw=";
+          license = "agpl3Plus";
+        };
         fileslibreofficeedit = pkgs.fetchNextcloudApp {
           url = "https://github.com/allotropia/nextcloud_files_libreoffice_edit/releases/download/v2.0.1/fileslibreofficeedit.tar.gz";
           hash = "sha256-Xqx5snQWintYJG3Q1Crw22TkNw18DdADXkurMQqt3X8=";
@@ -270,11 +280,6 @@
           hash = "sha256-f0D9UrlX8bsf4BSTCzb9bN1gYKDlSY9JxmgO6el7HZw=";
           license = "agpl3Plus";
         };
-        #money = pkgs.fetchNextcloudApp {
-        #  url = "https://github.com/powerpaul17/nc_money/releases/download/v0.31.0/money.tar.gz";
-        #  hash = "sha256-6RlxWTCw6NP9RquHnfoLLBw/dmAXx21INCzYUcp3E/4=";
-        #  license = "agpl3Plus";
-        #};
         passwords = pkgs.fetchNextcloudApp {
           url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2026.5.0/passwords.tar.gz";
           hash = "sha256-SJh+MhO3PysP/qIgzZuyKVVjmNKgXoh06IdNRF4fSgQ=";
@@ -286,15 +291,25 @@
     # Postgresql ###############################################################
     services.postgresql = {
       enable = true;
+      enableTCPIP = true;
       ensureUsers = [
-        {name = "cynerd";}
+        {
+          name = "cynerd";
+          ensureClauses = {
+            login = true;
+            createdb = true;
+            createrole = true;
+            bypassrls = true;
+            replication = true;
+          };
+        }
         {
           name = "nextcloud";
           ensureDBOwnership = true;
         }
       ];
-      ensureDatabases = ["nextcloud"];
-      #extraPlugins = ps: with ps; [timescaledb];
+      ensureDatabases = ["nextcloud" "monitoring"];
+      extraPlugins = ps: [ps.timescaledb];
     };
 
     # SearX ####################################################################
