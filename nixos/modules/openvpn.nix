@@ -40,6 +40,10 @@ in {
           ${pkgs.systemd}/bin/resolvectl domain "$dev" "~$domain"
         '';
       };
+      ellshv = mkIf cnf.elektroline {
+        config = "config /run/secrets/ellshv.ovpn";
+        autoStart = false;
+      };
     };
   };
 }

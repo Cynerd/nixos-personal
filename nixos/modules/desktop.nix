@@ -53,6 +53,7 @@ in {
             nautilus
 
             kanshi
+            shikane
             wdisplays
             wayvnc
             wl-mirror
