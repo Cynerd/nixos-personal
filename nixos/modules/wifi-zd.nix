@@ -3,70 +3,10 @@
   lib,
   ...
 }: let
-  inherit (lib) mkOption mkEnableOption types mkIf mkForce mkMerge hostapd elemAt;
+  inherit (lib) mkOption mkEnableOption types mkIf mkForce elemAt;
   cnf = config.cynerd.wifiAP.zd;
 
-  wifi-networks = name: let
-    is2g = cnf."${name}".channel <= 14;
-  in {
-    "${cnf."${name}".interface}" = {
-      bssid = elemAt cnf."${name}".bssids 0;
-      ssid = "UNas${
-        if is2g
-        then ""
-        else "5"
-      }";
-      authentication = {
-        mode = "wpa2-sha256";
-        wpaPasswordFile = "/run/secrets/hostapd-UNas.pass";
-      };
-      settings = mkIf is2g {
-        ieee80211w = 0;
-        wpa_key_mgmt = mkForce "WPA-PSK"; # force use without sha256
-      };
-    };
-    "${cnf."${name}".interface}.guest" = {
-      bssid = elemAt cnf."${name}".bssids 1;
-      ssid = "Koci";
-      authentication = {
-        mode = "wpa2-sha256";
-        wpaPasswordFile = "/run/secrets/hostapd-Koci.pass";
-      };
-    };
-  };
-
-  net-networks = name: {
-    "lan-${cnf."${name}".interface}" = {
-      matchConfig = {
-        Name = cnf."${name}".interface;
-        WLANInterfaceType = "ap";
-      };
-      networkConfig.Bridge = "brlan";
-      bridgeVLANs = [
-        {
-          EgressUntagged = 1;
-          PVID = 1;
-        }
-      ];
-    };
-    "lan-${cnf."${name}".interface}-guest" = {
-      matchConfig.Name = "${cnf."${name}".interface}.guest";
-      networkConfig.Bridge = "brlan";
-      bridgeVLANs = [
-        {
-          EgressUntagged = 2;
-          PVID = 2;
-        }
-      ];
-    };
-  };
-
-  wOptions = card: channelDefault: {
-    interface = mkOption {
-      type = with types; nullOr str;
-      default = null;
-      description = "Specify interface for ${card}";
-    };
+  wOptions = {
     bssids = mkOption {
       type = with types; listOf str;
       default = [];
@@ -74,16 +14,15 @@
     };
     channel = mkOption {
       type = types.ints.positive;
-      default = channelDefault;
-      description = "Channel to be used for ${card}";
+      description = "Channel to be used";
     };
   };
 in {
   options = {
     cynerd.wifiAP.zd = {
-      enable = mkEnableOption "Enable Wi-Fi Access Point support";
-      ar9287 = wOptions "Qualcom Atheros AR9287" 7;
-      qca988x = wOptions "Qualcom Atheros QCA988x" 36;
+      enable = mkEnableOption "Enable Wi-Fi Access Point support (OpenWrt One)";
+      wlan0 = wOptions;
+      wlan1 = wOptions;
     };
   };
 
@@ -94,44 +33,80 @@ in {
     '';
     services.hostapd = {
       enable = true;
-      radios = mkMerge [
-        (mkIf (cnf.ar9287.interface != null) {
-          "${cnf.ar9287.interface}" = {
-            inherit (cnf.ar9287) channel;
-            countryCode = "CZ";
-            wifi4 = {
-              enable = true;
-              inherit (hostapd.qualcomAtherosAR9287.wifi4) capabilities;
-            };
-            networks = wifi-networks "ar9287";
+      radios = {
+        "wlan0" = {
+          inherit (cnf.wlan0) channel;
+          countryCode = "CZ";
+          wifi4 = {
+            enable = true;
+            capabilities = [
+              "HT40"
+              "SHORT-GI-20"
+              "SHORT-GI-40"
+              "TX-STBC"
+              "RX-STBC1"
+              "MAX-AMSDU-7935"
+            ];
           };
-        })
-        (mkIf (cnf.qca988x.interface != null) {
-          "${cnf.qca988x.interface}" = let
-            is2g = cnf.qca988x.channel <= 14;
-          in {
-            inherit (cnf.qca988x) channel;
-            countryCode = "CZ";
-            band =
-              if is2g
-              then "2g"
-              else "5g";
-            wifi4 = {
-              enable = true;
-              inherit (hostapd.qualcomAtherosQCA988x.wifi4) capabilities;
+          networks = {
+            "wlan0" = {
+              bssid = elemAt cnf.wlan0.bssids 0;
+              ssid = "UNas";
+              authentication = {
+                mode = "wpa2-sha256";
+                wpaPasswordFile = "/run/secrets/hostapd-UNas.pass";
+              };
             };
-            wifi5 = {
-              enable = !is2g;
-              inherit (hostapd.qualcomAtherosQCA988x.wifi5) capabilities;
+            "wlan0.guest" = {
+              bssid = elemAt cnf.wlan0.bssids 1;
+              ssid = "Koci";
+              authentication = {
+                mode = "wpa2-sha256";
+                wpaPasswordFile = "/run/secrets/hostapd-Koci.pass";
+              };
             };
-            networks = wifi-networks "qca988x";
+            "wlan0.iotd" = {
+              bssid = elemAt cnf.wlan0.bssids 2;
+              ssid = "IOTD";
+              authentication = {
+                mode = "wpa2-sha256";
+                wpaPasswordFile = "/run/secrets/hostapd-IOTD.pass";
+              };
+              settings = {
+                ieee80211w = mkForce 0;
+                wpa_key_mgmt = mkForce "WPA-PSK"; # force use without sha256
+              };
+            };
           };
-        })
-      ];
+        };
+        #"wlan1" = {
+        #};
+      };
     };
-    systemd.network.networks = mkMerge [
-      (mkIf (cnf.ar9287.interface != null) (net-networks "ar9287"))
-      (mkIf (cnf.qca988x.interface != null) (net-networks "qca988x"))
-    ];
+    systemd.network.networks = {
+      "lan-wlan0" = {
+        matchConfig = {
+          Name = "wlan0 wlan0.iotd";
+          WLANInterfaceType = "ap";
+        };
+        networkConfig.Bridge = "brlan";
+        bridgeVLANs = [
+          {
+            EgressUntagged = 1;
+            PVID = 1;
+          }
+        ];
+      };
+      "lan-wlan0-guest" = {
+        matchConfig.Name = "wlan0.guest";
+        networkConfig.Bridge = "brlan";
+        bridgeVLANs = [
+          {
+            EgressUntagged = 2;
+            PVID = 2;
+          }
+        ];
+      };
+    };
   };
 }

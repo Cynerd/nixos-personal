@@ -6,6 +6,7 @@ in {
   deploy = {
     enable = true;
     ssh.host = "spt.cynerd.cz";
+    configurationLimit = 16;
   };
 
   cynerd = {
@@ -38,9 +39,9 @@ in {
   };
 
   services = {
-    journald.extraConfig = ''
-      SystemMaxUse=8G
-    '';
+    journald.settings.Journal = {
+      SystemMaxUse = "8G";
+    };
 
     btrfs.autoScrub = {
       enable = true;

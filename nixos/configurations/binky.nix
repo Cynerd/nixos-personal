@@ -1,4 +1,4 @@
-{
+{lib, ...}: {
   system.stateVersion = "24.05";
   nixpkgs.hostPlatform.system = "x86_64-linux";
   deploy = {
@@ -14,6 +14,7 @@
     };
     wifiClient = true;
     develop = true;
+    gaming = true;
     wireguard = true;
     openvpn.elektroline = true;
   };
@@ -85,4 +86,6 @@
     enable = true;
     dataDir = "/home/cynerd";
   };
+
+  programs.steam.enable = lib.mkForce false;
 }

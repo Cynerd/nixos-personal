@@ -1,0 +1,52 @@
+{
+  "fileslibreofficeedit": {
+    "hash": "sha256-Xqx5snQWintYJG3Q1Crw22TkNw18DdADXkurMQqt3X8=",
+    "url": "https://github.com/allotropia/nextcloud_files_libreoffice_edit/releases/download/v2.0.1/fileslibreofficeedit.tar.gz",
+    "version": "2.0.1",
+    "description": "This adds a new context menu item to the Files dropdown menu \"Edit with LibreOffice\".\nClicking that item will open the file in LibreOffice via WebDAV (the file can then be edited and saved back directly in LibreOffice).\n\nThis greatly improves the user experience when working with Office files in the browser. No need to download, edit, reupload. Instead use the \"Edit with LibreOffice\" item.\n\nThis app requires at least LibreOffice 7.2 on Linux and macOS. On Windows it also works with older LibreOffice versions (since LibreOffice 5.3).",
+    "homepage": "https://github.com/allotropia/nextcloud_files_libreoffice_edit",
+    "licenses": [
+      "agpl"
+    ]
+  },
+  "integration_github": {
+    "hash": "sha256-7fdQzM4yaFJ9To8lIoiQ4IgfKPGqh8ZXnVxy0Xzo+q8=",
+    "url": "https://github.com/nextcloud-releases/integration_github/releases/download/v3.2.6/integration_github-v3.2.6.tar.gz",
+    "version": "3.2.6",
+    "description": "GitHub integration provides a dashboard widget displaying your most important notifications\n    and a unified search provider for repositories, issues and pull requests. It also provides a link reference provider\n    to render links to issues, pull requests and comments in Talk and Text.",
+    "homepage": "https://github.com/nextcloud/integration_github",
+    "licenses": [
+      "agpl"
+    ]
+  },
+  "integration_gitlab": {
+    "hash": "sha256-f0D9UrlX8bsf4BSTCzb9bN1gYKDlSY9JxmgO6el7HZw=",
+    "url": "https://github.com/nextcloud-releases/integration_gitlab/releases/download/v5.0.0/integration_gitlab-v5.0.0.tar.gz",
+    "version": "5.0.0",
+    "description": "GitLab integration provides a dashboard widget displaying your most important notifications\n    and a unified search provider for repositories, issues and merge requests.",
+    "homepage": "https://github.com/nextcloud/integration_gitlab",
+    "licenses": [
+      "agpl"
+    ]
+  },
+  "money": {
+    "hash": "sha256-bEcKzgItP/Bs336qXAI72cGFXkPVNSfzMjrYQ5212K8=",
+    "url": "https://github.com/powerpaul17/nc_money/releases/download/v0.32.0/money.tar.gz",
+    "version": "0.32.0",
+    "description": "Finance manager for Nextcloud.",
+    "homepage": "https://github.com/powerpaul17/nc_money",
+    "licenses": [
+      "agpl"
+    ]
+  },
+  "passwords": {
+    "hash": "sha256-8ER2MqyePpERD7RRfw8Hq5xNx+s8vUhPbDyJ2JvU/ho=",
+    "url": "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2026.7.0/passwords.tar.gz",
+    "version": "2026.7.20",
+    "description": "Passwords is the most advanced password manager for Nextcloud and allows you to manage and store your passwords safely in your own cloud.\nThe intuitive and modern web interface of the app makes it easy to update and add new passwords from anywhere.\nIncluded security checks help you to keep your online accounts safe and up-to-date.\nYou can also share passwords with other Nextcloud users.\n\n**Features**\n * Intuitive and modern user interface\n * Password security monitor\n * Secure encryption\n * Folders &amp; tags\n * Sharing\n * Dashboard Widget\n * API for apps\n * Extensive handbook\n * Import &amp; Export\n * Browser extensions &amp; Apps\n * ... and many more to come\n\n**Support**\n * [Official Chat](https://matrix.to/#/#nextcloud-passwords:chat.passwordsapp.org)\n * [Official Forum](https://help.nextcloud.com/tag/passwords-app)\n * [User Handbook](https://git.mdns.eu/nextcloud/passwords/-/wikis/Users/Index)\n * [Administrator Handbook](https://git.mdns.eu/nextcloud/passwords/-/wikis/Administrators/Index)\n\n**Apps & Extensions**\n * [Official Firefox Add-On](https://addons.mozilla.org/de/firefox/addon/nextcloud-passwords?utm_source=app&utm_medium=nc-apps)\n * [Official Chrome Extension](https://chrome.google.com/webstore/detail/nextcloud-passwords/mhajlicjhgoofheldnmollgbgjheenbi)\n * [Official Microsoft Edge Extension](https://microsoftedge.microsoft.com/addons/detail/cjmlcljdpphgdfpkngjcmeepdpcgpffk)\n * [Android App](https://play.google.com/store/apps/details?id=de.jbservices.nc_passwords_app) by [joleaf](https://gitlab.com/joleaf/nc-passwords-app)\n * [Android App](https://play.google.com/store/apps/details?id=com.hegocre.nextcloudpasswords) by [hegocre](https://github.com/hegocre/NextcloudPasswords)\n * [Windows App (WIP)](https://www.microsoft.com/store/apps/9NXVZ0ZP6D5Z) by [j0chn](https://gitlab.com/j0chn/nextcloud_password_client)\n * [Linux App (WIP)](https://gitlab.com/j0chn/nextcloud_password_client/-/tree/main#linux) by [j0chn](https://gitlab.com/j0chn/nextcloud_password_client)\n * [macOS App (WIP)](https://gitlab.com/j0chn/nextcloud_password_client/-/tree/main#mac-os) by [j0chn](https://gitlab.com/j0chn/nextcloud_password_client)\n * [iOS App](https://apps.apple.com/app/id1546212226) by [Johannes Schliephake](https://github.com/johannes-schliephake/nextcloud-passwords-ios)",
+    "homepage": "https://passwordsapp.org/",
+    "licenses": [
+      "agpl"
+    ]
+  }
+}

@@ -68,9 +68,9 @@ in {
         };
       };
 
-      services.journald.extraConfig = ''
-        SystemMaxUse=512M
-      '';
+      services.journald.settings.Journal = {
+        SystemMaxUse = "512M";
+      };
 
       system.build.firmware = pkgs.callPackage ({stdenvNoCC}:
         stdenvNoCC.mkDerivation {

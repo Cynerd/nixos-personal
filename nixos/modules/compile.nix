@@ -20,7 +20,10 @@ in {
       cores = 0;
     };
 
-    boot.binfmt.emulatedSystems = ["armv7l-linux" "aarch64-linux" "riscv32-linux"];
+    boot.binfmt = {
+      emulatedSystems = ["armv7l-linux" "aarch64-linux" "riscv32-linux"];
+      preferStaticEmulators = true;
+    };
 
     environment.systemPackages = with pkgs; [
       # Tools
@@ -28,9 +31,6 @@ in {
       bash
       #uroot
       qemu
-
-      # Python
-      python3Packages.pip
     ];
   };
 }

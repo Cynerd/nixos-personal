@@ -32,6 +32,12 @@ in {
 
   config = mkMerge [
     (mkIf cnf.enable {
+      # Glances
+      services.glances = {
+        enable = true;
+        openFirewall = true;
+      };
+
       # Telegraf configuration
       services.telegraf = {
         enable = true;

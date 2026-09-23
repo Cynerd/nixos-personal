@@ -2,6 +2,7 @@
   config,
   pkgs,
   inputModules,
+  lib,
   ...
 }: {
   imports = [inputModules.vpsadminos];
@@ -198,7 +199,7 @@
     # Nextcloud ################################################################
     services.nextcloud = {
       enable = true;
-      package = pkgs.nextcloud33;
+      package = pkgs.nextcloud34;
       https = true;
       hostName = "cloud.cynerd.cz";
       datadir = "/nas/nextcloud";
@@ -233,59 +234,36 @@
       };
       maxUploadSize = "1G";
       appstoreEnable = false;
-      extraApps = {
-        inherit
-          (config.services.nextcloud.package.packages.apps)
-          bookmarks
-          calendar
-          contacts
-          cookbook
-          deck
-          forms
-          groupfolders
-          impersonate
-          #maps
-          memories
-          notes
-          phonetrack
-          previewgenerator
-          spreed
-          tasks
-          twofactor_webauthn
-          ;
-        # Additional modules can be fetched with:
-        # NEXTCLOUD_VERSIONS=33 nix run .#nc4nix -- -apps "passwords,money,integration_github,integration_gitlab,fileslibreofficeedit"
-        analytics = pkgs.fetchNextcloudApp {
-          url = "https://github.com/Rello/analytics/releases/download/6.3.4/analytics.tar.gz";
-          hash = "sha256-t/WJRIVdwfoomkUOTsH6f4MrXdRs+9XdK841I+FSdoE=";
-          license = "agpl3Plus";
-        };
-        flow_notifications = pkgs.fetchNextcloudApp {
-          url = "https://github.com/nextcloud-releases/flow_notifications/releases/download/v4.0.0/flow_notifications-v4.0.0.tar.gz";
-          hash = "sha256-D+eGGb+Eto5JtmEsnGhrLp2dKyI6twek5rwKEJGMSxw=";
-          license = "agpl3Plus";
-        };
-        fileslibreofficeedit = pkgs.fetchNextcloudApp {
-          url = "https://github.com/allotropia/nextcloud_files_libreoffice_edit/releases/download/v2.0.1/fileslibreofficeedit.tar.gz";
-          hash = "sha256-Xqx5snQWintYJG3Q1Crw22TkNw18DdADXkurMQqt3X8=";
-          license = "agpl3Plus";
-        };
-        integration_github = pkgs.fetchNextcloudApp {
-          url = "https://github.com/nextcloud-releases/integration_github/releases/download/v3.2.5/integration_github-v3.2.5.tar.gz";
-          hash = "sha256-QAOKT1Flgsy0kivgP/yoIo1vggb3MwRTGsMaMoEhZEo=";
-          license = "agpl3Plus";
-        };
-        integration_gitlab = pkgs.fetchNextcloudApp {
-          url = "https://github.com/nextcloud-releases/integration_gitlab/releases/download/v5.0.0/integration_gitlab-v5.0.0.tar.gz";
-          hash = "sha256-f0D9UrlX8bsf4BSTCzb9bN1gYKDlSY9JxmgO6el7HZw=";
-          license = "agpl3Plus";
-        };
-        passwords = pkgs.fetchNextcloudApp {
-          url = "https://git.mdns.eu/api/v4/projects/45/packages/generic/passwords/2026.5.0/passwords.tar.gz";
-          hash = "sha256-SJh+MhO3PysP/qIgzZuyKVVjmNKgXoh06IdNRF4fSgQ=";
-          license = "agpl3Plus";
-        };
-      };
+      extraApps =
+        {
+          inherit
+            (config.services.nextcloud.package.packages.apps)
+            bookmarks
+            calendar
+            contacts
+            cookbook
+            deck
+            forms
+            groupfolders
+            impersonate
+            #maps
+            memories
+            notes
+            phonetrack
+            previewgenerator
+            spreed
+            tasks
+            twofactor_webauthn
+            ;
+        }
+        // (lib.mapAttrs (n: v:
+            pkgs.fetchNextcloudApp {
+              inherit (v) url hash;
+              license = "agpl3Plus";
+            })
+          # Additional modules can be fetched with:
+          # NEXTCLOUD_VERSIONS=33 nix run .#nc4nix -- -apps "passwords,money,integration_github,integration_gitlab,fileslibreofficeedit"
+          (lib.importJSON ../nextcloud-extra-apps.json));
     };
 
     # Postgresql ###############################################################
@@ -309,7 +287,7 @@
         }
       ];
       ensureDatabases = ["nextcloud" "monitoring"];
-      extraPlugins = ps: [ps.timescaledb];
+      #extensions = ps: [ps.timescaledb];
     };
 
     # SearX ####################################################################

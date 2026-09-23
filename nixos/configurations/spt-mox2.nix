@@ -4,6 +4,7 @@
   deploy = {
     enable = true;
     ssh.host = "mox2.spt";
+    configurationLimit = 8;
   };
 
   cynerd = {
@@ -26,9 +27,9 @@
   boot.initrd.availableKernelModules = ["dm-mod"];
 
   services = {
-    journald.extraConfig = ''
-      SystemMaxUse=512M
-    '';
+    journald.settings.Journal = {
+      SystemMaxUse = "512M";
+    };
 
     btrfs.autoScrub = {
       enable = true;

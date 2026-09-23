@@ -2,6 +2,7 @@
   description = "Cynerd's personal flake";
 
   inputs = {
+    systems.url = "github:nix-systems/default-linux";
     nixpkgs.url = "flake:nixpkgs/nixos-unstable-small";
     nixos-hardware.url = "nixos-hardware";
     nixosdeploy.url = "gitlab:cynerd/nixosdeploy";
@@ -34,20 +35,10 @@
     nixturris,
     ...
   }: let
-    inherit (nixpkgs.lib) genAttrs mapAttrs' nameValuePair filterAttrs;
+    inherit (nixpkgs.lib) genAttrs;
+    inherit (nixosdeploy.lib) nixosFilterHostBuilds;
     forSystems = genAttrs (import systems);
     withPkgs = func: forSystems (system: func self.legacyPackages.${system});
-
-    osFilterMap = system: attr:
-      mapAttrs' (n: v: let
-        os =
-          if v.config.nixpkgs.hostPlatform.system == system
-          then v
-          else (v.extendModules {modules = [{nixpkgs.buildPlatform.system = system;}];});
-      in
-        nameValuePair "${attr}-${n}" os.config.system.build."${attr}")
-      (filterAttrs (_: v: v.config.system.build ? "${attr}")
-        self.nixosConfigurations);
   in {
     overlays = {
       lib = import ./lib;
@@ -84,9 +75,12 @@
     packages = forSystems (
       system:
         {inherit (nixosdeploy.packages.${system}) default;}
-        // (osFilterMap system "toplevel")
-        // (osFilterMap system "tarball")
-        // (osFilterMap system "firmware")
+        // (nixosFilterHostBuilds self.nixosConfigurations [
+            "toplevel"
+            "tarball"
+            "firmware"
+          ]
+          system)
     );
 
     devShells = withPkgs (import ./devShells);

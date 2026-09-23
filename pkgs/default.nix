@@ -87,30 +87,29 @@ final: prev: {
   };
 
   # NixPkgs patches
-  gnutls =
-    if prev.stdenv.hostPlatform != prev.stdenv.buildPlatform
-    then
-      prev.gnutls.overrideAttrs (oldAttrs: {
-        configureFlags = oldAttrs.configureFlags ++ ["--disable-doc"];
-        outputs = builtins.filter (v: v != "man" && v != "devdoc") oldAttrs.outputs;
-      })
-    else prev.gnutls;
-  git =
-    if prev.stdenv.hostPlatform != prev.stdenv.buildPlatform
-    then prev.git.override {rustSupport = false;}
-    else prev.git;
-  libcap =
-    if prev.stdenv.hostPlatform != prev.stdenv.buildPlatform
-    then
-      prev.libcap.overrideAttrs {
-        patches = [
-          (final.fetchpatch {
-            url = "https://git.kernel.org/pub/scm/libs/libcap/libcap.git/patch/?id=d628b3bfe40338d4efff6b0ae50f250a0eb884c7";
-            hash = "sha256-Eiv/BOJZkduL+hOEJd8K1LQd9wvOeCKchE2GaLcerVc=";
-          })
-        ];
-      }
-    else prev.libcap;
+  xdg-desktop-portal = prev.xdg-desktop-portal.overrideAttrs (oldAttrs: {
+    patches =
+      oldAttrs.patches
+      ++ [
+        # https://github.com/NixOS/nixpkgs/pull/548762
+        (final.fetchpatch {
+          url = "https://github.com/NixOS/nixpkgs/raw/4ba561388760a6fdfe376cbef28613b4366161ab/pkgs/by-name/xd/xdg-desktop-portal/allow-no-graphical-session-target.patch";
+          hash = "sha256-55RFYk4Fzsj8xp6j0wg1AEz+9c05tqfNkPCP+z9czdI=";
+        })
+      ];
+  });
+  #gnutls =
+  #  if prev.stdenv.hostPlatform != prev.stdenv.buildPlatform
+  #  then
+  #    prev.gnutls.overrideAttrs (oldAttrs: {
+  #      configureFlags = oldAttrs.configureFlags ++ ["--disable-doc"];
+  #      outputs = builtins.filter (v: v != "man" && v != "devdoc") oldAttrs.outputs;
+  #    })
+  #  else prev.gnutls;
+  #git =
+  #  if prev.stdenv.hostPlatform != prev.stdenv.buildPlatform
+  #  then prev.git.override {rustSupport = false;}
+  #  else prev.git;
   gvproxy =
     if prev.stdenv.hostPlatform.is32bit
     then

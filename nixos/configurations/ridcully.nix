@@ -86,16 +86,16 @@
       dataDir = "/home/cynerd";
     };
 
-    octoprint = {
-      enable = true;
-      openFirewall = true;
-    };
+    #octoprint = {
+    #  enable = true;
+    #  openFirewall = true;
+    #};
 
-    mjpg-streamer = {
-      enable = true;
-      inputPlugin = "input_uvc.so -d /dev/video2 -r 1920x1080 -f 30";
-      outputPlugin = "output_http.so -p 5001 -w @www@";
-    };
+    #mjpg-streamer = {
+    #  enable = true;
+    #  inputPlugin = "input_uvc.so -d /dev/video2 -r 1920x1080 -f 30";
+    #  outputPlugin = "output_http.so -p 5001 -w @www@";
+    #};
   };
   networking.firewall.allowedTCPPorts = [5001];
 

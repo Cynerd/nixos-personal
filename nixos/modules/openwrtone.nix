@@ -56,7 +56,7 @@ in {
       };
 
       # Use OpenWrt One specific kernel. It fixes SError with patch.
-      kernelPackages = mkDefault (pkgs.linuxPackagesFor pkgs.linux_7_0);
+      kernelPackages = mkDefault (pkgs.linuxPackagesFor pkgs.linux_7_2);
       kernelParams = [
         "fw_devlink=permissive"
         "clk_ignore_unused"

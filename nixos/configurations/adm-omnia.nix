@@ -7,6 +7,7 @@ in {
   deploy = {
     enable = true;
     ssh.host = "adm.cynerd.cz";
+    configurationLimit = 16;
   };
 
   cynerd = {
@@ -37,9 +38,9 @@ in {
   };
 
   services = {
-    journald.extraConfig = ''
-      SystemMaxUse=8G
-    '';
+    journald.settings.Journal = {
+      SystemMaxUse = "8G";
+    };
 
     btrfs.autoScrub = {
       enable = true;
@@ -52,17 +53,18 @@ in {
     };
   };
 
+  # Warning: This Omnia has broker WAN port thus LAN4 is used for WAN!!!!!!!!
   networking.useDHCP = false;
   systemd.network = {
     networks = {
-      "end2" = {
-        matchConfig.Name = "end2"; # Ensure that it is managed by systemd-networkd
+      "lan4" = {
+        matchConfig.Name = "lan4"; # Ensure that it is managed by systemd-networkd
         networkConfig.IPv6AcceptRA = false;
       };
       "pppoe-wan" = {
         matchConfig.Name = "pppoe-wan";
         networkConfig = {
-          BindCarrier = "end2";
+          BindCarrier = "lan4";
           DHCP = "ipv6";
           IPv6AcceptRA = "no";
           DHCPPrefixDelegation = "yes";
@@ -80,7 +82,7 @@ in {
         linkConfig.RequiredForOnline = "routable";
       };
       "lan-brlan" = {
-        matchConfig.Name = "lan*";
+        matchConfig.Name = "lan0 lan1 lan2 lan3";
         networkConfig.Bridge = "brlan";
         bridgeVLANs = [
           {
@@ -96,7 +98,7 @@ in {
   services.pppd = {
     enable = true;
     peers."wan".config = ''
-      plugin pppoe.so end2
+      plugin pppoe.so lan4
       ifname pppoe-wan
       lcp-echo-interval 1
       lcp-echo-failure 5
@@ -111,7 +113,7 @@ in {
   };
   systemd.services = {
     "pppd-wan" = {
-      after = ["sys-subsystem-net-devices-end2.device"];
+      after = ["sys-subsystem-net-devices-lan4.device"];
       partOf = ["systemd-networkd.service"];
       serviceConfig = {
         Restart = "always";

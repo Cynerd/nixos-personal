@@ -180,7 +180,7 @@ in {
       enable = true;
       settings.Resolve = {
         FallbackDNS = ["1.1.1.1" "8.8.8.8"];
-        DNSStubListenerExtra=[cnf.lanIP "192.168.1.1"];
+        DNSStubListenerExtra = [cnf.lanIP "192.168.1.1"];
         # TODO possibly enforce DNSSEC again
       };
     };

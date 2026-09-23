@@ -15,10 +15,13 @@ in {
   };
 
   config = mkIf config.cynerd.develop {
-    cynerd.compile = true;
-    environment.enableDebugInfo = true;
+    cynerd = {
+      devmin = true;
+      compile = true;
+    };
     environment.systemPackages = with pkgs; [
       # Tools
+      git-lfs
       gitlint
       tig
       gitg
@@ -33,6 +36,7 @@ in {
       vim-language-server
       vale
       can-utils
+      unixtools.xxd
 
       # Required for neovim plugins
       editorconfig-checker
@@ -64,12 +68,14 @@ in {
 
       # C
       clang-tools
+      bear
       #massif-visualizer
       elf-size-analyze
 
       # Python
       (python3.withPackages (pypkgs:
         with pypkgs; [
+          pip
           ipython
           python-lsp-server
 
@@ -141,6 +147,9 @@ in {
       virt-manager
       cdrtools
 
+      # Docker
+      docker-credential-helpers
+
       # U-Boot
       ubootTools
       tftp-hpa
@@ -181,6 +190,43 @@ in {
     #  package = pkgs.wireshark;
     #};
 
+    programs.nix-ld = {
+      enable = true;
+      libraries = with pkgs; [
+        alsa-lib
+        at-spi2-atk
+        cairo
+        cups
+        dbus
+        expat
+        gdk-pixbuf
+        glib
+        gtk3
+        libGL
+        libXpm
+        libdrm
+        libgbm
+        libgcrypt
+        libsoup_3
+        libudev0-shim
+        libusb1
+        libx11
+        libxcb
+        libxcomposite
+        libxdamage
+        libxext
+        libxfixes
+        libxkbcommon
+        libxrandr
+        nspr
+        nss
+        openssl
+        pango
+        udev
+        webkitgtk_4_1
+      ];
+    };
+
     documentation = {
       nixos = {
         enable = true;
@@ -190,19 +236,18 @@ in {
       doc.enable = true;
     };
 
-    services = {
-      udev.extraRules = ''
-        SUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="3748", MODE:="0660", GROUP="develop", SYMLINK+="stlinkv2_%n"
-        SUBSYSTEMS=="usb", ATTRS{idVendor}=="a600", ATTRS{idProduct}=="a003", MODE:="0660", GROUP="develop", SYMLINK+="aix_forte_%n"
-        SUBSYSTEMS=="usb", ATTRS{idVendor}=="1366", ATTRS{idProduct}=="0105", MODE:="0660", GROUP="develop", SYMLINK+="jlink_%n"
-        SUBSYSTEMS=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2111", MODE:="0660", GROUP="develop", SYMLINK+="cmsip_dap_%n"
-        SUBSYSTEMS=="usb", ATTRS{idVendor}=="1ab1", ATTRS{idProduct}=="0e11", MODE:="0660", GROUP="develop"
-        SUBSYSTEMS=="usb", ATTRS{idVendor}=="303a", ATTRS{idProduct}=="1001", MODE:="0660", GROUP="develop", TAG+="uaccess"
-        SUBSYSTEMS=="usb", ATTRS{idVendor}=="303a", ATTRS{idProduct}=="1002", MODE:="0660", GROUP="develop", TAG+="uaccess"
-      '';
-
-      guix.enable = true;
-    };
+    services.guix.enable = true;
+    #environment.etc."guix/machines.scm".text = ''
+    #  (list (build-machine
+    #    (name "czellembsrv.elektroline.cz")
+    #    (systems (list "x86_64-linux" "i686-linux"))
+    #    (host-key "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICQZIwdzBo5CvMjS0M9tKYG2ikqPmSgSKRa/UPAoyhBC root@embsrv")
+    #    (user "kkoci")
+    #    (private-key "/home/cynerd/.ssh/elektroline-emb")
+    #    (parallel-builds 16)
+    #    (speed 2.0)
+    #  ))
+    #'';
 
     virtualisation = {
       containers.enable = true;
@@ -212,15 +257,20 @@ in {
         storageDriver = "btrfs";
       };
       lxc.enable = true;
-      libvirtd.enable = true;
+      libvirtd = {
+        enable = true;
+        qemu = {
+          swtpm.enable = true;
+          vhostUserPackages = with pkgs; [virtiofsd];
+        };
+      };
       spiceUSBRedirection.enable = true;
     };
+    networking.firewall.trustedInterfaces = ["virbr0"];
 
-    users.groups.develop = {};
     users.users.cynerd.extraGroups = [
       "docker"
       "lxd"
-      "develop"
       "libvirtd"
     ];
   };

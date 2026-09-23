@@ -21,7 +21,7 @@
         wpaPasswordFile = "/run/secrets/hostapd-TurrisRules.pass";
       };
       settings = mkIf is2g {
-        ieee80211w = 0;
+        ieee80211w = mkForce 0;
         wpa_key_mgmt = mkForce "WPA-PSK"; # force use without sha256
       };
     };

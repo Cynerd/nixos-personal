@@ -37,6 +37,8 @@ in {
         wrapperFeatures.gtk = true;
         extraPackages = with pkgs;
           [
+            appimage-run
+
             dconf-editor
             glib
             gsettings-desktop-schemas
@@ -59,7 +61,7 @@ in {
             wl-mirror
             slurp
             grim
-            wf-recorder
+            #wf-recorder
             wl-clipboard
             wl-color-picker
             swayidle
@@ -114,7 +116,6 @@ in {
             yt-dlp
             spotify
 
-            nordic
             nordzy-cursor-theme
             nordzy-icon-theme
             adwaita-icon-theme
@@ -161,7 +162,6 @@ in {
             gst_all_1.gst-plugins-ugly
             gst_all_1.gst-plugins-rs
             gst_all_1.gst-libav
-            gst_all_1.gst-vaapi
 
             # Writing
             typst
@@ -170,10 +170,10 @@ in {
             vale
 
             # CAD
-            freecad
+            #freecad
             kicad
             sweethome3d.application
-            #qelectrotech
+            qelectrotech
             super-slicer
           ]
           ++ (optionals cnf.laptop [
@@ -189,9 +189,9 @@ in {
         nativeMessagingHosts.packages = with pkgs; [browserpass];
       };
 
-      nix-ld = {
+      fuse = {
         enable = true;
-        libraries = with pkgs; [libXpm];
+        userAllowOther = true;
       };
 
       usbkey = {
@@ -254,7 +254,7 @@ in {
       xserver.xkb.options = "grp:alt_shift_toggle,caps:escape";
 
       # Gnome crypto services (GnuPG)
-      dbus.packages = [pkgs.gcr];
+      dbus.packages = [pkgs.gcr_4];
 
       pipewire = {
         enable = true;
@@ -289,8 +289,33 @@ in {
       };
       saned.enable = true;
       avahi.enable = true;
+      samba = {
+        enable = false;
+        openFirewall = true;
+        settings = {
+          global = {
+            "workgroup" = "WORKGROUP";
+            "server string" = "smbnix";
+            "netbios name" = "smbnix";
+            "security" = "user";
+            "hosts allow" = "0.0.0.0/0";
+            "guest account" = "nobody";
+            "map to guest" = "bad user";
+          };
+          public = {
+            "path" = "/mnt/public";
+            "browseable" = "yes";
+            "read only" = "no";
+            "guest ok" = "yes";
+            "create mask" = "0644";
+            "directory mask" = "0755";
+            "force user" = "cynerd";
+            "force group" = "cynerd";
+          };
+        };
+      };
       samba-wsdd = {
-        enable = true;
+        enable = false;
         discovery = true;
       };
       #davfs2.enable = true; TODO!!!
@@ -369,13 +394,13 @@ in {
     };
 
     # Support running app images
-    boot.binfmt.registrations.appimage = {
-      wrapInterpreterInShell = false;
-      interpreter = "${pkgs.appimage-run}/bin/appimage-run";
-      recognitionType = "magic";
-      offset = 0;
-      mask = ''\xff\xff\xff\xff\x00\x00\x00\x00\xff\xff\xff'';
-      magicOrExtension = ''\x7fELF....AI\x02'';
-    };
+    #boot.binfmt.registrations.appimage = {
+    #  wrapInterpreterInShell = false;
+    #  interpreter = "${pkgs.appimage-run}/bin/appimage-run";
+    #  recognitionType = "magic";
+    #  offset = 0;
+    #  mask = ''\xff\xff\xff\xff\x00\x00\x00\x00\xff\xff\xff'';
+    #  magicOrExtension = ''\x7fELF....AI\x02'';
+    #};
   };
 }

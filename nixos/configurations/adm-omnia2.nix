@@ -5,6 +5,7 @@
   deploy = {
     enable = true;
     ssh.host = "omnia2.adm";
+    configurationLimit = 16;
   };
 
   cynerd = {
@@ -28,13 +29,15 @@
     };
   };
 
-  services.journald.extraConfig = ''
-    SystemMaxUse=8G
-  '';
+  services = {
+    journald.settings.Journal = {
+      SystemMaxUse = "8G";
+    };
 
-  services.btrfs.autoScrub = {
-    enable = true;
-    fileSystems = ["/"];
+    btrfs.autoScrub = {
+      enable = true;
+      fileSystems = ["/"];
+    };
   };
 
   networking = {

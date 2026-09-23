@@ -31,9 +31,9 @@
   boot.initrd.availableKernelModules = ["dm-mod"];
 
   services = {
-    journald.extraConfig = ''
-      SystemMaxUse=512M
-    '';
+    journald.settings.Journal = {
+      SystemMaxUse = "512M";
+    };
 
     btrfs.autoScrub = {
       enable = true;
